@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <!-- DIAGNOSTICKÝ OVERLAY PRO CHYBY -->
+  <script>
+    (function() {
+      function showErrorOverlay(title, message, stack) {
+        var el = document.getElementById('nnf-debug-overlay');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'nnf-debug-overlay';
+          el.style.cssText = 'position:fixed;inset:0;background:#990000;color:white;z-index:999999999;padding:40px;font-family:monospace;font-size:16px;line-height:1.5;overflow-y:auto;';
+          document.documentElement.appendChild(el);
+        }
+        el.innerHTML = '<h1>${heroTitle}</h1>' +
+          '<p><strong>Zpráva:</strong> ' + message + '</p>' +
+          (stack ? '<pre style="background:#440000;padding:20px;border-radius:10px;overflow-x:auto;">' + stack + '</pre>' : '');
+      }
+      window.onerror = function(msg, url, line, col, error) {
+        showErrorOverlay('Synchronní JS chyba', msg + ' (' + url + ':' + line + ':' + col + ')', error ? error.stack : '');
+        return false;
+      };
+      window.onunhandledrejection = function(event) {
+        var reason = event.reason || {};
+        showErrorOverlay('Asynchronní Promise chyba', reason.message || reason, reason.stack || '');
+      };
+      console.log('NANOfusion Diagnostic Error Catcher: Active');
+    })();
+  </script>
+
+  <meta charset="utf-8" />
+  <link href="/static/logo.jpg" rel="icon" type="image/jpeg" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <link href="/assets/manifest-D4Cn7J31.json" rel="manifest" />
+  <title>NANOfusion | Čištění a nano-ochrana střech, fasád a dlažeb</title>
+
+  <meta
+    content="Specialisté na profesionální čištění a dlouhodobou nano-ochranu střech, fasád, dlažeb a fotovoltaiky. Více než 950 realizovaných projektů s garancí až 10 let."
+    name="description" />
+  <meta content="NANOfusion | Čištění a nano-ochrana střech, fasád a dlažeb" property="og:title" />
+  <meta
+    content="Specialisté na profesionální čištění a dlouhodobou nano-ochranu střech, fasád, dlažeb a fotovoltaiky. Více než 950 realizovaných projektů s garancí až 10 let."
+    property="og:description" />
+  <meta content="/static/logo.jpg" property="og:image" />
+  <meta content="https://nanofusion.cz" property="og:url" />
+  <meta content="website" property="og:type" />
+  <meta content="NANOfusion" property="og:site_name" />
+
+  <!-- AI & SEO/GEO optimization -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "NANOfusion s.r.o.",
+      "image": "https://nanofusion.cz/static/logo.jpg",
+      "@id": "https://nanofusion.cz",
+      "url": "https://nanofusion.cz",
+      "telephone": "+420774509409",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Cezavy 627",
+        "addressLocality": "Blučina",
+        "postalCode": "664 56",
+        "addressCountry": "CZ"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 49.8175,
+        "longitude": 15.473
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
+        ],
+        "opens": "08:00",
+        "closes": "17:00"
+      },
+      "sameAs": [
+        "https://www.facebook.com/nanofusion",
+        "https://www.instagram.com/nano_fusion_cz/",
+        "https://www.linkedin.com/company/nanofusion/",
+        "https://www.tiktok.com/@nano_fusion_cz"
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Čištění a nano-ochrana povrchů",
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "NANOfusion s.r.o."
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Czech Republic"
+      },
+      "description": "Profesionální hloubkové čištění a dlouhodobá nano-ochrana střech, fasád, zámkových dlažeb a fotovoltaických panelů."
+    }
+  </script>
+
+  <meta content="yes" name="mobile-web-app-capable" />
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <meta content="NANOfusion" name="apple-mobile-web-app-title" />
+  <link href="https://nanofusion.cz" rel="canonical" />
+  <script type="module" crossorigin src="/assets/index-DnPFhj9u.js"></script>
+
+  <link rel="stylesheet" crossorigin href="/assets/index-D7rL3D6v.css">
+  <link rel="stylesheet" href="/static/modern-ui.css">
+  <link href="/static/calculator.css" rel="stylesheet" />
+  <link href="/static/ai-chat.css" rel="stylesheet" />
+  <script>
+    // Emergency preloader removal fallback
+    setTimeout(function() {
+      var p = document.getElementById('preloader');
+      if (p) {
+        p.style.opacity = '0';
+        p.style.visibility = 'hidden';
+        setTimeout(function() { if(p.parentNode) p.remove(); }, 500);
+        document.body.style.opacity = '1';
+        document.body.style.overflow = 'auto';
+      }
+    }, 4000);
+  </script>
+</head>
+
+<body>
+  <!-- Premium Preloader - White Edition -->
+  <div id="preloader"
+    style="position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; transition: opacity 0.6s ease, visibility 0.6s ease;">
+    <div style="position: relative; margin-bottom: 2rem;">
+      <img src="/static/logo-nav.jpg" alt="NANOfusion"
+        style="height: 80px; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); animation: pulse 2s infinite ease-in-out;">
+    </div>
+    <div class="loader-dots" style="display: flex; gap: 0.5rem;">
+      <div
+        style="width: 10px; height: 10px; background: #f59e0b; border-radius: 50%; animation: dot-bounce 1.4s infinite ease-in-out both;">
+      </div>
+      <div
+        style="width: 10px; height: 10px; background: #f59e0b; border-radius: 50%; animation: dot-bounce 1.4s infinite ease-in-out both; animation-delay: 0.16s;">
+      </div>
+      <div
+        style="width: 10px; height: 10px; background: #f59e0b; border-radius: 50%; animation: dot-bounce 1.4s infinite ease-in-out both; animation-delay: 0.32s;">
+      </div>
+    </div>
+    <p
+      style="margin-top: 1.5rem; font-family: 'Outfit', sans-serif; color: #64748b; font-size: 0.875rem; font-weight: 500;">
+      Příprava profesionální ochrany...</p>
+  </div>
+
+  <style>
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+    @keyframes dot-bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1.0); }
+    }
+  </style>
+
+  <div id="root"></div>
+
+  <!-- Core App Logic -->
+  <script src="/static/main.js" type="module"></script>
+  
+  <!-- App Features -->
+  <script src="/static/calculator.js" type="module"></script>
+  <script src="/static/reviews.js" type="module"></script>
+  <script src="/static/portfolio.js" type="module"></script>
+  <script src="/static/blog.js" type="module"></script>
+  <script src="/static/offers.js?v=3" type="module"></script>
+  <script src="/static/how-it-works.js" type="module"></script>
+  <script src="/static/ai-chat.js?v=2" type="module"></script>
+  <script src="/static/gallery-hero.js" type="module"></script>
+  <script src="/static/faq.js" type="module"></script>
+  <script src="/static/about-us.js" type="module"></script>
+</body>
+</html>

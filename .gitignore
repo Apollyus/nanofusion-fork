@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.vite/
+*.log
+npm-debug.log*
+.env*
+.DS_Store
+.vscode/
+.idea/
+scratch/
+.temp/
+.supabase/
+
+# Local testing and scratch files
+scratch_*.js
+seed_*.js
+inspect-*.js
+assets_backup/
+static_backup/
+o-nas.html

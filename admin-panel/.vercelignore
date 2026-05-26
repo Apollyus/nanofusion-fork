@@ -1,0 +1,5 @@
+supabase/functions
+supabase/.temp
+.supabase
+node_modules
+.next

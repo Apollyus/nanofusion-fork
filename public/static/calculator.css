@@ -1,0 +1,145 @@
+/* Interaktivní kalkulačka pro NANOfusion */
+
+.calc-section {
+  padding: 4rem 1rem;
+  background: #f9fafb;
+  border-radius: 1.5rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.calc-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calc-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  color: #111827;
+  margin-bottom: 2rem;
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .calc-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.calc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.calc-label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.calc-input, .calc-select {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.calc-input:focus, .calc-select:focus {
+  outline: none;
+  border-color: #f97316; /* NANOfusion Orange */
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+}
+
+.calc-result-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 2px dashed #f97316;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.calc-result-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.calc-result-value {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #f97316;
+}
+
+.calc-cta {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: #f97316;
+  color: white;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 0.5rem;
+  margin-top: 1.5rem;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.calc-cta:hover {
+  background: #ea580c;
+}
+
+.calc-note {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+/* Hero CTA button styles */
+.hero-btn-calc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  background: white;
+  color: #f97316;
+  border: 2px solid #f97316;
+  cursor: pointer;
+}
+
+.hero-btn-calc:hover {
+  background: #f97316;
+  color: white;
+}
+
+/* Footer link styles */
+.footer-links-discrete {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.footer-link-item {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.footer-link-item:hover {
+  color: #f97316;
+}

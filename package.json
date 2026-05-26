@@ -1,0 +1,26 @@
+{
+  "name": "nano-flow-boost-editable",
+  "version": "1.0.0",
+  "description": "Editable local clone of NANO Conversion Hub",
+  "scripts": {
+    "dev": "vite --host --port 5173",
+    "build": "node sync-content.js && mkdir -p dist && cp -rv public/assets public/static dist/ && cp -rv index.html faq dist/ && cd admin-panel && npm install && npm run build",
+    "preview": "vite preview",
+    "format": "prettier --write \"index.html\" \"assets/*.js\" \"assets/*.css\" \"manifest.json\""
+  },
+  "keywords": [
+    "nano",
+    "frontend",
+    "vite"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "prettier": "^3.8.1",
+    "vite": "^8.0.3"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.3"
+  }
+}

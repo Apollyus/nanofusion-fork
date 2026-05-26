@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+/* =============================================
+   NANOfusion Admin — Design System
+   ============================================= */
+
+:root {
+  /* Brand Colors */
+  --brand-primary: #f59e0b;
+  --brand-primary-dark: #d97706;
+  --brand-primary-light: #fef3c7;
+
+  /* Neutral Palette */
+  --bg-base: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-2: #f1f5f9;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Status Colors */
+  --status-new: #3b82f6;
+  --status-new-bg: #eff6ff;
+  --status-progress: #f59e0b;
+  --status-progress-bg: #fffbeb;
+  --status-resolved: #22c55e;
+  --status-resolved-bg: #f0fdf4;
+  --status-danger: #ef4444;
+  --status-danger-bg: #fef2f2;
+
+  /* Sidebar */
+  --sidebar-width: 256px;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-active: #ffffff;
+  --sidebar-item-active-bg: rgba(245, 158, 11, 0.15);
+  --sidebar-item-hover-bg: rgba(255, 255, 255, 0.05);
+
+  /* Spacing */
+  --header-height: 64px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Shadcn UI compatibility */
+  --primary: var(--brand-primary);
+  --primary-foreground: #ffffff;
+  --background: var(--bg-surface);
+  --foreground: var(--text-primary);
+  --muted: var(--bg-surface-2);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--bg-surface-2);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--status-danger);
+  --destructive-foreground: #ffffff;
+  --input: var(--border);
+  --ring: var(--brand-primary);
+}
+
+/* =============================================
+   Base Styles
+   ============================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  tab-size: 4;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================
+   Scrollbar Styling
+   ============================================= */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* =============================================
+   Transitions
+   ============================================= */
+
+
+
+/* =============================================
+   Tiptap Editor
+   ============================================= */
+
+.ProseMirror {
+  outline: none;
+  min-height: 300px;
+  padding: 1rem;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: var(--text-muted);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding: 0 1rem;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  line-height: 1.1;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ProseMirror blockquote {
+  border-left: 3px solid var(--border-strong);
+  padding-left: 1rem;
+  margin-left: 0;
+  color: var(--text-secondary);
+}
+
+.ProseMirror pre {
+  background: var(--bg-surface-2);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+.ProseMirror hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+/* =============================================
+   Drag & Drop
+   ============================================= */
+
+.drag-handle {
+  cursor: grab;
+  opacity: 0.3;
+  transition: opacity 150ms;
+}
+
+.drag-handle:hover {
+  opacity: 1;
+}
+
+.drag-item:hover .drag-handle {
+  opacity: 0.7;
+}
+
+/* =============================================
+   Animations
+   ============================================= */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInFromLeft {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 200ms ease-out;
+}
+
+.animate-slide-in {
+  animation: slideInFromLeft 200ms ease-out;
+}
+
+/* =============================================
+   Utility Classes
+   ============================================= */
+
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Status Badge Colors */
+.badge-new { 
+  background-color: var(--status-new-bg); 
+  color: var(--status-new); 
+}
+.badge-in_progress { 
+  background-color: var(--status-progress-bg); 
+  color: var(--status-progress); 
+}
+.badge-resolved { 
+  background-color: var(--status-resolved-bg); 
+  color: var(--status-resolved); 
+}
+.badge-pending { 
+  background-color: #fef9c3; 
+  color: #a16207; 
+}
+.badge-approved { 
+  background-color: var(--status-resolved-bg); 
+  color: #166534; 
+}
+.badge-rejected { 
+  background-color: var(--status-danger-bg); 
+  color: #991b1b; 
+}

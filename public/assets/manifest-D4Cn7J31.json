@@ -1,0 +1,22 @@
+{
+  "name": "NANOfusion",
+  "short_name": "NANOfusion",
+  "description": "Profesionální čištění a nano-ochrana střech, fasád a dlažeb.",
+  "icons": [
+    {
+      "src": "/static/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/static/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#f97316",
+  "background_color": "#ffffff",
+  "scope": "/"
+}

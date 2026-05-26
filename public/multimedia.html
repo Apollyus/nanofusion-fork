@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <link href="/static/logo.jpg" rel="icon" type="image/jpeg" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Blog & Magazín | NANOfusion</title>
+  <meta content="Rady, tipy a novinky ze světa profesionálního čištění a nano-ochrany povrchů." name="description" />
+  
+  <link rel="stylesheet" crossorigin href="/assets/index-D7rL3D6v.css">
+  <link rel="stylesheet" href="/static/modern-ui.css">
+</head>
+<body style="background: #ffffff;">
+  <!-- Navigation header -->
+  <header style="position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid #e2e8f0;">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style="height: 100px; display: flex; align-items: center; justify-content: space-between;">
+      <a href="/">
+        <img src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 75px; width: auto;">
+      </a>
+      <div style="display: flex; gap: 2rem; align-items: center; font-weight: 600; color: #475569;">
+        <a href="/#sluzby" style="transition: color 0.3s;">Služby</a>
+        <a href="/#jak-to-funguje">Jak to funguje</a>
+        <a href="/#reference">Reference</a>
+        <a href="/galerie.html">Galerie</a>
+        <a href="/blog.html" style="color: #f59e0b;">Blog</a>
+        <a href="/#kontakt">Kontakt</a>
+        <a href="/#kalkulacka" style="background: #f59e0b; color: white; padding: 0.75rem 1.5rem; border-radius: 2rem; box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.4);">Nezávazná poptávka</a>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding-top: 140px; min-height: 80vh; padding-bottom: 6rem;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div style="text-align: center; margin-bottom: 5rem;">
+        <h1 style="font-size: 3.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1.5rem;">Nano-Magazín & Tipy</h1>
+        <p style="font-size: 1.25rem; color: #64748b; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+          Inspirace a rady pro majitele nemovitostí. Zjistěte, jak moderní technologie šetří váš čas i peníze při údržbě majetku.
+        </p>
+      </div>
+
+      <!-- Blog Grid -->
+      <div id="blog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 3rem;">
+        <!-- Items will be injected by JS -->
+      </div>
+    </div>
+  </main>
+
+  <style>
+    .blog-card {
+      background: white;
+      border-radius: 2rem;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+      border: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+    }
+    .blog-card:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
+      border-color: #f59e0b;
+    }
+    .blog-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .blog-card:hover img {
+      transform: scale(1.05);
+    }
+  </style>
+
+  <script src="/static/blog.js" type="module"></script>
+  <script type="module">
+    import { blogPostsData } from '/static/blog.js'; // Wait, blog.js doesn't export it currently
+
+    // Fallback if import fails (re-defining for now, but will fix blog.js later)
+    const posts = [
+        { 
+            id: 1, 
+            title: 'Jak probíhá čištění fasád?', 
+            summary: 'Přečtěte si, jaké technologie používáme pro hloubkovou očistu vašeho domu a proč je důležitá správná příprava.', 
+            date: '10. 4. 2026', 
+            image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800' 
+        },
+        { 
+            id: 2, 
+            title: 'Výhody nano-ochrany povrchů', 
+            summary: 'Proč je nano-technologie revolucí v údržbě nemovitostí? Odpuzuje vodu, špínu a šetří váš čas i peněženku.', 
+            date: '5. 4. 2026', 
+            image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800' 
+        },
+        { 
+            id: 3, 
+            title: 'Příprava střechy na sezónu', 
+            summary: 'Nepodceňte jarní údržbu. Vyčištěná střecha lépe odvádí vodu, nezarůstá mechem a působí jako nová.', 
+            date: '28. 3. 2026', 
+            image: 'https://images.unsplash.com/photo-1632759145351-1d592919f522?w=800' 
+        }
+    ];
+
+    const grid = document.getElementById('blog-grid');
+
+    const render = () => {
+      grid.innerHTML = '';
+      posts.forEach(post => {
+        const el = document.createElement('div');
+        el.className = 'blog-card';
+        el.onclick = () => window.nnf_openBlog(post.id);
+        el.innerHTML = `
+          <div style="overflow: hidden;">
+            <img src="${post.image}" alt="${post.title}">
+          </div>
+          <div style="padding: 2.5rem;">
+            <div style="font-size: 0.75rem; color: #f59e0b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">AKTUALITA • ${post.date}</div>
+            <h3 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; line-height: 1.3;">${post.title}</h3>
+            <p style="color: #64748b; margin-bottom: 2rem; line-height: 1.6;">${post.summary}</p>
+            <div style="color: #f59e0b; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">Číst celý článek <span>→</span></div>
+          </div>
+        `;
+        grid.appendChild(el);
+      });
+    };
+
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/reviews/google?key=CRON_SECRET_PLACEHOLDER",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/reviews/firmy?key=CRON_SECRET_PLACEHOLDER",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}

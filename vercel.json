@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "public": true,
+  "rewrites": [
+    {
+      "source": "/admin/:path*",
+      "destination": "/admin-panel/:path*"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
+    },
+    {
+      "source": "/static/(.*)",
+      "destination": "/static/$1"
+    },
+    {
+      "source": "/((?!admin|api|assets|static|faq|o-nas).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "cleanUrls": true
+}

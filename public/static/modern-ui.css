@@ -1,0 +1,1037 @@
+:root {
+  --primary: 37 91% 55%;
+  --primary-hover: 37 91% 45%;
+  --bg-dark: #0f172a;
+  --bg-card: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --radius-xl: 1.5rem;
+  --radius-lg: 1rem;
+  --glass: rgba(255, 255, 255, 0.8);
+  --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-main);
+  scroll-behavior: smooth;
+  opacity: 0;
+  animation: fadeInGlobal 0.8s ease-out 0.2s forwards;
+}
+
+/* surgical-fix: moving patches from main.js to css to prevent flashing */
+footer {
+  background-color: #111111 !important;
+}
+
+header img:not(.chat-logo):not(.ai-chat-launcher img), 
+nav img:not(.chat-logo),
+footer img {
+  height: 75px !important;
+  width: auto !important;
+}
+
+header nav a.active-link {
+  color: #f59e0b !important;
+}
+
+#preloader.fade-out {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+@keyframes fadeInGlobal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.section-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Glassmorphism Header Overlay */
+header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: var(--glass) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+nav {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Modern Typography Upgrades */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+/* Premium Card Effects */
+.card,
+.calc-section,
+.admin-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.calc-section:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Re-styled Calculator for Step-by-Step feel */
+.calc-section {
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.calc-section::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.calc-grid {
+  gap: 2rem;
+}
+
+.calc-label {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.calc-input,
+.calc-select {
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  font-size: 1.125rem;
+  font-weight: 500;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.calc-result-box {
+  background: var(--bg-dark);
+  border: none;
+  border-radius: 1.25rem;
+  color: white;
+  padding: 2.5rem;
+  position: relative;
+}
+
+.calc-result-label {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.calc-result-value {
+  color: hsl(var(--primary));
+  text-shadow: 0 0 20px hsla(var(--primary), 0.3);
+}
+
+.calc-cta {
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  box-shadow: 0 10px 15px -3px hsla(var(--primary), 0.4);
+}
+
+/* Improved Hero Visuals */
+.hero-gradient-overlay {
+  background: linear-gradient(to right, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.4) 100%);
+}
+
+button.primary-btn {
+  background: hsl(var(--primary));
+  transition: all 0.2s ease;
+}
+
+button.primary-btn:hover {
+  background: hsl(var(--primary-hover));
+  transform: scale(1.02);
+}
+
+/* Reviews Carousel "In Motion" */
+#reference {
+  overflow: hidden;
+  padding: 0 0 4rem 0;
+}
+
+.reviews-container {
+  display: flex;
+  width: 100%;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.reviews-track {
+  display: flex;
+  gap: 2rem;
+  animation: scrollReviews 40s linear infinite;
+  padding: 2rem 0;
+}
+
+
+.review-card-modern {
+  flex: 0 0 320px;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.review-stars {
+  color: #fbbf24;
+  font-size: 0.875rem;
+}
+
+.review-text {
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  font-style: italic;
+}
+
+.review-author {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1rem;
+}
+
+.author-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #f8fafc;
+}
+
+.author-meta {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+@keyframes scrollReviews {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollPortfolio {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 768px) {
+  body { font-size: 16px; }
+  h1 { font-size: 2.1rem !important; line-height: 1.2 !important; }
+  h2 { font-size: 1.75rem !important; line-height: 1.3 !important; }
+  h3 { font-size: 1.4rem !important; }
+
+  .container { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+  section { padding-top: 3.5rem !important; padding-bottom: 3.5rem !important; }
+
+  .modal-content {
+    width: 100% !important;
+    height: 100dvh !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    overflow-y: auto !important;
+  }
+
+  .modal-body {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+
+  .modal-info-pane, .modal-calc-pane {
+    flex: none !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 1.5rem 1.25rem 3rem !important;
+    position: static !important; /* This is the key fix for overlap */
+    z-index: auto !important;
+  }
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 500px;
+}
+
+@media (min-width: 768px) {
+  .modal-body {
+    flex-direction: row;
+  }
+}
+
+.modal-info-pane {
+  flex: 1.2;
+  padding: 3rem;
+  overflow-y: auto;
+}
+
+.portfolio-container {
+  display: flex;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.portfolio-track {
+  display: flex;
+  gap: 2.5rem;
+  animation: scrollPortfolio 25s linear infinite;
+  padding: 1rem 0;
+}
+
+
+.portfolio-card-modern {
+  flex: 0 0 450px;
+  background: white;
+  border-radius: 2rem;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-img-wrap {
+  height: 300px;
+  overflow: hidden;
+}
+
+.portfolio-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.portfolio-card-modern:hover .portfolio-img-wrap img {
+  transform: scale(1.1);
+}
+
+.portfolio-content {
+  padding: 1.5rem 2rem;
+}
+
+.portfolio-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #fff7ed;
+  color: #f59e0b;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.portfolio-h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+
+/* Animations */
+
+/* Modal System */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  /* Omezení výšky na mobilu */
+  overflow-y: auto;
+  /* Skrolování uvnitř karty */
+  border-radius: 1.5rem;
+  /* Mírně menší rádius pro mobil */
+  box-shadow: 0 50px 100px -20px rgba(15, 23, 42, 0.3);
+  position: relative;
+  animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    border-radius: 1rem;
+    margin-top: 1rem;
+    max-height: 85vh;
+  }
+}
+
+
+@keyframes modalPop {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .modal-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+
+.modal-info-pane {
+  padding: 0;
+}
+
+.modal-calc-pane {
+  background: #f8fafc;
+  padding: 1.5rem;
+  /* Zmenšeno z 2.5rem pro mobil */
+  border-top: 1px solid #e2e8f0;
+}
+
+@media (min-width: 768px) {
+  .modal-calc-pane {
+    padding: 2.5rem;
+    border-top: none;
+    border-left: 1px solid #e2e8f0;
+  }
+}
+
+
+.close-modal-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  color: #1e293b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  font-size: 1.5rem;
+  font-weight: 300;
+  transition: all 0.2s;
+}
+
+.close-modal-btn:hover {
+  background: #f1f5f9;
+  transform: rotate(90deg);
+}
+
+.service-image-header {
+  height: 180px;
+  /* Zmenšeno z 250px pro mobil */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .service-image-header {
+    height: 250px;
+  }
+}
+
+
+.service-image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(to top, white, transparent);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Carousel - Natural Control & Manual Scroll (Snap) */
+.reviews-container, .portfolio-container {
+  overflow-x: auto !important;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  padding: 1.5rem 0 0 0;
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: white;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  color: #f59e0b;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 50;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.carousel-arrow:hover {
+  background: #f59e0b;
+  color: white;
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.left-arrow { left: 0.5rem; }
+.right-arrow { right: 0.5rem; }
+
+@media (max-width: 768px) {
+  .carousel-arrow {
+    display: none !important;
+  }
+}
+
+.reviews-container:active, .portfolio-container:active {
+  cursor: grabbing;
+}
+
+.reviews-container::-webkit-scrollbar, .portfolio-container::-webkit-scrollbar {
+  display: none;
+}
+
+.reviews-track, .portfolio-track {
+  animation: none !important;
+  display: flex !important;
+  width: max-content !important;
+}
+
+.review-card-modern, .portfolio-card-modern {
+  scroll-snap-align: center;
+  flex-shrink: 0;
+}
+
+/* Smaller, Elegant Portfolio Button */
+#realizace button, #reference button, .portfolio-section button, a[href*="poptavka"] {
+  background-color: #F59E0B !important;
+  color: white !important;
+  box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  border: none !important;
+  padding: 0.75rem 1.75rem !important;
+  font-size: 0.813rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  border-radius: 1rem !important;
+  margin-top: 0 !important;
+}
+
+/* Mobile Modal Fix - Inquiry Form Visibility */
+@media (max-width: 768px) {
+  .modal-content {
+    max-height: 95vh !important;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    flex: 1;
+  }
+
+  .modal-info-pane {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .modal-calc-pane {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    box-shadow: 0 -10px 20px rgba(0,0,0,0.05);
+    background: #fff !important;
+    border-top: 2px solid #F59E0B !important;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.modal-service-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 1rem 0;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .modal-service-title {
+    font-size: 2.25rem;
+  }
+}
+
+/* Base calc-service-grid: 3 columns desktop, 2 on mobile */
+.calc-service-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ============================================
+   COMPREHENSIVE MOBILE RESPONSIVENESS
+   ============================================ */
+
+/* --- Modal: Full-screen on mobile --- */
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+    border-radius: 1.25rem 1.25rem 0 0;
+    margin-top: 0;
+    animation: modalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes modalSlideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .close-modal-btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1.25rem;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .service-image-header {
+    height: 140px;
+  }
+
+  .modal-calc-pane {
+    padding: 1.25rem;
+  }
+
+  .modal-calc-pane h4 {
+    font-size: 1rem !important;
+  }
+
+  .modal-calc-pane input {
+    font-size: 1rem !important;
+    padding: 0.75rem !important;
+  }
+
+  .modal-service-title {
+    font-size: 1.5rem;
+    margin: 0.75rem 0;
+  }
+}
+
+/* --- Before/After section mobile --- */
+@media (max-width: 480px) {
+  .before-after-section {
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
+  }
+
+  .before-after-section>div {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.5rem !important;
+  }
+
+  .before-after-section img {
+    height: 100px !important;
+  }
+}
+
+/* --- FAQ accordion mobile --- */
+@media (max-width: 480px) {
+  .service-faq-section {
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
+  }
+
+  .faq-toggle {
+    padding: 0.75rem !important;
+    font-size: 0.813rem !important;
+  }
+
+  .faq-answer {
+    padding: 0.625rem 0.75rem !important;
+    font-size: 0.813rem !important;
+  }
+}
+
+/* --- Portfolio cards mobile --- */
+@media (max-width: 768px) {
+  .portfolio-card-modern {
+    flex: 0 0 280px;
+    border-radius: 1.25rem;
+  }
+
+  .portfolio-img-wrap {
+    height: 200px;
+  }
+
+  .portfolio-content {
+    padding: 1rem 1.25rem;
+  }
+
+  .portfolio-h3 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-card-modern {
+    flex: 0 0 260px;
+  }
+
+  .portfolio-img-wrap {
+    height: 180px;
+  }
+
+  .portfolio-track {
+    gap: 1.25rem;
+  }
+}
+
+/* --- Review cards mobile --- */
+@media (max-width: 480px) {
+  .review-card-modern {
+    flex: 0 0 260px;
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .review-text {
+    font-size: 0.875rem;
+  }
+
+  .reviews-track {
+    gap: 1rem;
+  }
+
+  #reference {
+    padding: 3rem 0;
+  }
+}
+
+/* --- Calculator wizard mobile --- */
+@media (max-width: 768px) {
+  .calc-section {
+    padding: 2rem 0.75rem !important;
+    border-radius: 1rem !important;
+    margin: 1rem 0.5rem !important;
+  }
+
+  .calc-title {
+    font-size: 1.25rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  /* Grid: 2 columns on small mobile for 12 services */
+  .calc-service-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+
+  .calc-service-card {
+    padding: 0.625rem !important;
+    border-radius: 0.75rem !important;
+  }
+
+  .calc-service-card div:first-child {
+    font-size: 0.75rem !important;
+  }
+
+  .calc-service-card div:last-child {
+    font-size: 0.625rem !important;
+  }
+
+  .calc-obj-card {
+    padding: 0.625rem !important;
+    border-radius: 0.75rem !important;
+  }
+
+  .calc-obj-card div {
+    font-size: 0.75rem !important;
+  }
+
+  .calc-cta {
+    padding: 1rem !important;
+    font-size: 0.938rem !important;
+    border-radius: 0.75rem !important;
+  }
+
+  .calc-result-box {
+    padding: 2rem 1rem !important;
+    border-radius: 1.25rem !important;
+  }
+
+  .calc-result-value {
+    font-size: 1.75rem !important;
+  }
+}
+
+/* --- AI Chat improvements for mobile --- */
+@media (max-width: 480px) {
+  .ai-chat-launcher {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 52px;
+    height: 52px;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+  }
+
+  .ai-chat-launcher svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .ai-chat-window {
+    width: calc(100% - 1rem) !important;
+    right: 0.5rem !important;
+    bottom: 4.5rem !important;
+    height: calc(100vh - 6rem) !important;
+    max-height: 550px;
+    border-radius: 1.25rem;
+  }
+
+  .chat-header {
+    padding: 1rem;
+  }
+
+  .chat-messages {
+    padding: 1rem;
+  }
+
+  .chat-footer {
+    padding: 0.75rem;
+  }
+
+  .chat-input {
+    padding: 0.625rem 1rem;
+    font-size: 1rem;
+  }
+
+  .quick-reply-btn {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.813rem;
+  }
+}
+
+/* --- General mobile spacing and typography --- */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.75rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Fix stats section horizontal overflow */
+  .flex.justify-around,
+  .flex.justify-between {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  /* Prevent any horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+
+  section {
+    overflow-x: hidden;
+  }
+}
+
+/* --- Fix content padding inside modal pane on mobile --- */
+@media (max-width: 480px) {
+  .modal-info-pane>div:not(.service-image-header) {
+    padding: 1.25rem !important;
+    padding-top: 0 !important;
+  }
+}
+
+/* --- Smooth scrolling within modal on iOS --- */
+.modal-content {
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-info-pane {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* --- Touch-friendly improvements --- */
+@media (hover: none) and (pointer: coarse) {
+
+  .calc-service-card,
+  .calc-obj-card {
+    min-height: 44px;
+  }
+/* Force AI Chat Visibility */
+#ai-chat-launcher {
+  z-index: 100000 !important; /* Vyšší než preloader po zmizení */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+  .faq-toggle {
+    min-height: 48px;
+  }
+
+  .quick-reply-btn {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Remove hover effects on touch devices */
+  .calc-section:hover {
+    transform: none;
+  }
+
+  .close-modal-btn:hover {
+    transform: none;
+  }
+}
+
+/* Questionnaire Highlight (Orange Border) */
+#kontakt .bg-card {
+  border: 2px solid #f59e0b !important;
+  box-shadow: 0 20px 40px -15px rgba(245, 158, 11, 0.15);
+  transition: all 0.3s ease;
+}
+
+#kontakt .bg-card:hover {
+  box-shadow: 0 25px 50px -12px rgba(245, 158, 11, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Footer Services Highlight */
+footer ul.space-y-2.text-sm.text-neutral-400 li {
+  display: flex;
+  align-items: center;
+}
+
+
+/* Footer Services logic moved to JS for precision */
+
+/* --- Hide Number Input Spinners (Arrows) --- */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
