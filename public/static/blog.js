@@ -29,7 +29,23 @@ const fallbackBlogPosts = [
     }
 ];
 
-let blogPostsData = [...fallbackBlogPosts];
+// Pre-fetch blog posts IMMEDIATELY on script load to save time (CTO Performance Hack)
+export const blogPromise = (async () => {
+  try {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false });
+    if (error) throw error;
+    return data;
+  } catch (e) {
+    console.warn('NANOfusion: Pre-fetch blog posts failed:', e);
+    return null;
+  }
+})();
+
+let blogPostsData = [];
 
 const openBlogDetail = (post) => {
     let overlay = document.getElementById('blog-modal-overlay');
@@ -80,14 +96,7 @@ const injectBlog = async () => {
 
     // Surgical database retrieval of articles
     try {
-        const { data: dbPosts, error } = await supabase
-            .from('articles')
-            .select('*')
-            .eq('is_published', true)
-            .order('published_at', { ascending: false });
-
-        if (error) throw error;
-
+        const dbPosts = await blogPromise;
         if (dbPosts && dbPosts.length > 0) {
             const formatDate = (dateStr) => {
                 if (!dateStr) return '';
@@ -103,9 +112,12 @@ const injectBlog = async () => {
                 date: formatDate(dbPost.published_at || dbPost.created_at),
                 image: dbPost.hero_image_url || 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800'
             }));
+        } else {
+            blogPostsData = fallbackBlogPosts;
         }
     } catch (e) {
         console.warn('NANOfusion: Failed to fetch blog posts from Supabase, using local fallback.', e);
+        blogPostsData = fallbackBlogPosts;
     }
 
     const render = () => {

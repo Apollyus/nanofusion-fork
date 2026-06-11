@@ -22,6 +22,7 @@ import {
   LogOut,
   Menu,
   X,
+  Sparkles,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
@@ -90,6 +91,11 @@ const navSections = [
         label: 'O nás',
         href: '/admin/about-us',
         icon: <Users size={18} />,
+      },
+      {
+        label: 'AI Analýzátor',
+        href: '/admin/analyzer',
+        icon: <Sparkles size={18} />,
       },
     ],
   },

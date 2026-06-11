@@ -1,19 +1,23 @@
 /* NANOfusion — Premium Dark Reviews Scroller + Supabase hydratace */
+import { supabase } from './supabase-config.js';
 
-let reviewsData = [
-  { name: 'Ing. Petr Svoboda', info: 'Praha, Čištění střechy', stars: 5, text: 'Hloubkové čištění krytiny a následná nano-ochrana dopadla na jedničku. Střecha vypadá jako nově položená a už se na ní nedrží mech.' },
-  { name: 'Jana Novotná', info: 'Brno, Čištění fasády', stars: 5, text: 'Fasáda prokoukla během jediného dne. Kluci byli moc šikovní, vše po sobě uklidili a výsledek je i po roce stále skvělý.' },
-  { name: 'Marek Kučera', info: 'Plzeň, Zámková dlažba', stars: 5, text: 'Čištění před firmou dopadlo výborně. Zmizela všechna léta usazená špína a olejové skvrny. Výborná komunikace.' },
-  { name: 'Lucie Marešová', info: 'Ostrava, Celková renovace', stars: 5, text: 'Oceňuji rychlost domluvy a zaměření zdarma. Cena byla férová a výsledek předčil naše očekávání. Určitě doporučuji!' },
-  { name: 'David Černý', info: 'Liberec, Fotovoltaika', stars: 5, text: 'Nano-ochrana fotovoltaiky nám reálně zvýšila účinnost panelů. Velmi profesionální přístup and čistá práce.' },
-  { name: 'Eva Králová', info: 'Hradec Králové, Čištění střechy', stars: 5, text: 'Skvělý výsledek. Po práci po sobě vše uklidili, dům vypadá skvěle a sousedi se už ptají na kontakt. Děkujeme!' },
-  { name: 'Martin Horák', info: 'Pardubice, Fasáda', stars: 5, text: 'Efekt nano-ochrany je neskutečný. Voda z fasády prostě stéká a fasáda se sama omývá deštěm. Úžasná technologie.' },
-  { name: 'Pavel Holub', info: 'České Budějovice, Terasa', stars: 5, text: 'Neskutečný rozdíl před a po. Terasa vypadá jako nově postavená a impregnace funguje skvěle.' },
-  { name: 'Kateřina Šťastná', info: 'Zlín, Fasáda', stars: 5, text: 'Rychlost, profesionalita a čistota. Rozhodně doporučuji všem, kdo chtějí mít dům jako nový.' },
-  { name: 'Jiří Procházka', info: 'Kladno, Střecha', stars: 5, text: 'Skvělá domluva, férová cena. Střecha po čištění vypadá perfektně a mech už nemá šanci.' },
-];
+// Pre-fetch reviews data IMMEDIATELY on script load to save time (CTO Performance Hack)
+export const reviewsPromise = (async () => {
+  try {
+    let data, error;
+    ({ data, error } = await supabase.from('external_reviews').select('*').eq('approved', true));
+    if (error || !data || data.length === 0) {
+      ({ data, error } = await supabase.from('reviews').select('*').eq('is_approved', true));
+    }
+    if (error) throw error;
+    return data;
+  } catch (e) {
+    console.warn('NANOfusion: Pre-fetch reviews failed:', e);
+    return null;
+  }
+})();
 
-const injectReviews = () => {
+const injectReviews = (list) => {
     const reviewsSection = document.getElementById('reference');
     if (!reviewsSection || reviewsSection.dataset.injected === 'true') return false;
 
@@ -29,7 +33,7 @@ const injectReviews = () => {
 
                 <div style="position: relative; width: 100%; max-width: 1300px; margin: 0 auto;">
                     <div id="reviews-scroller" style="display: flex; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; padding: 1rem 0 3rem; scrollbar-width: none; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
-                        ${reviewsData.map(rev => `
+                        ${list.map(rev => `
                             <div class="review-card-premium"
                                  style="flex: 0 0 350px; background: #1e293b; border-radius: 1.5rem; padding: 2.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 1.5rem;">
                                  <div style="display: flex; gap: 4px;">
@@ -86,16 +90,25 @@ const injectReviews = () => {
     return true;
 };
 
-const hydrateReviews = async () => {
+const initReviews = async () => {
+    let finalReviews = [];
+    const fallbackReviews = [
+      { name: 'Ing. Petr Svoboda', info: 'Praha, Čištění střechy', stars: 5, text: 'Hloubkové čištění krytiny a následná nano-ochrana dopadla na jedničku. Střecha vypadá jako nově položená a už se na ní nedrží mech.' },
+      { name: 'Jana Novotná', info: 'Brno, Čištění fasády', stars: 5, text: 'Fasáda prokoukla během jediného dne. Kluci byli moc šikovní, vše po sobě uklidili a výsledek je i po roce stále skvělý.' },
+      { name: 'Marek Kučera', info: 'Plzeň, Zámková dlažba', stars: 5, text: 'Čištění před firmou dopadlo výborně. Zmizela všechna léta usazená špína a olejové skvrny. Výborná komunikace.' },
+      { name: 'Lucie Marešová', info: 'Ostrava, Celková renovace', stars: 5, text: 'Oceňuji rychlost domluvy a zaměření zdarma. Cena byla férová a výsledek předčil naše očekávání. Určitě doporučuji!' },
+      { name: 'David Černý', info: 'Liberec, Fotovoltaika', stars: 5, text: 'Nano-ochrana fotovoltaiky nám reálně zvýšila účinnost panelů. Velmi profesionální přístup and čistá práce.' },
+      { name: 'Eva Králová', info: 'Hradec Králové, Čištění střechy', stars: 5, text: 'Skvělý výsledek. Po práci po sobě vše uklidili, dům vypadá skvěle a sousedi se už ptají na kontakt. Děkujeme!' },
+      { name: 'Martin Horák', info: 'Pardubice, Fasáda', stars: 5, text: 'Efekt nano-ochrany je neskutečný. Voda z fasády prostě stéká a fasáda se sama omývá deštěm. Úžasná technologie.' },
+      { name: 'Pavel Holub', info: 'České Budějovice, Terasa', stars: 5, text: 'Neskutečný rozdíl před a po. Terasa vypadá jako nově postavená a impregnace funguje skvěle.' },
+      { name: 'Kateřina Šťastná', info: 'Zlín, Fasáda', stars: 5, text: 'Rychlost, profesionalita a čistota. Rozhodně doporučuji všem, kdo chtějí mít dům jako nový.' },
+      { name: 'Jiří Procházka', info: 'Kladno, Střecha', stars: 5, text: 'Skvělá domluva, férová cena. Střecha po čištění vypadá perfektně a mech už nemá šanci.' },
+    ];
+
     try {
-        const { supabase } = await import('./supabase-config.js');
-        let data, error;
-        ({ data, error } = await supabase.from('external_reviews').select('*').eq('approved', true));
-        if (error || !data || data.length === 0) {
-            ({ data, error } = await supabase.from('reviews').select('*').eq('is_approved', true));
-        }
-        if (!error && data && data.length > 0) {
-            reviewsData = data.map(d => ({
+        const data = await reviewsPromise;
+        if (data && data.length > 0) {
+            finalReviews = data.map(d => ({
                 name: d.author || d.name || 'Zákazník',
                 info: d.location || d.city
                     ? `${d.city || ''}, ${d.service || d.source || 'firmy.cz'}`.trim().replace(/^,\s*/, '')
@@ -103,31 +116,34 @@ const hydrateReviews = async () => {
                 stars: d.rating || d.stars || 5,
                 text: d.content || d.text || ''
             })).filter(r => r.text);
-            const target = document.getElementById('reference');
-            if (target) {
-                target.dataset.injected = 'false';
-                injectReviews();
-                setTimeout(() => { target.style.opacity = '1'; }, 100);
-            }
+        } else {
+            finalReviews = fallbackReviews;
         }
     } catch (e) {
-        console.error('Reviews Sync Error:', e);
+        console.warn('Reviews Sync Error:', e);
+        finalReviews = fallbackReviews;
     }
-};
 
-const initReviews = () => {
-    if (injectReviews()) {
-        hydrateReviews();
-        return;
-    }
+    const runInjection = () => {
+        if (injectReviews(finalReviews)) {
+            const target = document.getElementById('reference');
+            if (target) {
+                setTimeout(() => { target.style.opacity = '1'; }, 100);
+            }
+            return true;
+        }
+        return false;
+    };
+
+    if (runInjection()) return;
+
     const observer = new MutationObserver(() => {
-        if (injectReviews()) {
+        if (runInjection()) {
             observer.disconnect();
-            hydrateReviews();
         }
     });
     observer.observe(document.body, { childList: true, subtree: true });
-    setTimeout(() => { observer.disconnect(); injectReviews(); hydrateReviews(); }, 5000);
+    setTimeout(() => { observer.disconnect(); runInjection(); }, 5000);
 };
 
 initReviews();

@@ -11,23 +11,51 @@ const revealObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1 });
 
-const syncHeroText = async (heading) => {
+// Start fetching hero title IMMEDIATELY on script execution (CTO Performance Hack)
+export const heroTitlePromise = (async () => {
   try {
     const { supabase } = await import('./supabase-config.js');
     const { data, error } = await supabase.from('site_config').select('value').eq('key', 'hero_title').single();
-    if (!error && data) {
-      heading.style.transition = 'opacity 0.3s ease';
-      heading.style.opacity = '0';
-      setTimeout(() => {
-        heading.innerHTML = data.value;
-        heading.style.opacity = '1';
-      }, 300);
+    if (error) throw error;
+    return data ? data.value : null;
+  } catch (e) {
+    console.warn('NANOfusion: Pre-fetch hero title failed:', e);
+    return null;
+  }
+})();
+
+const syncHeroText = async (heading) => {
+  try {
+    const titleVal = await heroTitlePromise;
+    const preloader = document.getElementById('preloader');
+    const isPreloaderVisible = preloader && !preloader.classList.contains('fade-out');
+
+    if (titleVal) {
+      if (isPreloaderVisible) {
+        // Under the preloader cover, apply immediately with NO opacity fade (0ms FOUC)
+        heading.innerHTML = titleVal;
+      } else {
+        // Apply with fade transition if the page is already visible
+        heading.style.transition = 'opacity 0.3s ease';
+        heading.style.opacity = '0';
+        setTimeout(() => {
+          heading.innerHTML = titleVal;
+          heading.style.opacity = '1';
+        }, 300);
+      }
       console.log('NANOfusion: Hero text synchronizován');
     } else {
       heading.innerHTML = 'Špičková péče o to,<br><span style="color: #f59e0b;">co jste usilovně vybudovali</span>';
     }
   } catch (e) {
     heading.innerHTML = 'Špičková péče o to,<br><span style="color: #f59e0b;">co jste usilovně vybudovali</span>';
+  } finally {
+    // Signal title loading completion to preloader
+    if (!window.nnf_preloaderState) window.nnf_preloaderState = {};
+    window.nnf_preloaderState.titleReady = true;
+    if (window.nnf_checkPreloader) {
+      window.nnf_checkPreloader();
+    }
   }
 };
 
@@ -584,20 +612,46 @@ const domObserver = new MutationObserver(() => {
   });
 });
 
+// Initialize preloader state for homepage vs subpages
+const isHomepage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname.endsWith('/');
+
+window.nnf_preloaderState = {
+  titleReady: !isHomepage,
+  mediaReady: !isHomepage
+};
+
+window.nnf_checkPreloader = () => {
+  if (window.nnf_preloaderState.titleReady && window.nnf_preloaderState.mediaReady) {
+    clearPreloader();
+  }
+};
+
 const clearPreloader = () => {
   const preloader = document.getElementById('preloader');
   if (preloader && !preloader.classList.contains('fade-out')) {
     preloader.classList.add('fade-out');
+    document.body.style.opacity = '1';
+    document.body.style.overflow = 'auto';
     setTimeout(() => { if(preloader.parentNode) preloader.remove(); }, 600);
+    console.log('NANOfusion: Preloader plynule odstraněn.');
+  } else {
+    document.body.style.opacity = '1';
+    document.body.style.overflow = 'auto';
   }
-  document.body.style.opacity = '1';
-  document.body.style.overflow = 'auto';
 };
 
 const initApp = () => {
   observeAll();
   domObserver.observe(document.body, { childList: true, subtree: true });
-  setTimeout(clearPreloader, 100); 
+  
+  // Safety timeout: 1.5s max for homepage, 100ms for subpages
+  const maxWait = isHomepage ? 1500 : 100;
+  setTimeout(() => {
+    if (document.getElementById('preloader')) {
+      console.log('NANOfusion: Preloader safety timeout reached');
+    }
+    clearPreloader();
+  }, maxWait);
 };
 
 if (document.readyState === 'loading') {

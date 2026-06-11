@@ -1,18 +1,34 @@
 // --- Jak to funguje Dynamic Sync ---
 // Tento skript přepisuje statickou sekci "Jak to funguje" daty z Admin panelu
+import { supabase } from './supabase-config.js';
 
-const syncHowItWorks = async () => {
+// Pre-fetch "how it works" data IMMEDIATELY on script load to save time (CTO Performance Hack)
+export const howItWorksPromise = (async () => {
   try {
-    const { supabase } = await import('./supabase-config.js');
-    
-    // Načti hlavičku a kroky paralelně
     const [sectionRes, stepsRes] = await Promise.all([
       supabase.from('site_sections').select('*').eq('section_key', 'how_it_works').single(),
       supabase.from('how_it_works_steps').select('*').order('order_index', { ascending: true })
     ]);
+    return { sectionRes, stepsRes };
+  } catch (e) {
+    console.warn('NANOfusion: Pre-fetch how it works failed:', e);
+    return null;
+  }
+})();
 
-    const section = document.getElementById('proces');
-    if (!section) return;
+const syncHowItWorks = async () => {
+  const section = document.getElementById('proces');
+  if (!section) return;
+
+  // Set opacity to 0 to prevent visual jump during replacement
+  section.style.opacity = '0';
+  section.style.transition = 'opacity 0.4s ease';
+
+  try {
+    const res = await howItWorksPromise;
+    if (!res) throw new Error('No pre-fetched data');
+
+    const { sectionRes, stepsRes } = res;
 
     // 1. Aktualizace hlavičky (pokud existuje v DB)
     if (!sectionRes.error && sectionRes.data) {
@@ -62,6 +78,9 @@ const syncHowItWorks = async () => {
     }
   } catch (e) {
     console.warn('HowItWorks Sync: Cloud data nedostupná.');
+  } finally {
+    // Reveal the section (either with new DB data or fallback HTML)
+    section.style.opacity = '1';
   }
 };
 

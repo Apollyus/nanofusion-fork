@@ -6,6 +6,33 @@
 
 import { supabase } from './supabase-config.js';
 
+// Start fetching hero media IMMEDIATELY on module load to save time (CTO Performance Hack)
+export const heroMediaPromise = (async () => {
+  try {
+    const { data, error } = await supabase
+      .from('hero_media')
+      .select('*')
+      .eq('is_active', true)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error) throw error;
+    return data;
+  } catch (e) {
+    console.warn('NANOfusion: Pre-fetch hero media failed:', e);
+    return null;
+  }
+})();
+
+// Helper to signal media loading completion to preloader
+const markMediaReady = () => {
+  if (!window.nnf_preloaderState) window.nnf_preloaderState = {};
+  window.nnf_preloaderState.mediaReady = true;
+  if (window.nnf_checkPreloader) {
+    window.nnf_checkPreloader();
+  }
+};
+
 // ============================================================
 // HERO MEDIA — načti aktivní hero médium z DB
 // ============================================================
@@ -15,6 +42,7 @@ export const loadHeroMedia = async () => {
     const heroSection = document.querySelector('section:first-of-type')
       || document.querySelector('.hero, #hero, [data-hero]');
     if (!heroSection) {
+      markMediaReady();
       return;
     }
 
@@ -24,16 +52,12 @@ export const loadHeroMedia = async () => {
     }
     heroSection.dataset.mediaLoaded = 'true';
 
-    const { data, error } = await supabase
-      .from('hero_media')
-      .select('*')
-      .eq('is_active', true)
-      .order('updated_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+    // Await the pre-fetched promise
+    const data = await heroMediaPromise;
 
-    if (error || !data) {
+    if (!data) {
       console.warn('NANOfusion: Žádné aktivní hero médium v DB');
+      markMediaReady();
       return;
     }
 
@@ -66,6 +90,7 @@ export const loadHeroMedia = async () => {
       if (existingMedia) existingMedia.parentElement.remove();
       
       const videoWrap = document.createElement('div');
+      videoWrap.className = 'video-wrap';
       videoWrap.style.cssText = 'position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;opacity:0;transition:opacity 1s cubic-bezier(0.4, 0, 0.2, 1);';
       
       const iframe = document.createElement('iframe');
@@ -83,7 +108,11 @@ export const loadHeroMedia = async () => {
         videoWrap.style.opacity = '0.55'; // Příjemná ambientní průhlednost pro text
         fadeOutExisting();
         console.log('NANOfusion: Hero YouTube video plynule zobrazeno:', videoId);
+        markMediaReady();
       };
+      
+      // Fallback
+      setTimeout(markMediaReady, 1500);
       
     } else if (isVideo) {
       const existingVideo = heroSection.querySelector('video');
@@ -96,6 +125,7 @@ export const loadHeroMedia = async () => {
           existingVideo.load();
           existingVideo.play().catch(() => {});
           existingVideo.style.opacity = '1';
+          markMediaReady();
         }, 50);
         console.log('NANOfusion: Hero video plynule nahrazeno z DB:', data.url);
       } else {
@@ -119,6 +149,7 @@ export const loadHeroMedia = async () => {
           videoWrap.style.opacity = '1';
           fadeOutExisting();
           console.log('NANOfusion: Hero HTML5 video plynule zobrazeno:', data.url);
+          markMediaReady();
         };
 
         // Fallback: Pokud by canplaythrough trval příliš dlouho
@@ -127,7 +158,8 @@ export const loadHeroMedia = async () => {
             videoWrap.style.opacity = '1';
             fadeOutExisting();
           }
-        }, 2000); // Rychlejší fallback
+          markMediaReady();
+        }, 1200);
       }
     } else if (data.type === 'image') {
       const existingMedia = heroSection.querySelector('video, iframe');
@@ -139,16 +171,32 @@ export const loadHeroMedia = async () => {
         img.alt = 'NANOfusion hero';
         img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0;transition:opacity 1s ease;';
         wrap?.appendChild(img);
-        setTimeout(() => { img.style.opacity = '1'; }, 50);
+        img.onload = () => {
+          img.style.opacity = '1';
+          markMediaReady();
+        };
+        setTimeout(() => { img.style.opacity = '1'; markMediaReady(); }, 500);
       } else {
-        heroSection.style.backgroundImage = `url('${data.url}')`;
-        heroSection.style.backgroundSize = 'cover';
-        heroSection.style.backgroundPosition = 'center';
+        const tempImg = new Image();
+        tempImg.src = data.url;
+        tempImg.onload = () => {
+          heroSection.style.backgroundImage = `url('${data.url}')`;
+          heroSection.style.backgroundSize = 'cover';
+          heroSection.style.backgroundPosition = 'center';
+          markMediaReady();
+        };
+        tempImg.onerror = () => {
+          markMediaReady();
+        };
+        setTimeout(markMediaReady, 1000);
       }
       console.log('NANOfusion: Hero obrázek načten z DB:', data.url);
+    } else {
+      markMediaReady();
     }
   } catch (e) {
     console.warn('Hero media load failed:', e);
+    markMediaReady();
   }
 };
 

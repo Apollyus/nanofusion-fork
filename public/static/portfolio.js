@@ -1,4 +1,22 @@
 /* Dynamic Portfolio / Realizations for NANOfusion with Autoplay & Arrows */
+import { supabase } from './supabase-config.js';
+
+// Pre-fetch realizations data IMMEDIATELY on script load to save time (CTO Performance Hack)
+export const portfolioPromise = (async () => {
+  try {
+    const { data, error } = await supabase
+      .from('realizations')
+      .select('*, realization_photos(id, url, order_index, caption)')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  } catch (e) {
+    console.warn('NANOfusion: Pre-fetch realizations failed:', e);
+    return null;
+  }
+})();
 
 const injectPortfolio = async () => {
     if (document.getElementById('realizace')) return; // Zabráníme dvojité inicializaci
@@ -19,8 +37,10 @@ const injectPortfolio = async () => {
         root.appendChild(portfolioSection);
     }
 
-    // Hardcoded záloha
-    let projectsData = [
+    let projectsData = [];
+
+    // Default static fallback data (only used if Supabase load fails)
+    const fallbackProjects = [
         {
             id: 'default-1',
             title: 'Čištění střechy RD, Praha',
@@ -149,14 +169,8 @@ const injectPortfolio = async () => {
 
     // Hydratace z Supabase
     try {
-        const { supabase } = await import('./supabase-config.js');
-        const { data, error } = await supabase
-            .from('realizations')
-            .select('*, realization_photos(id, url, order_index, caption)')
-            .eq('is_published', true)
-            .order('created_at', { ascending: false });
-
-        if (!error && data && data.length > 0) {
+        const data = await portfolioPromise;
+        if (data && data.length > 0) {
             projectsData = data.map(r => ({
                 id: r.id,
                 title: r.title || 'Realizace',
@@ -166,13 +180,12 @@ const injectPortfolio = async () => {
                 description: r.description || '',
                 photos: (r.realization_photos || []).sort((a, b) => a.order_index - b.order_index),
             }));
-            // Re-render with live data
-            render();
-            // Trigger routing again after data is loaded
-            handleRouting();
+        } else {
+            projectsData = fallbackProjects;
         }
     } catch (e) {
-        console.warn('Portfolio Sync: Cloud data nedostupná.');
+        console.warn('Portfolio Sync: Cloud data nedostupná, používám fallback.');
+        projectsData = fallbackProjects;
     }
 
     const render = () => {

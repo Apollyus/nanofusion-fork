@@ -24,7 +24,7 @@ import {
   deleteInquiry,
 } from './actions'
 
-type Inquiry = Tables<'inquiries'>
+type Inquiry = Tables<'inquiries'> & { original_photo_url?: string }
 
 const STATUS_LABELS: Record<string, string> = {
   new: 'Nová',
@@ -103,7 +103,7 @@ export function InquiriesClient({ initialInquiries }: InquiriesClientProps) {
   const handleStatusChange = async (id: string, status: string) => {
     setUpdatingStatus(true)
     try {
-      await updateInquiryStatus(id, status)
+      await updateInquiryStatus(id, status, selectedInquiry?.source || undefined)
       toast.success('Stav poptávky byl aktualizován')
       if (selectedInquiry?.id === id) {
         setSelectedInquiry({ ...selectedInquiry, status: status as Inquiry['status'] })
@@ -119,7 +119,7 @@ export function InquiriesClient({ initialInquiries }: InquiriesClientProps) {
     if (!selectedInquiry) return
     setSavingNotes(true)
     try {
-      await updateInquiryNotes(selectedInquiry.id, notes)
+      await updateInquiryNotes(selectedInquiry.id, notes, selectedInquiry.source || undefined)
       toast.success('Poznámky byly uloženy')
     } catch {
       toast.error('Nepodařilo se uložit poznámky')
@@ -130,8 +130,9 @@ export function InquiriesClient({ initialInquiries }: InquiriesClientProps) {
 
   const handleDelete = async (id: string) => {
     setDeleting(true)
+    const inq = inquiries.find((i) => i.id === id)
     try {
-      await deleteInquiry(id)
+      await deleteInquiry(id, inq?.source || undefined)
       toast.success('Poptávka byla smazána')
       setDeleteConfirm(null)
       if (selectedInquiry?.id === id) setSelectedInquiry(null)
@@ -304,6 +305,7 @@ export function InquiriesClient({ initialInquiries }: InquiriesClientProps) {
                         <span className="text-xs font-medium px-2 py-1 rounded-md bg-slate-100 text-slate-600">
                            {inq.source === 'kalkulacka' ? 'Kalkulačka' : 
                             inq.source === 'chat' ? 'Nanobot' : 
+                            inq.source === 'ai_analyzer' ? 'AI Analýzátor' :
                             inq.source || 'Web'}
                         </span>
                       </td>
@@ -540,6 +542,24 @@ export function InquiriesClient({ initialInquiries }: InquiriesClientProps) {
                     }}
                   >
                     {selectedInquiry.message}
+                  </div>
+                </div>
+              )}
+
+              {selectedInquiry.original_photo_url && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>
+                    Fotografie z AI Analýzy
+                  </p>
+                  <div 
+                    className="relative w-full h-80 rounded-2xl overflow-hidden border bg-slate-50 flex items-center justify-center" 
+                    style={{ borderColor: 'var(--border)' }}
+                  >
+                    <img
+                      src={selectedInquiry.original_photo_url}
+                      alt="Analyzovaný povrch"
+                      className="max-h-full max-w-full object-contain"
+                    />
                   </div>
                 </div>
               )}

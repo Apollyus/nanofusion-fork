@@ -31,6 +31,18 @@ footer img {
   width: auto !important;
 }
 
+/* surgical-fix: hide legacy logos until they are patched with the long version to avoid flashing */
+header img[src*="logo.jpg"], 
+header img[src*="logo-nav.jpg"], 
+footer img[src*="logo_dark.jpg"] {
+  opacity: 0 !important;
+}
+header img[data-patched="true"], 
+footer img[data-patched="true"] {
+  opacity: 1 !important;
+  transition: opacity 0.25s ease-out;
+}
+
 header nav a.active-link {
   color: #f59e0b !important;
 }
