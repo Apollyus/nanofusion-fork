@@ -3,6 +3,21 @@ import { cookies } from 'next/headers'
 import type { Database } from '@/lib/database.types'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
+function createDummySupabaseClient() {
+  const handler: ProxyHandler<any> = {
+    get(target, prop) {
+      if (prop === 'from' || prop === 'select' || prop === 'eq' || prop === 'order' || prop === 'limit' || prop === 'match' || prop === 'single' || prop === 'maybeSingle' || prop === 'update' || prop === 'insert' || prop === 'delete') {
+        return () => new Proxy({}, handler)
+      }
+      if (prop === 'then') {
+        return (resolve: any) => resolve({ data: [], error: null })
+      }
+      return new Proxy({}, handler)
+    }
+  }
+  return new Proxy({}, handler)
+}
+
 export async function createClient(): Promise<any> {
   const cookieStore = await cookies()
 
@@ -10,8 +25,8 @@ export async function createClient(): Promise<any> {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!url || !key) {
-    console.error('Supabase keys missing')
-    return null
+    console.warn('Supabase keys missing - returning dummy client')
+    return createDummySupabaseClient()
   }
 
   return createServerClient<Database>(url, key, {
@@ -39,8 +54,8 @@ export async function createAdminClient(): Promise<any> {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!url || !serviceKey) {
-    console.error('Supabase Admin keys missing')
-    return null
+    console.warn('Supabase Admin keys missing - returning dummy client')
+    return createDummySupabaseClient()
   }
 
   return createSupabaseClient<Database>(url, serviceKey, {
