@@ -3,11 +3,11 @@ import fs from 'fs';
 import path from 'path';
 
 process.on('unhandledRejection', (reason, promise) => {
-    console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+    fs.writeSync(1, `❌ Unhandled Rejection: ${reason && (reason.stack || reason.message || reason)}\n`);
     process.exit(1);
 });
 process.on('uncaughtException', (err) => {
-    console.error('❌ Uncaught Exception:', err);
+    fs.writeSync(1, `❌ Uncaught Exception: ${err && (err.stack || err.message || err)}\n`);
     process.exit(1);
 });
 
@@ -251,7 +251,7 @@ async function syncContent() {
         console.log('✨ NANOfusion Sync Complete!');
 
     } catch (err) {
-        console.error('❌ Sync failed:', err);
+        fs.writeSync(1, `❌ Sync failed: ${err && (err.stack || err.message || err)}\n`);
         process.exit(1);
     }
 }
