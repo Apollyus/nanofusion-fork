@@ -4,7 +4,7 @@
   "description": "Editable local clone of NANO Conversion Hub",
   "scripts": {
     "dev": "vite --host --port 5173",
-    "build": "node sync-content.js && mkdir -p dist && cp -rv public/assets public/static dist/ && cp -rv index.html o-nas.html faq dist/ && cd admin-panel && npm install && npm run build",
+    "build": "node sync-content.js && mkdir -p dist && cp -rv public/assets public/static dist/ && cp -rv index.html o-nas.html faq dist/ && cd admin-panel && npm install --legacy-peer-deps && npm run build",
     "preview": "vite preview",
     "format": "prettier --write \"index.html\" \"assets/*.js\" \"assets/*.css\" \"manifest.json\""
   },
