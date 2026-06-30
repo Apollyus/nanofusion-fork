@@ -25,15 +25,7 @@ window.nnf_optimizeImage = (url, width = 800) => {
     return normalized;
   }
   
-  const isLocalhost = window.location.hostname === 'localhost' || 
-                      window.location.hostname === '127.0.0.1';
-                      
-  if (isLocalhost) {
-    // Speed up local development as well using Cloudflare-backed wsrv.nl image resizer
-    return `https://wsrv.nl/?url=${encodeURIComponent(normalized)}&w=${width}&q=80&output=webp`;
-  }
-  
-  // Production: Vercel native image optimization
-  return `/_vercel/image?url=${encodeURIComponent(normalized)}&w=${width}&q=80`;
+  // Use Cloudflare-backed wsrv.nl image resizer for maximum performance and compatibility
+  return `https://wsrv.nl/?url=${encodeURIComponent(normalized)}&w=${width}&q=80&output=webp`;
 };
 

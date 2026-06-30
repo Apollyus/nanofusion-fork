@@ -102,6 +102,11 @@ export const preloadAboutUsData = async () => {
 // MODAL RENDERER & INTERACTIVE LOGIC
 // ============================================================
 export const openAboutUsModal = async () => {
+  // Update URL to /o-nas for SEO / GEO routing consistency
+  if (typeof window !== 'undefined' && !window.location.pathname.includes('o-nas')) {
+    window.history.pushState({ modal: 'about' }, '', '/o-nas');
+  }
+
   // 1. Zobrazíme transparentní skleněné pozadí (web zůstane v pozadí plně vidět)
   let overlay = document.getElementById('about-us-modal-overlay');
   if (!overlay) {
