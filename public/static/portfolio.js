@@ -70,6 +70,41 @@ const injectPortfolio = async () => {
         },
     ];
 
+    window.nnf_switchPortfolioPhoto = (idx) => {
+        const photos = window.nnf_currentPortfolioPhotos || [];
+        if (photos.length === 0) return;
+        
+        const newIndex = (idx + photos.length) % photos.length;
+        window.nnf_currentPortfolioIndex = newIndex;
+        
+        const photo = photos[newIndex];
+        const imgEl = document.getElementById('modal-main-img');
+        if (imgEl) {
+            imgEl.src = window.nnf_optimizeImage(photo.url, 1080);
+        }
+        
+        const thumbsContainer = document.getElementById('modal-gallery-thumbs');
+        if (thumbsContainer) {
+            Array.from(thumbsContainer.children).forEach((thumbDiv, i) => {
+                if (i === newIndex) {
+                    thumbDiv.style.borderColor = '#F59E0B';
+                } else {
+                    thumbDiv.style.borderColor = 'transparent';
+                }
+            });
+        }
+    };
+
+    window.nnf_prevPortfolioPhoto = (e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        window.nnf_switchPortfolioPhoto(window.nnf_currentPortfolioIndex - 1);
+    };
+
+    window.nnf_nextPortfolioPhoto = (e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        window.nnf_switchPortfolioPhoto(window.nnf_currentPortfolioIndex + 1);
+    };
+
     const openCaseStudy = (p) => {
         let modal = document.getElementById('case-study-modal');
         if (!modal) {
@@ -79,15 +114,18 @@ const injectPortfolio = async () => {
             document.body.appendChild(modal);
         }
 
-        const mainPhoto = p.photos?.[0]?.url || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800';
+        const mainPhoto = window.nnf_optimizeImage(p.photos?.[0]?.url || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800', 1080);
         
+        window.nnf_currentPortfolioPhotos = p.photos || [];
+        window.nnf_currentPortfolioIndex = 0;
+
         // Gallery logic
         const galleryHtml = p.photos && p.photos.length > 1
             ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.75rem;margin-top:1.5rem;" id="modal-gallery-thumbs">
                 ${p.photos.map((ph, idx) => `
                     <div style="position:relative;aspect-ratio:4/3;border-radius:0.75rem;overflow:hidden;cursor:pointer;border:2px solid ${idx === 0 ? '#F59E0B' : 'transparent'};transition:all 0.2s;" 
-                         onclick="document.getElementById('modal-main-img').src='${ph.url}'; Array.from(this.parentElement.children).forEach(el=>el.style.borderColor='transparent'); this.style.borderColor='#F59E0B'">
-                        <img src="${ph.url}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+                         onclick="window.nnf_switchPortfolioPhoto(${idx})">
+                        <img src="${window.nnf_optimizeImage(ph.url, 256)}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
                     </div>`).join('')}
                </div>`
             : '';
@@ -96,7 +134,18 @@ const injectPortfolio = async () => {
             <div class="modal-content" style="max-width:960px;max-height:90vh;overflow-y:auto;">
                 <button class="close-modal-btn" onclick="window.location.hash = 'realizace'">&times;</button>
                 <div style="padding:2.5rem;">
-                    <div style="position:relative;margin-bottom:1.5rem;border-radius:1.5rem;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.1);">
+                    <div style="position:relative;margin-bottom:1.5rem;border-radius:1.5rem;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.1);" id="portfolio-modal-media-viewport">
+                        
+                        <!-- Navigation arrows inside the image container -->
+                        ${p.photos && p.photos.length > 1 ? `
+                          <button onclick="window.nnf_prevPortfolioPhoto(event)" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 50%; background: rgba(15, 23, 42, 0.6); border: none; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(245, 158, 11, 0.9)'" onmouseout="this.style.background='rgba(15, 23, 42, 0.6)'">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+                          </button>
+                          <button onclick="window.nnf_nextPortfolioPhoto(event)" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 50%; background: rgba(15, 23, 42, 0.6); border: none; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(245, 158, 11, 0.9)'" onmouseout="this.style.background='rgba(15, 23, 42, 0.6)'">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+                          </button>
+                        ` : ''}
+                        
                         <img id="modal-main-img" src="${mainPhoto}" alt="${p.title}" style="width:100%;height:450px;object-fit:cover;cursor:zoom-in;" onclick="window.open(this.src, '_blank')">
                     </div>
                     
@@ -194,7 +243,7 @@ const injectPortfolio = async () => {
         portfolioSection.style.transition = 'opacity 0.6s ease-out';
 
         const generateCards = (list) => list.map(p => {
-            const img = p.photos?.[0]?.url || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800';
+            const img = window.nnf_optimizeImage(p.photos?.[0]?.url || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800', 640);
             return `
             <a href="#realizace/${p.id}" class="portfolio-card-modern" style="text-decoration: none; display: block;">
                 <div class="portfolio-img-wrap">

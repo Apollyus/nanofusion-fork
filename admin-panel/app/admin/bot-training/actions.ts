@@ -49,12 +49,15 @@ export async function uploadBotDocument(formData: FormData) {
     .from('bot-documents')
     .getPublicUrl(filePath)
 
-  // 2. Parse PDF using require to avoid build issues
-  const pdf = require('pdf-parse')
+  // 2. Parse PDF using PDFParse class from Mehmet Kozan's pdf-parse package
+  const { PDFParse } = require('pdf-parse')
   const arrayBuffer = await file.arrayBuffer()
   const buffer = Buffer.from(arrayBuffer)
-  const pdfData = await pdf(buffer)
+  const parser = new PDFParse({ data: buffer })
+  await parser.load()
+  const pdfData = await parser.getText()
   const extractedText = pdfData.text
+  await parser.destroy()
 
   // 3. Save to bot_knowledge as a special entry
   const { error: kbError } = await (supabase.from('bot_knowledge') as any).insert([{

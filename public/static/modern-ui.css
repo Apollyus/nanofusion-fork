@@ -1047,3 +1047,103 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+/* STRV: Blog Post Rich Text Styling inside Modals */
+.blog-content-html p {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+.blog-content-html p:last-child {
+  margin-bottom: 0;
+}
+.blog-content-html h1,
+.blog-content-html h2,
+.blog-content-html h3 {
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+.blog-content-html ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.blog-content-html ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+/* STRV: About Us Rich Text Styling inside Modals */
+.about-modal-desc p {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+.about-modal-desc p:last-child {
+  margin-bottom: 0;
+}
+.about-modal-desc h1,
+.about-modal-desc h2,
+.about-modal-desc h3 {
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+.about-modal-desc ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.about-modal-desc ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+/* STRV: About Us dark box floated layout (desktop text wrapping) */
+@media (min-width: 769px) {
+  .about-modal-accent-box {
+    float: right;
+    width: 380px;
+    margin-left: 2.5rem;
+    margin-bottom: 2rem;
+  }
+}
+@media (max-width: 768px) {
+  .about-modal-accent-box {
+    float: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-bottom: 2rem !important;
+  }
+}
+
+/* STRV: Modal gallery arrows responsiveness */
+@media (max-width: 768px) {
+  #modal-media-viewport button,
+  #portfolio-modal-media-viewport button {
+    width: 38px !important;
+    height: 38px !important;
+    left: 10px !important;
+  }
+  #modal-media-viewport button + button,
+  #portfolio-modal-media-viewport button + button {
+    left: auto !important;
+    right: 10px !important;
+  }
+  #modal-media-viewport button svg,
+  #portfolio-modal-media-viewport button svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+/* STRV: Page layout rendering optimizations (Core Web Vitals) */
+#sluzby, #galerie, #realizace, #faq, #reference {
+  content-visibility: auto;
+  contain-intrinsic-size: 600px;
+}
+
+
+

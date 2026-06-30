@@ -7,3 +7,33 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Also attach to window for global access (backward compatibility / debugging)
 window.supabase = supabase;
+
+// STRV: Global premium image optimization helper
+window.nnf_optimizeImage = (url, width = 800) => {
+  if (!url) return '';
+  
+  // Normalize
+  let normalized = url;
+  if (!url.startsWith('http') && !url.startsWith('//')) {
+    normalized = `${supabaseUrl}/storage/v1/object/public/${url}`;
+  } else if (url.startsWith('//')) {
+    normalized = 'https:' + url;
+  }
+  
+  // Do not transform SVGs or external domains (except Supabase)
+  if (normalized.toLowerCase().endsWith('.svg') || !normalized.includes('supabase.co')) {
+    return normalized;
+  }
+  
+  const isLocalhost = window.location.hostname === 'localhost' || 
+                      window.location.hostname === '127.0.0.1';
+                      
+  if (isLocalhost) {
+    // Speed up local development as well using Cloudflare-backed wsrv.nl image resizer
+    return `https://wsrv.nl/?url=${encodeURIComponent(normalized)}&w=${width}&q=80&output=webp`;
+  }
+  
+  // Production: Vercel native image optimization
+  return `/_vercel/image?url=${encodeURIComponent(normalized)}&w=${width}&q=80`;
+};
+

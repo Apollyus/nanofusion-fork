@@ -413,30 +413,62 @@ const renderGalleryContent = () => {
 };
 
 window.nnf_switchModalMedia = (url, isVideo = false, youtubeId = null) => {
-  const container = document.getElementById('modal-media-viewport');
+  const container = document.getElementById('modal-media-content');
+  const viewport = document.getElementById('modal-media-viewport');
   if (!container) return;
 
   // Visual feedback: border on thumbnails
   const thumbs = document.querySelectorAll('.modal-thumb-item');
   thumbs.forEach(t => {
-    t.style.borderColor = (t.dataset.photoUrl === url) ? '#f59e0b' : 'transparent';
+    // Check if thumbnail matches youtube video or photo url
+    const isYoutubeThumb = t.getAttribute('onclick')?.includes('true');
+    if (isVideo && youtubeId && isYoutubeThumb) {
+      t.style.borderColor = '#f59e0b';
+    } else if (!isVideo && t.dataset.photoUrl === url) {
+      t.style.borderColor = '#f59e0b';
+    } else {
+      t.style.borderColor = 'transparent';
+    }
   });
 
   if (isVideo && youtubeId) {
     container.innerHTML = `
-      <div style="aspect-ratio: 16/9; width: 100%;">
+      <div style="aspect-ratio: 16/9; width: 100%; height: 100%;">
         <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${youtubeId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>`;
   } else {
     container.innerHTML = `
-      <div style="height:500px; position:relative;">
-        <img src="${url}" style="width:100%; height:100%; object-fit:cover; animation: fadeIn 0.5s ease;">
-      </div>`;
+      <img src="${window.nnf_optimizeImage(url, 1080)}" style="width:100%; height:100%; object-fit:cover; animation: fadeIn 0.5s ease;">`;
+  }
+
+  // Update current index based on select
+  if (window.nnf_currentGalleryMedia) {
+    window.nnf_currentGalleryIndex = window.nnf_currentGalleryMedia.findIndex(m => 
+      (isVideo && m.isVideo && m.youtubeId === youtubeId) || (!isVideo && !m.isVideo && m.url === url)
+    );
   }
   
   // Scroll to top of modal if needed
-  const modalBody = container.closest('div[style*="overflow-y:auto"]');
-  if (modalBody) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+  if (viewport) {
+    const modalBody = viewport.closest('div[style*="overflow-y:auto"]');
+    if (modalBody) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
+
+window.nnf_prevGalleryMedia = (e) => {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  if (!window.nnf_currentGalleryMedia || window.nnf_currentGalleryMedia.length <= 1) return;
+  window.nnf_currentGalleryIndex = (window.nnf_currentGalleryIndex - 1 + window.nnf_currentGalleryMedia.length) % window.nnf_currentGalleryMedia.length;
+  const item = window.nnf_currentGalleryMedia[window.nnf_currentGalleryIndex];
+  window.nnf_switchModalMedia(item.url, item.isVideo, item.youtubeId);
+};
+
+window.nnf_nextGalleryMedia = (e) => {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  if (!window.nnf_currentGalleryMedia || window.nnf_currentGalleryMedia.length <= 1) return;
+  window.nnf_currentGalleryIndex = (window.nnf_currentGalleryIndex + 1) % window.nnf_currentGalleryMedia.length;
+  const item = window.nnf_currentGalleryMedia[window.nnf_currentGalleryIndex];
+  window.nnf_switchModalMedia(item.url, item.isVideo, item.youtubeId);
 };
 
 window.nnf_openGallery = (id) => {
@@ -452,22 +484,50 @@ window.nnf_openGallery = (id) => {
   }
 
   const photos = item.realization_photos || [];
-  const mainImg = photos[0]?.url || item.image_url || 'https://images.unsplash.com/photo-1635339001328-8007ebfd4a60?w=1200';
+  const mainImg = window.nnf_optimizeImage(photos[0]?.url || item.image_url || 'https://images.unsplash.com/photo-1635339001328-8007ebfd4a60?w=1200', 1080);
+
+  // Build list of all media items in correct index order
+  const mediaItems = [];
+  if (item.youtube_id) {
+    mediaItems.push({ isVideo: true, youtubeId: item.youtube_id, url: '' });
+  }
+  if (photos.length > 0) {
+    photos.forEach(p => {
+      mediaItems.push({ isVideo: false, youtubeId: null, url: p.url });
+    });
+  } else if (item.image_url) {
+    mediaItems.push({ isVideo: false, youtubeId: null, url: item.image_url });
+  }
+
+  window.nnf_currentGalleryMedia = mediaItems;
+  window.nnf_currentGalleryIndex = 0;
 
   overlay.innerHTML = `
     <div style="background:white; width:100%; max-width:1000px; max-height:95vh; border-radius:32px; overflow:hidden; display:flex; flex-direction:column; position:relative; box-shadow:0 30px 100px rgba(0,0,0,0.5); z-index:10000000;">
       <button onclick="document.getElementById('gallery-modal-overlay').style.display='none'" style="position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.9); border:none; width:44px; height:44px; border-radius:50%; cursor:pointer; font-size:24px; z-index:101; font-weight:bold; box-shadow:0 4px 15px rgba(0,0,0,0.1);">&times;</button>
       
       <div style="flex: 1; overflow-y:auto; padding-bottom: 40px;">
-        <div id="modal-media-viewport" style="background: #000;">
-          ${item.youtube_id 
-            ? `<div style="aspect-ratio: 16/9; width: 100%;">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${item.youtube_id}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-               </div>`
-            : `<div style="height:500px; position:relative;">
-                <img src="${mainImg}" style="width:100%; height:100%; object-fit:cover;">
-               </div>`
-          }
+        <div id="modal-media-viewport" style="background: #000; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          
+          <!-- Navigation arrows inside the image container -->
+          ${mediaItems.length > 1 ? `
+            <button onclick="window.nnf_prevGalleryMedia(event)" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 50%; background: rgba(15, 23, 42, 0.6); border: none; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(245, 158, 11, 0.9)'" onmouseout="this.style.background='rgba(15, 23, 42, 0.6)'">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+            </button>
+            <button onclick="window.nnf_nextGalleryMedia(event)" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 50%; background: rgba(15, 23, 42, 0.6); border: none; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(245, 158, 11, 0.9)'" onmouseout="this.style.background='rgba(15, 23, 42, 0.6)'">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+            </button>
+          ` : ''}
+
+          <!-- Media content container -->
+          <div id="modal-media-content" style="height:500px; width: 100%; display: block; overflow: hidden; position: relative;">
+            ${item.youtube_id 
+              ? `<div style="aspect-ratio: 16/9; width: 100%; height: 100%;">
+                  <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${item.youtube_id}?autoplay=1" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen style="border:0;"></iframe>
+                 </div>`
+              : `<img src="${mainImg}" style="width:100%; height:100%; object-fit:cover;">`
+            }
+          </div>
         </div>
         
         <div style="padding:40px; background:white;">
@@ -481,14 +541,14 @@ window.nnf_openGallery = (id) => {
               </div>
             </div>
           </div>
-
+ 
           <div style="font-size:17px; line-height:1.7; color:#334155; margin-bottom:30px;">${item.description || ''}</div>
           
           <div style="margin-bottom: 40px;">
             <h4 style="font-size:12px; font-weight:800; color:#94a3b8; text-transform:uppercase; margin-bottom:16px; letter-spacing:0.1em;">Galerie & Video</h4>
             <div id="modal-thumbnails-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:12px;">
               ${item.youtube_id ? `
-                <div onclick="window.nnf_switchModalMedia('', true, '${item.youtube_id}')" style="aspect-ratio:1; border-radius:12px; overflow:hidden; cursor:pointer; border:2px solid #f59e0b; position:relative;">
+                <div onclick="window.nnf_switchModalMedia('', true, '${item.youtube_id}')" style="aspect-ratio:1; border-radius:12px; overflow:hidden; cursor:pointer; border:2px solid #f59e0b; position:relative;" class="modal-thumb-item">
                   <img src="https://img.youtube.com/vi/${item.youtube_id}/0.jpg" style="width:100%; height:100%; object-fit:cover; opacity:0.6;">
                   <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:white;">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -497,12 +557,12 @@ window.nnf_openGallery = (id) => {
               ` : ''}
               ${photos.map((p, idx) => `
                 <div onclick="window.nnf_switchModalMedia('${p.url}')" data-photo-url="${p.url}" style="aspect-ratio:1; border-radius:12px; overflow:hidden; cursor:pointer; border:2px solid ${idx === 0 && !item.youtube_id ? '#f59e0b' : 'transparent'}; transition:all 0.2s;" class="modal-thumb-item">
-                  <img src="${p.url}" style="width:100%; height:100%; object-fit:cover;">
+                  <img src="${window.nnf_optimizeImage(p.url, 256)}" style="width:100%; height:100%; object-fit:cover;">
                 </div>
               `).join('')}
             </div>
           </div>
-
+ 
           <div style="background:#0f172a; padding:32px; border-radius:24px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap: wrap;">
             <div>
               <div style="font-weight:800; color:white; font-size:20px;">Líbí se vám tento výsledek?</div>

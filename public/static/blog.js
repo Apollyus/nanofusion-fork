@@ -60,12 +60,12 @@ const openBlogDetail = (post) => {
         <div style="background:white; width:100%; max-width:800px; max-height:90vh; border-radius:32px; overflow-y:auto; position:relative; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
             <button onclick="document.getElementById('blog-modal-overlay').style.display='none'" style="position:sticky; top:20px; right:20px; float:right; background:#f1f5f9; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:20px; z-index:10; font-weight:bold;">&times;</button>
             <div style="height:350px; overflow:hidden;">
-                <img src="${post.image}" style="width:100%; height:100%; object-fit:cover;">
+                <img src="${window.nnf_optimizeImage(post.image, 1080)}" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div style="padding:40px;">
                 <div style="color:#f59e0b; font-weight:800; text-transform:uppercase; font-size:12px; margin-bottom:12px; letter-spacing:0.1em;">Článek • ${post.date}</div>
                 <h2 style="font-size:32px; font-weight:800; color:#0f172a; line-height:1.2; margin-bottom:24px;">${post.title}</h2>
-                <div style="font-size:18px; line-height:1.7; color:#475569; white-space:pre-wrap;">${post.content || post.summary}</div>
+                <div class="blog-content-html" style="font-size:18px; line-height:1.7; color:#475569;">${post.content || post.summary}</div>
                 
                 <div style="margin-top:40px; padding-top:30px; border-top:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
                     <div style="font-weight:700; color:#1e293b;">Zaujal vás článek?</div>
@@ -139,7 +139,7 @@ const injectBlog = async () => {
                                 onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.05)';"
                             >
                                 <div style="height: 240px; overflow: hidden;">
-                                    <img src="${post.image}" alt="${post.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <img src="${window.nnf_optimizeImage(post.image, 640)}" alt="${post.title}" style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
                                 <div style="padding: 2rem;">
                                     <div style="font-size: 0.75rem; color: #f59e0b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">AKTUALITA • ${post.date}</div>

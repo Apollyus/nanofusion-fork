@@ -243,7 +243,7 @@ export const loadGalleryFromDB = async () => {
           <div class="gallery-item-v" style="flex:0 0 450px;background:#0f172a;border-radius:2rem;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.1);cursor:pointer;transition:transform 0.3s ease;position:relative;"
                onclick="if(window.__nnfLightboxAlbums && window.__nnfLightboxAlbums['${item.id}']) window.__nnfLightboxAlbums['${item.id}'].open('${cover.id}'); else console.log('Lightbox neni ready pro album ${item.id}');">
             <div style="height:250px;position:relative;overflow:hidden;pointer-events:none;">
-              <img src="${cover.url}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.45s ease;" loading="lazy">
+              <img src="${window.nnf_optimizeImage(cover.url, 640)}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.45s ease;" loading="lazy">
               <div style="position:absolute;top:16px;left:16px;background:rgba(15,23,42,0.85);backdrop-filter:blur(4px);border-radius:8px;padding:6px 12px;display:flex;align-items:center;gap:6px;">
                 <span style="color:white;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Album (${albumPhotos.length})</span>
               </div>
@@ -277,7 +277,7 @@ export const loadGalleryFromDB = async () => {
             <div class="gallery-item-v" style="flex:0 0 450px;background:#0f172a;border-radius:2rem;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.1);cursor:pointer;transition:transform 0.3s ease;position:relative;"
                  onclick="if(window.__nnfLightboxStandalone) window.__nnfLightboxStandalone.open('${item.id}')">
               <div style="height:250px;position:relative;overflow:hidden;pointer-events:none;">
-                <img src="${item.url}" alt="${item.caption || 'Galerie'}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.45s ease;" loading="lazy">
+                <img src="${window.nnf_optimizeImage(item.url, 640)}" alt="${item.caption || 'Galerie'}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.45s ease;" loading="lazy">
               </div>
               <div style="padding:2rem;pointer-events:none;">
                 ${item.caption ? `<h3 style="color:white;font-weight:800;font-size:1.1rem;">${item.caption}</h3>` : ''}
@@ -353,7 +353,7 @@ const _createLightboxInstance = (items, instanceId) => {
       const it  = list[cur];
       const img = document.getElementById(`nnf-lb-img-${instanceId}`);
       img.style.opacity = '0';
-      setTimeout(() => { img.src = it.url; img.alt = it.caption || ''; img.style.opacity = '1'; }, 160);
+      setTimeout(() => { img.src = window.nnf_optimizeImage(it.url, 1600); img.alt = it.caption || ''; img.style.opacity = '1'; }, 160);
       document.getElementById(`nnf-lb-cap-${instanceId}`).textContent = it.caption || '';
       document.getElementById(`nnf-lb-cnt-${instanceId}`).textContent = list.length > 1 ? `${cur + 1} / ${list.length}` : '';
       const multi = list.length > 1;

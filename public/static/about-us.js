@@ -146,7 +146,7 @@ export const openAboutUsModal = async () => {
     ? certs.map(c => `
         <div class="cert-card" onclick="window.nnf_openCertDetail('${c.id}')" style="background:#ffffff;border-radius:1.5rem;border:1px solid #e2e8f0;overflow:hidden;cursor:pointer;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);box-shadow:0 4px 12px rgba(0,0,0,0.03);position:relative;">
           <div style="height:150px;position:relative;overflow:hidden;background:#f8fafc;">
-            <img src="${c.imageUrl}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;" class="cert-img-hover" loading="lazy">
+            <img src="${window.nnf_optimizeImage(c.imageUrl, 450)}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;" class="cert-img-hover" loading="lazy">
             <div style="position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 60%);"></div>
             <span style="position:absolute;bottom:12px;left:12px;background:rgba(245,158,11,0.95);color:white;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;">Certifikát</span>
           </div>
@@ -172,20 +172,10 @@ export const openAboutUsModal = async () => {
           <div class="about-modal-subtitle" style="font-size:1.15rem;font-weight:600;color:#64748b;line-height:1.4;">${subtitle}</div>
         </div>
 
-        <!-- Mřížka obsahu -->
-        <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:50px;margin-bottom:4rem;" class="about-grid-responsive">
-          <!-- Levý sloupec: Text + Statistiky -->
-          <div>
-            <div class="about-modal-desc" style="font-size:1.05rem;line-height:1.75;color:#334155;white-space:pre-wrap;margin-bottom:2.5rem;">${description}</div>
-            
-            <!-- Statistiky -->
-            <div class="about-modal-stats-grid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:20px;">
-              ${statsHtml}
-            </div>
-          </div>
-
-          <!-- Pravý sloupec: Proč NANOfusion -->
-          <div class="about-modal-accent-box" style="background:#0f172a;color:white;padding:2.5rem;border-radius:2rem;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;">
+        <!-- Mřížka obsahu (Obtékání na desktopu) -->
+        <div class="about-content-wrapper" style="margin-bottom:4rem;">
+          <!-- Pravý sloupec: Proč NANOfusion (Dark Box) -->
+          <div class="about-modal-accent-box" style="background:#0f172a;color:white;padding:2.5rem;border-radius:2rem;position:relative;overflow:hidden;">
             <h3 style="font-size:1.5rem;font-weight:800;margin:0 0 1.5rem 0;color:#f59e0b;">${whyTitle}</h3>
             <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1.25rem;">
               ${whyPoints.map(p => `
@@ -195,7 +185,17 @@ export const openAboutUsModal = async () => {
                 </li>
               `).join('')}
             </ul>
-            <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" style="position:absolute;right:-80px;bottom:-80px;width:256px;height:256px;background:rgba(245,158,11,0.1);border-radius:50%;filter:blur(40px);pointer-events:none;"></div>
+          </div>
+
+          <!-- Levý sloupec: Text -->
+          <div class="about-modal-desc" style="font-size:1.05rem;line-height:1.75;color:#334155;">${description}</div>
+          
+          <div style="clear:both;"></div>
+          
+          <!-- Statistiky -->
+          <div class="about-modal-stats-grid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:20px;margin-top:3rem;">
+            ${statsHtml}
           </div>
         </div>
 
@@ -350,7 +350,7 @@ window.nnf_openCertDetail = (certId) => {
       <button onclick="window.nnf_closeCertDetail()" class="cert-zoom-close" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.9);border:none;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:20px;z-index:10;font-weight:bold;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,0.1);">&times;</button>
       
       <div class="cert-zoom-img-wrap" style="height:350px;background:#0f172a;position:relative;overflow:hidden;">
-        <img src="${cert.imageUrl}" alt="${cert.title}" style="width:100%;height:100%;object-fit:contain;">
+        <img src="${window.nnf_optimizeImage(cert.imageUrl, 1080)}" alt="${cert.title}" style="width:100%;height:100%;object-fit:contain;">
       </div>
       
       <div class="cert-zoom-body" style="padding:2.5rem;">
@@ -478,3 +478,43 @@ document.addEventListener('click', (e) => {
     }
   }
 }, true);
+
+// --- SEO/GEO Direct Routing to Modal ---
+const checkDirectLink = () => {
+  const path = window.location.pathname;
+  if (path.includes('o-nas') || path.includes('o-nas.html')) {
+    // 1. Skryjeme statický obsah stránky pod Reactem
+    const staticMain = document.querySelector('main');
+    if (staticMain) {
+      staticMain.style.display = 'none';
+    }
+    
+    // 2. Otevřeme modal automaticky
+    setTimeout(openAboutUsModal, 300);
+  }
+};
+
+// Rozšíříme zavírací funkci, aby při přímém vstupu vrátila URL na /
+const originalClose = window.nnf_closeAboutUs;
+window.nnf_closeAboutUs = () => {
+  if (typeof originalClose === 'function') {
+    originalClose();
+  } else {
+    // Fallback if not initialized yet
+    const overlay = document.getElementById('about-us-modal-overlay');
+    if (overlay) {
+      overlay.style.opacity = '0';
+      setTimeout(() => { overlay.style.display = 'none'; document.body.style.overflow = ''; }, 300);
+    }
+  }
+  if (window.location.pathname.includes('o-nas')) {
+    window.history.replaceState(null, '', '/');
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', checkDirectLink);
+} else {
+  checkDirectLink();
+}
+

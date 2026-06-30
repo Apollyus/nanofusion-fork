@@ -332,11 +332,11 @@ const openServiceModal = (data) => {
     const gridsHtml = pairsToRender.map(pair => `
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
         <div style="position: relative; border-radius: 1rem; overflow: hidden; border: 2px solid #fee2e2; cursor: pointer;" onclick="window.nnf_openLightbox('${pair.beforeImg}')">
-          <img src="${pair.beforeImg}" alt="Před" style="width: 100%; height: 140px; object-fit: cover;" onerror="this.parentElement.style.display='none'">
+          <img src="${window.nnf_optimizeImage(pair.beforeImg, 450)}" alt="Před" style="width: 100%; height: 140px; object-fit: cover;" onerror="this.parentElement.style.display='none'">
           <span style="position: absolute; bottom: 0.5rem; left: 0.5rem; background: #ef4444; color: white; padding: 0.15rem 0.5rem; border-radius: 99px; font-size: 0.7rem; font-weight: 800;">PŘED</span>
         </div>
         <div style="position: relative; border-radius: 1rem; overflow: hidden; border: 2px solid #bbf7d0; cursor: pointer;" onclick="window.nnf_openLightbox('${pair.afterImg}')">
-          <img src="${pair.afterImg}" alt="Po" style="width: 100%; height: 140px; object-fit: cover;" onerror="this.parentElement.style.display='none'">
+          <img src="${window.nnf_optimizeImage(pair.afterImg, 450)}" alt="Po" style="width: 100%; height: 140px; object-fit: cover;" onerror="this.parentElement.style.display='none'">
           <span style="position: absolute; bottom: 0.5rem; left: 0.5rem; background: #22c55e; color: white; padding: 0.15rem 0.5rem; border-radius: 99px; font-size: 0.7rem; font-weight: 800;">PO</span>
         </div>
       </div>
@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in';
       card.innerHTML = `
         <div class="aspect-[16/9] overflow-hidden">
-          <img src="${service.image}" alt="${service.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+          <img src="${window.nnf_optimizeImage(service.image, 640)}" alt="${service.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
         </div>
         <div class="p-6">
           <div class="flex items-center gap-2 mb-3">
@@ -602,6 +602,6 @@ window.nnf_openLightbox = (url) => {
     document.body.appendChild(lb);
   }
   const img = document.getElementById('nnf-lb-img');
-  img.src = url;
+  img.src = window.nnf_optimizeImage(url, 1600);
   lb.style.display = 'flex';
 };
