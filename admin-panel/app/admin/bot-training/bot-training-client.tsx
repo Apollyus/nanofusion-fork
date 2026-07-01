@@ -57,9 +57,9 @@ export function BotTrainingClient({ initialKnowledge }: { initialKnowledge: any[
       await uploadBotDocument(formData)
       toast.success('Dokument byl úspěšně zpracován a naučen', { id: toastId })
       window.location.reload()
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
-      toast.error('Chyba při zpracování PDF', { id: toastId })
+      toast.error(error.message || 'Chyba při zpracování PDF', { id: toastId })
     } finally {
       setIsUploading(false)
     }

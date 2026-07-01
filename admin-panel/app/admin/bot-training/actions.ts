@@ -23,6 +23,26 @@ export async function uploadBotDocument(formData: FormData) {
   if (!file) throw new Error('Nebyl vybrán žádný soubor')
 
   const supabase = await createAdminClient()
+
+  // Ensure "bot-documents" storage bucket exists (Self-Healing Storage)
+  try {
+    const { data: bucket, error: bucketError } = await supabase.storage.getBucket('bot-documents')
+    if (bucketError || !bucket) {
+      console.log('NANOfusion: Bucket "bot-documents" not found. Creating it dynamically...')
+      const { error: createError } = await supabase.storage.createBucket('bot-documents', {
+        public: true,
+        allowedMimeTypes: ['application/pdf'],
+        fileSizeLimit: 10485760 // 10MB limit
+      })
+      if (createError) {
+        console.error('NANOfusion: Failed to create bucket "bot-documents":', createError.message)
+      } else {
+        console.log('NANOfusion: Bucket "bot-documents" created successfully.')
+      }
+    }
+  } catch (bucketEx) {
+    console.warn('NANOfusion: Bucket existence check failed:', bucketEx)
+  }
   
   // 1. Upload to Storage
   const fileExt = file.name.split('.').pop()
@@ -36,8 +56,9 @@ export async function uploadBotDocument(formData: FormData) {
 
     if (uploadError) {
       console.error('Storage Upload Error:', uploadError)
-      if (uploadError.message.includes('bucket not found')) {
-        throw new Error('Chyba: V Supabase Storage chybí bucket "bot-documents". Vytvořte ho prosím.')
+      const msg = uploadError.message.toLowerCase()
+      if (msg.includes('bucket not found') || msg.includes('not found')) {
+        throw new Error('V Supabase Storage chybí bucket "bot-documents". Pokusili jsme se ho automaticky vytvořit, zkontrolujte prosím přístupová práva.')
       }
       throw new Error('Chyba nahrávání: ' + uploadError.message)
     }
