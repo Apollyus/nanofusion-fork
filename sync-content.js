@@ -244,6 +244,55 @@ async function syncContent() {
             content = replaceSyncBlock(content, 'ABOUT_US', aboutUsHtml);
             content = replaceSyncBlock(content, 'FAQ', faqsHtml);
 
+            if (filename === 'index.html') {
+                const heroTitleText = configMap.hero_title || 'Špičková péče o to, co jste usilovně vybudovali';
+                const fallbackHtml = `
+                <header style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                    <a href="/" style="font-weight: bold; font-size: 1.5rem; text-decoration: none; color: #0f172a;">NANOfusion</a>
+                    <nav style="display: flex; gap: 1.5rem;">
+                        <a href="/" style="text-decoration: none; color: #0f172a; font-weight: 500;">Domů</a>
+                        <a href="#sluzby" style="text-decoration: none; color: #0f172a; font-weight: 500;">Služby</a>
+                        <a href="#realizace" style="text-decoration: none; color: #0f172a; font-weight: 500;">Reference</a>
+                        <a href="/o-nas" style="text-decoration: none; color: #0f172a; font-weight: 500;">O nás</a>
+                        <a href="/faq" style="text-decoration: none; color: #0f172a; font-weight: 500;">Časté dotazy</a>
+                    </nav>
+                </header>
+                <main style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
+                    <section class="hero" style="text-align: center; padding: 4rem 1rem; background: #f8fafc; border-radius: 2rem; margin-bottom: 3rem;">
+                        <h1 style="font-size: 3rem; font-weight: 900; color: #0f172a; line-height: 1.2; margin-bottom: 1.5rem;">${heroTitleText}</h1>
+                        <p style="font-size: 1.25rem; color: #64748b; max-width: 800px; margin: 0 auto;">Specialisté na profesionální čištění a dlouhodobou nano-ochranu střech, fasád, dlažeb a fotovoltaiky. Více než 950 realizovaných projektů s garancí až 10 let.</p>
+                    </section>
+                    
+                    <section id="sluzby-sec" style="margin-bottom: 4rem;">
+                        <h2 style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin-bottom: 2rem;">Naše služby</h2>
+                        ${servicesHtml}
+                    </section>
+                    
+                    <section id="realizace-sec" style="margin-bottom: 4rem;">
+                        ${portfolioHtml}
+                    </section>
+                    
+                    <section id="reference-sec" style="margin-bottom: 4rem;">
+                        ${reviewsHtml}
+                    </section>
+                    
+                    <section id="o-nas-sec" style="margin-bottom: 4rem; padding: 3rem; background: #fafafa; border-radius: 2rem;">
+                        ${aboutUsHtml}
+                    </section>
+                    
+                    <section id="faq-sec" style="margin-bottom: 4rem;">
+                        ${faqsHtml}
+                    </section>
+                </main>
+                <footer style="background: #111; color: white; padding: 3rem 1rem; text-align: center; border-radius: 2rem 2rem 0 0;">
+                    <h3 style="font-weight: bold; margin-bottom: 1rem;">NANOfusion s.r.o.</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem;">Cezavy 627, Blučina 664 56 | Česká republika</p>
+                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem;">Telefon: +420 774 509 409 | Email: info@nanofusion.cz</p>
+                    <p style="color: #64748b; font-size: 0.8rem; margin-top: 2rem;">&copy; ${new Date().getFullYear()} NANOfusion s.r.o. Všechna práva vyhrazena.</p>
+                </footer>`;
+                content = replaceSyncBlock(content, 'FALLBACK', fallbackHtml);
+            }
+            
             fs.writeFileSync(filename, content);
             console.log(`✅ ${filename} synchronized.`);
         }
