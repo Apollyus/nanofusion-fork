@@ -19,7 +19,7 @@
       "destination": "/static/$1"
     },
     {
-      "source": "/((?!admin|api|assets|static|faq|o-nas).*)",
+      "source": "/((?!admin|api|assets|static|faq|o-nas|sluzby).*)",
       "destination": "/index.html"
     }
   ],

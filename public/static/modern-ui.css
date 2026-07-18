@@ -47,6 +47,59 @@ header nav a.active-link {
   color: #f59e0b !important;
 }
 
+/* Footer Link Highlighting & Interactions */
+.footer-eshop-link {
+  color: #f59e0b !important;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid #f59e0b;
+  transition: all 0.2s ease-in-out;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: inline-block;
+}
+.footer-eshop-link:hover {
+  color: #ffffff !important;
+  border-bottom-color: #ffffff;
+  opacity: 0.9;
+}
+.footer-admin-link {
+  color: #94a3b8 !important;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: inline-block;
+}
+.footer-admin-link:hover {
+  color: #f59e0b !important;
+  text-decoration: underline;
+}
+
+/* Footer Menu & Info Links Hover Effects */
+.footer-hover-link {
+  color: #94a3b8 !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease-in-out !important;
+  display: inline-block !important;
+  opacity: 0.8 !important;
+  font-size: 0.95rem !important;
+}
+.footer-hover-link:hover {
+  transform: translateX(8px) !important;
+  opacity: 1 !important;
+  color: #f59e0b !important;
+}
+
+/* Paragraph spacing inside service details process description */
+.service-process-description p {
+  margin-bottom: 1.25rem;
+}
+.service-process-description p:last-child {
+  margin-bottom: 0;
+}
+
 #preloader.fade-out {
   opacity: 0 !important;
   visibility: hidden !important;

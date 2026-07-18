@@ -24,24 +24,37 @@ import {
   deleteServiceFaq,
   uploadServiceHeroImage,
   uploadBeforeAfterPhoto,
-  deleteBeforeAfter
+  deleteBeforeAfter,
+  addServiceReview,
+  deleteServiceReview
 } from '../actions'
 import { TiptapEditor } from '@/components/admin/editor'
 
 type Service = Tables<'services'>
 type BeforeAfter = Tables<'service_before_after'>
 type ServiceFAQ = Tables<'service_faqs'>
+type ServiceReview = Tables<'service_reviews'>
+type ExternalReview = Tables<'external_reviews'>
 
 interface Props {
   service: Service
   beforeAfterItems: BeforeAfter[]
   serviceFaqs: ServiceFAQ[]
+  serviceReviews: ServiceReview[]
+  externalReviews: ExternalReview[]
 }
 
-export function ServiceDetailClient({ service: initialService, beforeAfterItems: initialBeforeAfter, serviceFaqs: initialFaqs }: Props) {
-  const [activeTab, setActiveTab] = useState<'general' | 'photos' | 'faqs'>('general')
+export function ServiceDetailClient({ 
+  service: initialService, 
+  beforeAfterItems: initialBeforeAfter, 
+  serviceFaqs: initialFaqs,
+  serviceReviews: initialReviews,
+  externalReviews
+}: Props) {
+  const [activeTab, setActiveTab] = useState<'general' | 'photos' | 'faqs' | 'reviews'>('general')
   const [faqs, setFaqs] = useState<ServiceFAQ[]>(initialFaqs)
   const [beforeAfterItems, setBeforeAfterItems] = useState<BeforeAfter[]>(initialBeforeAfter)
+  const [serviceReviews, setServiceReviews] = useState<ServiceReview[]>(initialReviews)
   const [service, setService] = useState(initialService)
   const [saving, setSaving] = useState(false)
   const [uploadingHero, setUploadingHero] = useState(false)
@@ -51,6 +64,13 @@ export function ServiceDetailClient({ service: initialService, beforeAfterItems:
   const beforeFileRef = useRef<HTMLInputElement>(null)
   const afterFileRef = useRef<HTMLInputElement>(null)
   const [baCaption, setBaCaption] = useState('')
+
+  // Reviews Tab State
+  const [showAddReview, setShowAddReview] = useState(false)
+  const [addingReview, setAddingReview] = useState(false)
+  const [revAuthor, setRevAuthor] = useState('')
+  const [revRating, setRevRating] = useState(5)
+  const [revContent, setRevContent] = useState('')
 
   // --- General save ---
   const handleSaveGeneral = async () => {
@@ -166,6 +186,7 @@ export function ServiceDetailClient({ service: initialService, beforeAfterItems:
           { id: 'general', label: 'Základní info', icon: <Layout size={16} /> },
           { id: 'photos', label: `Před & Po fotky (${beforeAfterItems.length})`, icon: <Camera size={16} /> },
           { id: 'faqs', label: `Q&A (${faqs.length})`, icon: <MessageSquareQuote size={16} /> },
+          { id: 'reviews', label: `Vybrané recenze (${serviceReviews.length})`, icon: <MessageSquareQuote size={16} /> },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -523,6 +544,171 @@ export function ServiceDetailClient({ service: initialService, beforeAfterItems:
               {faqs.length === 0 && (
                 <div className="text-center py-12 opacity-40 text-sm border-2 border-dashed rounded-2xl">
                   Zatím žádné dotazy. Klikněte na "Přidat dotaz".
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* --- REVIEWS TAB --- */}
+        {activeTab === 'reviews' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Vybrané recenze k této službě</h2>
+                <p className="text-sm opacity-60">Recenze, které se budou zobrazovat na detailu této služby.</p>
+              </div>
+              <button
+                onClick={() => setShowAddReview(!showAddReview)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white block"
+                style={{ background: 'var(--brand-primary)' }}
+              >
+                <Plus size={16} />
+                Přidat recenzi
+              </button>
+            </div>
+
+            {showAddReview && (
+              <div className="p-6 rounded-2xl border space-y-4 max-w-xl" style={{ borderColor: 'var(--border)', background: 'var(--bg-surface-2)' }}>
+                <h3 className="font-bold text-sm">Nová recenze</h3>
+                
+                {/* Dropdown for selecting existing approved review */}
+                {externalReviews.length > 0 && (
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Kopírovat z existujících recenzí</label>
+                    <select
+                      onChange={(e) => {
+                        const selected = externalReviews.find(r => r.id === e.target.value)
+                        if (selected) {
+                          setRevAuthor(selected.author || '')
+                          setRevRating(selected.rating || 5)
+                          setRevContent(selected.content || '')
+                        }
+                      }}
+                      defaultValue=""
+                      className="w-full px-3 py-2.5 rounded-xl border outline-none text-sm"
+                      style={{ background: 'var(--bg-base)', borderColor: 'var(--border)' }}
+                    >
+                      <option value="" disabled>-- Vyberte recenzi pro automatické vyplnění --</option>
+                      {externalReviews.map(r => (
+                        <option key={r.id} value={r.id}>
+                          {r.author} ({r.source}) - {r.content?.substring(0, 60)}...
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Autor / Jméno</label>
+                    <input
+                      type="text"
+                      value={revAuthor}
+                      onChange={(e) => setRevAuthor(e.target.value)}
+                      placeholder="např. Jan Novák"
+                      className="w-full px-3 py-2.5 rounded-xl border outline-none text-sm"
+                      style={{ background: 'var(--bg-base)', borderColor: 'var(--border)' }}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Hodnocení (1-5)</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={5}
+                      value={revRating}
+                      onChange={(e) => setRevRating(Number(e.target.value))}
+                      className="w-full px-3 py-2.5 rounded-xl border outline-none text-sm"
+                      style={{ background: 'var(--bg-base)', borderColor: 'var(--border)' }}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Obsah recenze</label>
+                  <textarea
+                    value={revContent}
+                    onChange={(e) => setRevContent(e.target.value)}
+                    rows={4}
+                    placeholder="Sem vepište obsah recenze..."
+                    className="w-full px-3 py-2.5 rounded-xl border outline-none text-sm"
+                    style={{ background: 'var(--bg-base)', borderColor: 'var(--border)' }}
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    onClick={() => {
+                      setShowAddReview(false)
+                      setRevAuthor('')
+                      setRevContent('')
+                    }}
+                    className="px-4 py-2 rounded-xl text-sm border hover:bg-slate-50 transition-colors"
+                  >
+                    Zrušit
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (!revAuthor || !revContent) {
+                        toast.error('Vyplňte autora a obsah recenze')
+                        return
+                      }
+                      setAddingReview(true)
+                      try {
+                        const newRev = await addServiceReview(service.id, revAuthor, revRating, revContent)
+                        setServiceReviews(prev => [newRev, ...prev])
+                        setShowAddReview(false)
+                        setRevAuthor('')
+                        setRevContent('')
+                        toast.success('Recenze přidána')
+                      } catch (err: any) {
+                        toast.error('Chyba: ' + err.message)
+                      } finally {
+                        setAddingReview(false)
+                      }
+                    }}
+                    disabled={addingReview}
+                    className="px-4 py-2 rounded-xl text-sm font-bold text-white"
+                    style={{ background: 'var(--brand-primary)' }}
+                  >
+                    {addingReview ? 'Ukládám...' : 'Přidat'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              {serviceReviews.map((rev) => (
+                <div key={rev.id} className="p-6 rounded-2xl border" style={{ borderColor: 'var(--border)' }}>
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <div className="flex gap-1 text-amber-500 font-bold">
+                        {'★'.repeat(rev.rating || 5)}{'☆'.repeat(5 - (rev.rating || 5))}
+                      </div>
+                      <h4 className="font-bold">{rev.author}</h4>
+                      <p className="text-sm text-slate-500">{new Date(rev.created_at).toLocaleDateString('cs')}</p>
+                      <p className="pt-2 text-slate-700 max-w-2xl text-sm leading-relaxed">"{rev.content}"</p>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (confirm('Smazat tuto recenzi?')) {
+                          await deleteServiceReview(rev.id, service.id)
+                          setServiceReviews(prev => prev.filter(r => r.id !== rev.id))
+                          toast.success('Recenze smazána')
+                        }
+                      }}
+                      className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              {serviceReviews.length === 0 && (
+                <div className="text-center py-12 opacity-40 text-sm border-2 border-dashed rounded-2xl">
+                  Zatím žádné recenze. Přidejte první nebo zkopírujte z existujících.
                 </div>
               )}
             </div>

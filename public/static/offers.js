@@ -550,7 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
       `;
-      card.onclick = () => openServiceModal(service);
+      card.onclick = () => window.location.href = '/sluzby/' + service.id;
       serviceGrid.appendChild(card);
     });
   };
@@ -579,15 +579,14 @@ document.addEventListener('click', (e) => {
     if (detectedData) {
       e.preventDefault();
       e.stopPropagation();
-      openServiceModal(detectedData);
+      window.location.href = '/sluzby/' + detectedData.id;
     }
   }
 }, true);
 
 // Senior CTO: Expose for footer links
 window.nnf_openService = (id) => {
-  const data = servicesData.find(s => s.id === id);
-  if (data) openServiceModal(data);
+  window.location.href = '/sluzby/' + id;
 };
 
 // --- Lightbox Implementation ---

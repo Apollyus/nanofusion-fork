@@ -134,3 +134,26 @@ export async function uploadServiceHeroImage(serviceId: string, formData: FormDa
   revalidatePath(`/admin/services/${serviceId}`)
   return publicUrl
 }
+
+// --- Service Reviews management ---
+export async function addServiceReview(serviceId: string, author: string, rating: number, content: string) {
+  const supabase = await createAdminClient()
+  const { data, error } = await (supabase.from('service_reviews') as any)
+    .insert({ service_id: serviceId, author, rating, content, is_visible: true })
+    .select()
+    .single()
+  
+  if (error) throw new Error(error.message)
+  revalidatePath(`/admin/services/${serviceId}`)
+  return data
+}
+
+export async function deleteServiceReview(id: string, serviceId: string) {
+  const supabase = await createAdminClient()
+  const { error } = await (supabase.from('service_reviews') as any)
+    .delete()
+    .eq('id', id)
+  
+  if (error) throw new Error(error.message)
+  revalidatePath(`/admin/services/${serviceId}`)
+}
