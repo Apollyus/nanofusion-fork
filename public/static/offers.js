@@ -308,7 +308,7 @@ const hydrateFromCloud = async () => {
     console.warn('Cloud hydration skipped (offline or not configured)');
   }
 };
-hydrateFromCloud();
+const hydratePromise = hydrateFromCloud();
 
 
 const openServiceModal = (data) => {
@@ -331,13 +331,13 @@ const openServiceModal = (data) => {
   if (pairsToRender.length > 0) {
     const gridsHtml = pairsToRender.map(pair => `
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
-        <div style="position: relative; border-radius: 1rem; overflow: hidden; border: 2px solid #fee2e2; cursor: pointer;" onclick="window.nnf_openLightbox('${pair.beforeImg}')">
+        <div style="position: relative; border-radius: 1rem; overflow: hidden; border: 2px solid #fde68a; cursor: pointer;" onclick="window.nnf_openLightbox('${pair.beforeImg}')">
           <img src="${window.nnf_optimizeImage(pair.beforeImg, 450)}" alt="Před" style="width: 100%; height: 140px; object-fit: cover;" onerror="this.parentElement.style.display='none'">
-          <span style="position: absolute; bottom: 0.5rem; left: 0.5rem; background: #ef4444; color: white; padding: 0.15rem 0.5rem; border-radius: 99px; font-size: 0.7rem; font-weight: 800;">PŘED</span>
+          <span style="position: absolute; bottom: 0.5rem; left: 0.5rem; background: #f59e0b; color: white; padding: 0.15rem 0.55rem; border-radius: 99px; font-size: 0.7rem; font-weight: 800;">PŘED</span>
         </div>
-        <div style="position: relative; border-radius: 1rem; overflow: hidden; border: 2px solid #bbf7d0; cursor: pointer;" onclick="window.nnf_openLightbox('${pair.afterImg}')">
+        <div style="position: relative; border-radius: 1rem; overflow: hidden; border: 2px solid #fde68a; cursor: pointer;" onclick="window.nnf_openLightbox('${pair.afterImg}')">
           <img src="${window.nnf_optimizeImage(pair.afterImg, 450)}" alt="Po" style="width: 100%; height: 140px; object-fit: cover;" onerror="this.parentElement.style.display='none'">
-          <span style="position: absolute; bottom: 0.5rem; left: 0.5rem; background: #22c55e; color: white; padding: 0.15rem 0.5rem; border-radius: 99px; font-size: 0.7rem; font-weight: 800;">PO</span>
+          <span style="position: absolute; bottom: 0.5rem; left: 0.5rem; background: #f59e0b; color: white; padding: 0.15rem 0.55rem; border-radius: 99px; font-size: 0.7rem; font-weight: 800;">PO</span>
         </div>
       </div>
     `).join('');
@@ -408,7 +408,6 @@ const openServiceModal = (data) => {
             <div class="service-image-overlay"></div>
           </div>
           <div style="padding: 2.5rem; padding-top: 0;">
-            <span class="service-tag" style="position: relative; z-index: 5; margin-top: -1rem; background: #FEF3C7; color: #F59E0B; padding: 0.25rem 0.75rem; border-radius: 99px; font-weight: 700; display: inline-block;">${data.tag}</span>
             <h3 class="modal-service-title">${data.title}</h3>
             <style>
               .rich-text p { margin-bottom: 1em; }
@@ -519,16 +518,20 @@ const openServiceModal = (data) => {
   };
 };
 
-// Injection logic for supplemental services
+// Injection logic – waits for cloud hydration before rendering to prevent flash
 document.addEventListener('DOMContentLoaded', () => {
+  const serviceGrid = document.querySelector('#sluzby .grid');
+  if (serviceGrid) {
+    // Hide immediately so hardcoded React cards never flash
+    serviceGrid.style.opacity = '0';
+    serviceGrid.style.transition = 'opacity 0.35s ease';
+  }
+
   const injectSupplementalServices = () => {
-    const serviceGrid = document.querySelector('#sluzby .grid');
-    if (!serviceGrid) return;
+    const grid = document.querySelector('#sluzby .grid');
+    if (!grid) return;
 
-    // Vymažeme statický React grid a nahradíme ho aktuálními daty
-    serviceGrid.innerHTML = '';
-
-    // Vykreslíme všechny služby seřazené podle pořadí, s aplikovanými úpravami z admin panelu
+    grid.innerHTML = '';
     servicesData.forEach(service => {
       const card = document.createElement('div');
       card.className = 'group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in';
@@ -537,10 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <img src="${window.nnf_optimizeImage(service.image, 640)}" alt="${service.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
         </div>
         <div class="p-6">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">${service.tag}</span>
-          </div>
-          <h3 class="text-xl font-bold mb-2">${service.title}</h3>
+          <h3 class="text-xl font-bold mb-2" style="color: #f59e0b;">${service.title}</h3>
           <div class="text-muted-foreground text-sm line-clamp-2">${service.detail}</div>
           <div class="mt-4 flex items-center text-primary font-bold text-sm">
             Zjistit více 
@@ -551,12 +551,19 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
       card.onclick = () => window.location.href = '/sluzby/' + service.id;
-      serviceGrid.appendChild(card);
+      grid.appendChild(card);
+    });
+
+    // Fade in the finished grid
+    requestAnimationFrame(() => {
+      grid.style.opacity = '1';
     });
   };
 
-  // Run with delay to ensure React has finished rendering the initial grid
-  setTimeout(injectSupplementalServices, 1500);
+  // Wait for cloud data, then render once – no flashing
+  Promise.resolve(hydratePromise)
+    .catch(() => {})
+    .finally(injectSupplementalServices);
 });
 
 // Interceptor with improved matching

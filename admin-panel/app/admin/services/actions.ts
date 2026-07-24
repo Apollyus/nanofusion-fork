@@ -157,3 +157,35 @@ export async function deleteServiceReview(id: string, serviceId: string) {
   if (error) throw new Error(error.message)
   revalidatePath(`/admin/services/${serviceId}`)
 }
+
+// --- Service Process Steps management ---
+export async function getServiceProcessSteps(serviceId: string) {
+  const supabase = await createAdminClient()
+  const { data } = await (supabase.from('site_config') as any)
+    .select('value')
+    .eq('key', `service_process_${serviceId}`)
+    .maybeSingle()
+  
+  if (data?.value) {
+    try {
+      return JSON.parse(data.value)
+    } catch (e) {
+      return []
+    }
+  }
+  return []
+}
+
+export async function saveServiceProcessSteps(serviceId: string, steps: Array<{ step: string; title: string; desc: string }>) {
+  const supabase = await createAdminClient()
+  const key = `service_process_${serviceId}`
+  const { error } = await (supabase.from('site_config') as any)
+    .upsert({
+      key,
+      value: JSON.stringify(steps),
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'key' })
+  
+  if (error) throw new Error(error.message)
+  revalidatePath(`/admin/services/${serviceId}`)
+}

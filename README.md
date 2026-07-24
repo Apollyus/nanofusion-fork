@@ -30,4 +30,4 @@ Vstup do správy je možný přes odkaz v patičce nebo přidáním `#admin` do 
 Heslo: `admin123`
 
 ## Vizuální reference pro AI agenty
-Web se načítá dynamicky přes React. Kompletní vizuální reference a screenshoty jednotlivých stránek v plném rozlišení naleznete v souboru [visual_reference.md](file:///Users/petrzak/Downloads/nanofusion-main/visual_reference.md).
+Web se načítá dynamicky přes React. Kompletní vizuální reference a screenshoty jednotlivých stránek v plném rozlišení naleznete v souboru 

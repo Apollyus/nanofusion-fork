@@ -487,15 +487,13 @@ document.addEventListener('DOMContentLoaded', () => {
     sendBtn.onclick = () => handleInput(chatInput.value);
     chatInput.onkeypress = (e) => { if (e.key === 'Enter') handleInput(chatInput.value); };
 
-    // --- Auto-pop logic (Disabled for now) ---
-    /*
+    // --- Auto-pop logic ---
     setTimeout(() => {
-        // If chat isn't already open, open it
-        if (chatWindow.style.display !== 'flex') {
+        const chatWindow = document.getElementById('ai-chat-window');
+        if (chatWindow && chatWindow.style.display !== 'flex') {
             chatWindow.style.setProperty('display', 'flex', 'important');
             if (chatState === 'INIT') startChat();
             console.log('AI Chat: Auto-pop triggered');
         }
-    }, 4000);
-    */
+    }, 1200);
 });

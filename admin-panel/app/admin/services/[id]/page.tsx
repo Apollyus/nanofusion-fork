@@ -26,10 +26,12 @@ export default async function ServiceDetailPage(props: { params: Promise<{ id: s
 
   const [
     { data: serviceSpecificFaqs },
-    { data: globalSectionFaqs }
+    { data: globalSectionFaqs },
+    { data: processConfig }
   ] = await Promise.all([
     (supabase.from('service_faqs') as any).select('*').eq('service_id', params.id).order('order_index'),
-    (supabase.from('faqs') as any).select('*').eq('page_section', (service as any).slug).order('order_index')
+    (supabase.from('faqs') as any).select('*').eq('page_section', (service as any).slug).order('order_index'),
+    (supabase.from('site_config') as any).select('value').eq('key', `service_process_${params.id}`).maybeSingle()
   ])
 
   // Merge them for the client
@@ -38,6 +40,15 @@ export default async function ServiceDetailPage(props: { params: Promise<{ id: s
     ...((globalSectionFaqs as any[]) ?? []).map(f => ({ ...f, is_global: true }))
   ]
 
+  let initialProcessSteps: Array<{ step: string; title: string; desc: string }> = []
+  if (processConfig?.value) {
+    try {
+      initialProcessSteps = JSON.parse(processConfig.value)
+    } catch (e) {
+      initialProcessSteps = []
+    }
+  }
+
   return (
     <ServiceDetailClient 
       service={service as any} 
@@ -45,6 +56,7 @@ export default async function ServiceDetailPage(props: { params: Promise<{ id: s
       serviceFaqs={allFaqs as any[]}
       serviceReviews={(serviceReviews as any[]) ?? []}
       externalReviews={(externalReviews as any[]) ?? []}
+      initialProcessSteps={initialProcessSteps}
     />
   )
 }

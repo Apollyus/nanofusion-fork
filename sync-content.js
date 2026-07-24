@@ -747,12 +747,26 @@ async function syncContent() {
                 </div>`).join('');
             }
 
-            // Process HTML compilation
-            const processHtml = (catalog.process || []).map(p => `
-            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 1.5rem; padding: 2.25rem; transition: transform 0.2s, box-shadow 0.2s;">
-                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: var(--bg-dark); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.15rem; margin-bottom: 1.25rem;">${p.step}</div>
-                <h3 style="font-size: 1.15rem; margin-bottom: 0.6rem;">${p.title}</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">${p.desc}</p>
+            // Process HTML compilation (DB site_config custom steps with catalog fallbacks)
+            const dbConfig = configRes.data || [];
+            const customProcessConfig = dbConfig.find(c => c.key === `service_process_${s.id}` || c.key === `service_process_${s.slug}`);
+            let processStepsList = catalog.process || [];
+            if (customProcessConfig && customProcessConfig.value) {
+                try {
+                    const parsed = JSON.parse(customProcessConfig.value);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        processStepsList = parsed;
+                    }
+                } catch (e) {
+                    console.warn(`Warning: Failed to parse process steps for ${s.slug}:`, e);
+                }
+            }
+
+            const processHtml = processStepsList.map(p => `
+            <div style="background: white; border: 2px solid #f59e0b; border-radius: 1.5rem; padding: 2.25rem; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 10px 25px rgba(245,158,11,0.08);">
+                <div style="width: 3.25rem; height: 3.25rem; border-radius: 50%; background: #f59e0b; color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; margin-bottom: 1.25rem; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);">${p.step || '01'}</div>
+                <h3 style="font-size: 1.15rem; margin-bottom: 0.6rem; color: #f59e0b; font-weight: 800;">${p.title}</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">${p.desc || p.description || ''}</p>
             </div>`).join('');
 
             // Before & After image slider compilation
@@ -777,16 +791,16 @@ async function syncContent() {
                     <div style="max-width: 640px; margin: 0 auto;">
                         <h2 class="service-section-title" style="text-align: center; margin-bottom: 1.25rem; color: var(--bg-dark);">Před a po</h2>
                         <p style="text-align: center; color: var(--text-muted); margin-bottom: 3.5rem; font-size: 1.15rem; line-height: 1.7;">Táhněte posuvníkem a porovnejte sami</p>
-                        <div style="position: relative; border-radius: 1.5rem; overflow: hidden; aspect-ratio: 4/3; user-select: none; box-shadow: 0 20px 40px rgba(0,0,0,0.08);">
+                        <div style="position: relative; border-radius: 1.5rem; overflow: hidden; aspect-ratio: 4/3; user-select: none; box-shadow: 0 20px 40px rgba(0,0,0,0.08); border: 3px solid #f59e0b;">
                             <img src="${afterImg}" alt="Po" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
                             <div id="${s.slug}-clip" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; clip-path: inset(0 50% 0 0);">
                                 <img src="${beforeImg}" alt="Před" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
                             </div>
-                            <div id="${s.slug}-handle" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; background: white; box-shadow: 0 0 0 1px rgba(0,0,0,0.1); pointer-events: none; z-index: 5;">
-                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2.75rem; height: 2.75rem; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.25); color: var(--text-main); font-size: 0.9rem;">⟷</div>
+                            <div id="${s.slug}-handle" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); pointer-events: none; z-index: 5;">
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2.75rem; height: 2.75rem; background: #f59e0b; border: 2.5px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4); color: white; font-weight: 900; font-size: 0.95rem;">⟷</div>
                             </div>
-                            <div style="position: absolute; top: 1.25rem; left: 1.25rem; background: #ef4444; color: white; padding: 0.5rem 1.1rem; border-radius: 99px; font-weight: 900; font-size: 0.85rem; z-index: 6; pointer-events: none;">PŘED</div>
-                            <div style="position: absolute; top: 1.25rem; right: 1.25rem; background: #22c55e; color: white; padding: 0.5rem 1.1rem; border-radius: 99px; font-weight: 900; font-size: 0.85rem; z-index: 6; pointer-events: none;">PO</div>
+                            <div style="position: absolute; top: 1.25rem; left: 1.25rem; background: #f59e0b; color: white; padding: 0.5rem 1.1rem; border-radius: 99px; font-weight: 900; font-size: 0.85rem; z-index: 6; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">PŘED</div>
+                            <div style="position: absolute; top: 1.25rem; right: 1.25rem; background: #f59e0b; color: white; padding: 0.5rem 1.1rem; border-radius: 99px; font-weight: 900; font-size: 0.85rem; z-index: 6; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">PO</div>
                             <input class="ba-range" data-slug="${s.slug}" type="range" min="0" max="100" value="50" style="position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; z-index: 10;">
                         </div>
                     </div>
@@ -963,8 +977,20 @@ async function syncContent() {
             console.log(`✅ Generated subpage: /sluzby/${slug}`);
         }
 
-        console.log('✨ NANOfusion Sync Complete!');
+        // Sync poptavka page
+        const poptavkaSrc = path.join('public', 'poptavka', 'index.html');
+        if (fs.existsSync(poptavkaSrc)) {
+            const poptavkaContent = fs.readFileSync(poptavkaSrc, 'utf8');
+            const poptavkaRoot = path.join('poptavka');
+            if (!fs.existsSync(poptavkaRoot)) fs.mkdirSync(poptavkaRoot, { recursive: true });
+            fs.writeFileSync(path.join(poptavkaRoot, 'index.html'), poptavkaContent);
+            const poptavkaAdmin = path.join('admin-panel', 'public', 'poptavka');
+            if (!fs.existsSync(poptavkaAdmin)) fs.mkdirSync(poptavkaAdmin, { recursive: true });
+            fs.writeFileSync(path.join(poptavkaAdmin, 'index.html'), poptavkaContent);
+            console.log('✅ poptavka/index.html synchronized.');
+        }
 
+        console.log('✨ NANOfusion Sync Complete!');
     } catch (err) {
         fs.writeSync(1, `❌ Sync failed: ${err && (err.stack || err.message || err)}\n`);
         process.exit(1);

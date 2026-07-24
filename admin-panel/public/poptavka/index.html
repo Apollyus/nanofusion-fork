@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="cs" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nezávazná poptávka | NANOfusion s.r.o.</title>
+  <meta name="description"
+    content="Nezávazná poptávka služeb čištění a nano-ochrany povrchů po celé ČR zdarma. Odpovídáme do 24 hodin." />
+  <link href="/static/logo.jpg" rel="icon" type="image/jpeg" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" crossorigin href="/assets/index-D7rL3D6v.css">
+  <link rel="stylesheet" href="/static/modern-ui.css">
+  <link href="/static/calculator.css" rel="stylesheet" />
+  <link href="/static/ai-chat.css" rel="stylesheet" />
+  <style>
+    body {
+      opacity: 1 !important;
+      overflow: auto !important;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50">
+
+  <!-- Navigation Header -->
+  <header
+    style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div
+      style="background: #1c1c1e; color: #e5e5ea; font-size: 0.85rem; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.05);">
+      <div class="top-info-bar-inner"
+        style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 2.5rem;">
+        <div>Jezdíme po celé ČR · Po–Pá 7:00–18:00</div>
+        <div class="top-info-bar-contacts" style="display: flex; gap: 1.5rem; align-items: center;">
+          <a href="tel:+420774509409"
+            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">📞 +420 774
+            509 409</a>
+          <a href="mailto:info@nanofusion.cz"
+            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">✉️
+            info@nanofusion.cz</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-main-bar"
+      style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 0.85rem 2.5rem;">
+      <div
+        style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+        <a href="/" style="display: flex; align-items: center; text-decoration: none;">
+          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion"
+            style="height: 60px; width: auto;" data-patched="true">
+        </a>
+        <nav class="nav-desktop" style="display: flex; gap: 2rem; align-items: center;">
+          <a href="/#sluzby" style="text-decoration: none; color: #475569; font-weight: 500;">Služby</a>
+          <a href="/#postup" style="text-decoration: none; color: #475569; font-weight: 500;">Jak to funguje</a>
+          <a href="/#kalkulacka" style="text-decoration: none; color: #475569; font-weight: 500;">Konfigurátor</a>
+          <a href="/#realizace" style="text-decoration: none; color: #475569; font-weight: 500;">Reference</a>
+          <a href="/o-nas" style="text-decoration: none; color: #475569; font-weight: 500;">O nás</a>
+          <a href="/faq" style="text-decoration: none; color: #475569; font-weight: 500;">FAQ</a>
+        </nav>
+        <a class="nav-cta-desktop" href="#kalkulacka"
+          style="background: var(--primary); color: white; padding: 0.75rem 2rem; border-radius: 99px; text-decoration: none; font-weight: 700; font-size: 0.95rem;">Nezávazná
+          poptávka</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Section -->
+  <main style="padding-top: 10rem; padding-bottom: 6rem;">
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 1.5rem;">
+      <div style="text-align: center; margin-bottom: 3.5rem;">
+        <span
+          style="color: #f59e0b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.9rem; display: block; margin-bottom: 0.75rem;">Bezplatná
+          konzultace po celé ČR</span>
+        <h1 style="font-size: 2.75rem; font-weight: 900; color: #0f172a; line-height: 1.2; margin-bottom: 1.25rem;">
+          Nezávazná poptávka služeb <span style="color: #f59e0b;">NANOfusion</span></h1>
+        <p style="font-size: 1.15rem; color: #64748b; max-width: 650px; margin: 0 auto;">Získejte přesnou cenovou
+          nabídku a bezplatnou konzultaci do 24 hodin.</p>
+      </div>
+
+      <!-- Quick Calc Card -->
+      <div class="hero-calc-card" id="kalkulacka"
+        style="background: white; border-radius: 1.5rem; padding: 3rem; box-shadow: 0 20px 50px rgba(0,0,0,0.08); border: 2px solid #f59e0b; max-width: 600px; margin: 0 auto 4rem;">
+        <div id="m-form">
+          <div style="font-weight: 900; font-size: 1.35rem; margin-bottom: 0.4rem; color: var(--text-main);">Kalkulace
+            zdarma do 24 h</div>
+          <div style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem;">Získejte okamžitý odhad ceny
+            pro váš projekt.</div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label
+              style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Plocha
+              v m²</label>
+            <div style="position: relative;">
+              <input id="m-area" type="number" value="100" min="10" max="10000"
+                style="width: 100%; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1.15rem; font-weight: 700; background: #f8fafc; color: var(--text-main);">
+              <span
+                style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted);">m²</span>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label
+              style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Vaše
+              jméno</label>
+            <input id="m-name" type="text" placeholder="Vaše jméno"
+              style="width: 100%; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1rem; background: #f8fafc; color: var(--text-main);">
+          </div>
+
+          <div style="margin-bottom: 1.75rem;">
+            <label
+              style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Telefonní
+              číslo</label>
+            <input id="m-phone" type="tel" placeholder="Telefonní číslo"
+              style="width: 100%; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1rem; background: #f8fafc; color: var(--text-main);">
+          </div>
+
+          <button id="m-reveal"
+            style="display: block; text-align: center; width: 100%; background: var(--primary); color: white; padding: 1.15rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 1rem;">Zobrazit
+            cenu</button>
+          <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem;">Nezávazné a
+            zdarma · odpověď do 24 h</div>
+        </div>
+
+        <div id="m-result" style="display: none; text-align: center; padding: 2rem 1rem;">
+          <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 600;">Předběžná cena pro vaši
+            plochu:</span>
+          <div id="m-price" style="font-size: 2.5rem; font-weight: 900; color: var(--primary); margin: 0.5rem 0;">0 Kč
+          </div>
+          <div
+            style="padding: 1rem; background: #f0fdf4; border-radius: 1rem; color: #166534; font-size: 0.875rem; font-weight: 700; border: 1px solid #dcfce7; margin-top: 1rem;">
+            ✓ Úspěšně odesláno. Zavoláme vám.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/static/main.js" type="module"></script>
+  <script src="/static/service-detail.js" type="module"></script>
+  <script src="/static/ai-chat.js" type="module"></script>
+</body>
+
+</html>
