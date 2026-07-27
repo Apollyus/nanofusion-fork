@@ -137,3 +137,24 @@ export async function toggleKnowledgeActive(id: string, is_active: boolean) {
   if (error) throw new Error(error.message)
   revalidatePath('/admin/bot-training')
 }
+
+export async function getBotEnabledStatus(): Promise<boolean> {
+  const supabase = await createAdminClient()
+  const { data } = await (supabase.from('site_config') as any)
+    .select('value')
+    .eq('key', 'nanobot_enabled')
+    .maybeSingle()
+  return data?.value === 'true'
+}
+
+export async function setBotEnabledStatus(enabled: boolean) {
+  const supabase = await createAdminClient()
+  const { error } = await (supabase.from('site_config') as any)
+    .upsert({
+      key: 'nanobot_enabled',
+      value: enabled ? 'true' : 'false',
+      description: 'Stav aktivace AI Nanobota na webu'
+    }, { onConflict: 'key' })
+  if (error) throw new Error(error.message)
+  revalidatePath('/admin/bot-training')
+}

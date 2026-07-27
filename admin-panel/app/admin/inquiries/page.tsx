@@ -15,8 +15,21 @@ export default async function InquiriesPage() {
     (supabase.from('leads') as any).select('*')
   ])
 
-  const inquiries = inquiriesResult.data || []
+  const rawInquiries = inquiriesResult.data || []
   const leads = leadsResult.data || []
+
+  // Ensure photo URLs are mapped for standard inquiries
+  const inquiries = rawInquiries.map((inq: any) => {
+    let photoUrl = inq.original_photo_url || inq.photo_url || inq.image_url || null
+    if (!photoUrl && inq.message && inq.message.includes('Fotografie:')) {
+      const match = inq.message.match(/Fotografie:\s*(data:image\/[^\s\n]+|https?:\/\/[^\s\n]+)/)
+      if (match) photoUrl = match[1]
+    }
+    return {
+      ...inq,
+      original_photo_url: photoUrl
+    }
+  })
 
   // Map leads to match the inquiries structure
   const mappedLeads = leads.map((lead: any) => {

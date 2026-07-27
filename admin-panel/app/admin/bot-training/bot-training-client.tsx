@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Trash2, Edit2, Brain, Save, X, Lightbulb, FileUp, Loader2 } from 'lucide-react'
+import { Plus, Trash2, Edit2, Brain, Save, X, Lightbulb, FileUp, Loader2, Power, Bot } from 'lucide-react'
 import { toast } from 'sonner'
-import { saveKnowledge, deleteKnowledge, toggleKnowledgeActive, uploadBotDocument } from './actions'
+import { saveKnowledge, deleteKnowledge, toggleKnowledgeActive, uploadBotDocument, setBotEnabledStatus } from './actions'
 import { TiptapEditor } from '@/components/admin/editor'
 
 interface Knowledge {
@@ -15,8 +15,10 @@ interface Knowledge {
   created_at: string
 }
 
-export function BotTrainingClient({ initialKnowledge }: { initialKnowledge: any[] }) {
+export function BotTrainingClient({ initialKnowledge, initialBotEnabled }: { initialKnowledge: any[], initialBotEnabled: boolean }) {
   const [knowledge, setKnowledge] = useState<Knowledge[]>(initialKnowledge)
+  const [botEnabled, setBotEnabled] = useState<boolean>(initialBotEnabled)
+  const [isTogglingBot, setIsTogglingBot] = useState(false)
   const [isEditing, setIsEditing] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [formData, setFormData] = useState({
@@ -24,6 +26,20 @@ export function BotTrainingClient({ initialKnowledge }: { initialKnowledge: any[
     content: '',
     category: 'obecné'
   })
+
+  const handleToggleBot = async () => {
+    setIsTogglingBot(true)
+    const newStatus = !botEnabled
+    try {
+      await setBotEnabledStatus(newStatus)
+      setBotEnabled(newStatus)
+      toast.success(newStatus ? 'AI Nanobot byl zapnut na webu' : 'AI Nanobot byl vypnut na webu')
+    } catch (error) {
+      toast.error('Chyba při změně nastavení Nanobota')
+    } finally {
+      setIsTogglingBot(false)
+    }
+  }
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -105,6 +121,58 @@ export function BotTrainingClient({ initialKnowledge }: { initialKnowledge: any[
             Naučte AI asistenta fakta o vaší firmě, službách a cenách.
           </p>
         </div>
+      </div>
+
+      {/* Bot Auto-Pop Status & Activation Card */}
+      <div className={`rounded-3xl p-6 border transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-6 ${
+        botEnabled 
+          ? 'bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-900 text-white border-emerald-500/30 shadow-xl shadow-emerald-950/20'
+          : 'bg-slate-900 text-white border-slate-800 shadow-xl'
+      }`}>
+        <div className="flex items-start gap-4">
+          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-all ${
+            botEnabled 
+              ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' 
+              : 'bg-slate-800 text-slate-400 border border-slate-700'
+          }`}>
+            <Bot size={28} />
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-3 flex-wrap">
+              <h3 className="font-bold text-xl text-white">Automatické vyskakovací okno Nanobota</h3>
+              <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${
+                botEnabled 
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
+                  : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+              }`}>
+                {botEnabled ? '● Auto-Pop Zapnuto' : '○ Auto-Pop Vypnuto (Pouze ikona)'}
+              </span>
+            </div>
+            <p className="text-sm text-slate-300 max-w-2xl leading-relaxed">
+              {botEnabled
+                ? 'Nanobot po 1.2 sekundách od načtení stránky automaticky vyskočí a pozdraví návštěvníka.'
+                : 'Automatické vyskakovací okno je vypnuté. Chatovací ikona vpravo dole na webu zůstává dostupná pro ruční kliknutí.'}
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleToggleBot}
+          disabled={isTogglingBot}
+          className={`flex items-center justify-center gap-3 px-7 py-3.5 rounded-2xl font-bold text-sm tracking-wide transition-all shadow-lg active:scale-95 shrink-0 disabled:opacity-50 cursor-pointer ${
+            botEnabled
+              ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-900/40 border border-rose-400/30'
+              : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black shadow-emerald-500/30 border border-emerald-300/50'
+          }`}
+        >
+          {isTogglingBot ? (
+            <Loader2 className="animate-spin" size={20} />
+          ) : (
+            <Power size={20} />
+          )}
+          <span>{botEnabled ? 'Vypnout automatické pop-up okno' : 'Zapnout automatické pop-up okno'}</span>
+        </button>
       </div>
 
       {/* Editor Card */}

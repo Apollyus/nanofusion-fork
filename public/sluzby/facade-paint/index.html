@@ -154,7 +154,7 @@
         grid-template-columns: 1fr !important;
         gap: 2rem !important;
       }
-      .hero-section { padding: 7.5rem 1.25rem 2.5rem !important; }
+      .hero-section { padding: 9.5rem 1.25rem 3rem !important; }
       .service-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
       .hero-subtitle { font-size: 1.1rem !important; }
       .hero-badges { gap: 1rem !important; flex-direction: column !important; }
@@ -240,9 +240,6 @@
           <a href="/#sluzby"
             style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
             data-nav-patched="true">Služby</a>
-          <a href="#postup"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
-            data-nav-patched="true">Jak to funguje</a>
           <a href="#kalkulacka"
             style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
             data-nav-patched="true">Konfigurátor</a>
@@ -258,9 +255,6 @@
           <a href="/o-nas"
             style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
             data-nav-patched="true">O nás</a>
-          <a href="#faq"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
-            data-nav-patched="true">FAQ</a>
           <a href="#kontakt"
             style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
             data-nav-patched="true">Kontakt</a>
@@ -277,13 +271,11 @@
     <!-- Mobile Drawer -->
     <div class="nav-mobile-drawer" id="nav-drawer">
       <a href="/#sluzby">Služby</a>
-      <a href="#postup">Jak to funguje</a>
       <a href="#kalkulacka">Konfigurátor</a>
       <a href="/#realizace">Reference</a>
       <a href="/#blog">Blog</a>
       <a href="/#galerie">Galerie</a>
       <a href="/o-nas">O nás</a>
-      <a href="#faq">FAQ</a>
       <a href="#kontakt">Kontakt</a>
       <a href="#kalkulacka" class="drawer-cta">Nezávazná poptávka</a>
     </div>
@@ -294,7 +286,7 @@
 
     <!-- HERO -->
     <section class="hero-section"
-      style="padding: 8.5rem 2.5rem 4rem; background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.8) 50%, rgba(26, 35, 50, 0.6) 100%), url('https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800') center/cover no-repeat; color: white;">
+      style="padding: 12.5rem 2.5rem 4.5rem; background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.8) 50%, rgba(26, 35, 50, 0.6) 100%), url('https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800') center/cover no-repeat; color: white;">
       <div class="hero-grid"
         style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr; gap: 4rem; align-items: center;">
         <div>
@@ -344,12 +336,26 @@
                 style="width: 100%; padding: 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1rem; background: #f8fafc; color: var(--text-main);">
             </div>
 
-            <div style="margin-bottom: 1.5rem;">
+            <div style="margin-bottom: 1rem;">
+              <label
+                style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Město / Lokace</label>
+              <input id="m-location" type="text" placeholder="Např. Praha, Brno, Beroun..."
+                style="width: 100%; padding: 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1rem; background: #f8fafc; color: var(--text-main);">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
               <label
                 style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Telefonní
                 číslo</label>
               <input id="m-phone" type="tel" placeholder="Telefonní číslo"
                 style="width: 100%; padding: 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1rem; background: #f8fafc; color: var(--text-main);">
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+              <label
+                style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Fotografie objektu (nepovinné)</label>
+              <input id="m-photo" type="file" accept="image/*"
+                style="width: 100%; padding: 0.75rem; border: 1px dashed #cbd5e1; border-radius: 0.65rem; font-size: 0.875rem; background: #f8fafc; color: var(--text-main); cursor: pointer;">
             </div>
 
             <button id="m-reveal"
@@ -485,35 +491,35 @@
     <!-- GALLERY (Dynamic Realization Photos) -->
     
                 <!-- GALLERY -->
-                <section style="padding: 7.5rem 2.5rem; background: #f8fafc;">
+                <section class="gallery-section" style="padding: 4.5rem 2.5rem; background: #f8fafc;">
                     <div style="max-width: 1200px; margin: 0 auto;">
-                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 1.25rem; color: var(--bg-dark);">Z realizací</h2>
-                        <p style="text-align: center; color: var(--text-muted); margin-bottom: 4rem; font-size: 1.15rem;">Ukázky z naší práce</p>
-                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;" class="grid grid-cols-2 md:grid-cols-4">
+                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.75rem; color: var(--bg-dark);">Z realizací</h2>
+                        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.15rem;">Ukázky z naší práce</p>
+                        <div class="service-gallery-grid">
                             
-                            <div style="border-radius: 1rem; overflow: hidden; aspect-ratio: 1; border: 1px solid #e2e8f0; cursor: pointer;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600')">
-                                <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600" alt="Realizace 1" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600')">
+                                <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600" alt="Realizace 1">
                             </div>
-                            <div style="border-radius: 1rem; overflow: hidden; aspect-ratio: 1; border: 1px solid #e2e8f0; cursor: pointer;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600')">
-                                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600" alt="Realizace 2" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600')">
+                                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600" alt="Realizace 2">
                             </div>
-                            <div style="border-radius: 1rem; overflow: hidden; aspect-ratio: 1; border: 1px solid #e2e8f0; cursor: pointer;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600')">
-                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600" alt="Realizace 3" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600" alt="Realizace 3">
                             </div>
-                            <div style="border-radius: 1rem; overflow: hidden; aspect-ratio: 1; border: 1px solid #e2e8f0; cursor: pointer;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600')">
-                                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600" alt="Realizace 4" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600" alt="Realizace 4">
                             </div>
-                            <div style="border-radius: 1rem; overflow: hidden; aspect-ratio: 1; border: 1px solid #e2e8f0; cursor: pointer;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600')">
-                                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600" alt="Realizace 5" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600" alt="Realizace 5">
                             </div>
-                            <div style="border-radius: 1rem; overflow: hidden; aspect-ratio: 1; border: 1px solid #e2e8f0; cursor: pointer;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600')">
-                                <img src="https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600" alt="Realizace 6" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600" alt="Realizace 6">
                             </div>
-                            <div style="border-radius: 1rem; overflow: hidden; aspect-ratio: 1; border: 1px solid #e2e8f0; cursor: pointer;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=600')">
-                                <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=600" alt="Realizace 7" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=600" alt="Realizace 7">
                             </div>
-                            <div style="border-radius: 1rem; overflow: hidden; aspect-ratio: 1; border: 1px solid #e2e8f0; cursor: pointer;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600')">
-                                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600" alt="Realizace 8" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600" alt="Realizace 8">
                             </div>
                         </div>
                     </div>

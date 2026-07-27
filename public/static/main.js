@@ -109,7 +109,15 @@ const observeAll = () => {
     }
   });
 
-  // 5. Navigation Links Injection
+  // 5. Navigation Links Injection & Cleanup
+  document.querySelectorAll('header nav a, header div a, .nav-mobile-drawer a').forEach(a => {
+    const text = a.textContent.trim().toLowerCase();
+    const href = (a.getAttribute('href') || '').toLowerCase();
+    if (text === 'jak to funguje' || text === 'faq' || text === 'časté dotazy' || href === '#postup' || href === '#faq' || href === '/faq') {
+      a.remove();
+    }
+  });
+
   const navLinks = Array.from(document.querySelectorAll('header nav a, header div a'));
   const referenceLink = navLinks.find(a => a.textContent.trim() === 'Reference');
 

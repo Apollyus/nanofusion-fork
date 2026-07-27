@@ -1,5 +1,61 @@
 /* Pokročilá kalkulačka s napojením na Supabase (Admin Panel) pro NANOfusion */
 
+async function getPhotoPayloadUrl(fileInput) {
+  if (!fileInput || !fileInput.files || !fileInput.files[0]) return null;
+  const file = fileInput.files[0];
+
+  // 1. Try Supabase storage upload
+  try {
+    const { supabase } = await import('./supabase-config.js');
+    if (supabase && supabase.storage) {
+      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+      const fileName = `inquiry_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data: uploadData, error: uploadErr } = await supabase.storage
+        .from('gallery')
+        .upload(fileName, file, { upsert: true, cacheControl: '3600' });
+
+      if (!uploadErr && uploadData) {
+        const { data: pubData } = supabase.storage.from('gallery').getPublicUrl(fileName);
+        if (pubData && pubData.publicUrl) return pubData.publicUrl;
+      }
+    }
+  } catch (e) {
+    console.warn('Storage upload fallback triggered:', e);
+  }
+
+  // 2. Fallback: Compress image to compressed JPEG Data URL
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1000;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.75));
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
+
 const injectCalculator = async () => {
   const contactSection = document.getElementById('kontakt');
   if (contactSection && !document.getElementById('kalkulacka')) {
@@ -95,10 +151,14 @@ const injectCalculator = async () => {
             <div style="background: #f8fafc; padding: 2rem; border-radius: 1.5rem; margin: 2rem 0;">
               <p class="calc-label" style="margin-bottom: 1rem; text-align: center;">Uveďte kontakt pro zaslání kalkulace</p>
               <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                <input class="calc-input" id="calc-name" name="name" placeholder="Vaše jméno" style="width: 100%; border-radius: 0.75rem;" type="text">
-                <input class="calc-input" id="calc-email" name="email" placeholder="E-mail" style="width: 100%; border-radius: 0.75rem;" type="email">
-                <input class="calc-input" id="calc-phone" name="phone" placeholder="Telefon" style="width: 100%; border-radius: 0.75rem;" type="tel">
-                <input class="calc-input" id="calc-address" name="address" placeholder="Adresa zaměření" style="width: 100%; border-radius: 0.75rem; display: none;" type="text">
+                <input class="calc-input" id="calc-name" name="name" placeholder="Vaše jméno *" style="width: 100%; border-radius: 0.75rem;" type="text">
+                <input class="calc-input" id="calc-address" name="address" placeholder="Město / Lokace objektu *" style="width: 100%; border-radius: 0.75rem;" type="text">
+                <input class="calc-input" id="calc-phone" name="phone" placeholder="Telefonní číslo *" style="width: 100%; border-radius: 0.75rem;" type="tel">
+                <input class="calc-input" id="calc-email" name="email" placeholder="E-mail (nepovinný)" style="width: 100%; border-radius: 0.75rem;" type="email">
+                <div style="margin-top: 0.5rem; text-align: left;">
+                  <label style="display: block; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: #64748b; margin-bottom: 0.4rem;">Fotografie objektu (nepovinné)</label>
+                  <input class="calc-input" id="calc-photo" name="photo" type="file" accept="image/*" style="width: 100%; padding: 0.6rem; border: 1px dashed #cbd5e1; border-radius: 0.75rem; background: #ffffff; font-size: 0.85rem; cursor: pointer;">
+                </div>
               </div>
             </div>
 
@@ -175,8 +235,6 @@ const injectCalculator = async () => {
     areaUnknown.addEventListener('change', () => {
       areaInput.disabled = areaUnknown.checked;
       areaInput.style.opacity = areaUnknown.checked ? '0.5' : '1';
-      document.getElementById('calc-address').style.display = areaUnknown.checked ? 'block' : 'none';
-      if (areaUnknown.checked) document.getElementById('calc-address').focus();
     });
 
     document.getElementById('go-to-step-2').addEventListener('click', () => {
@@ -192,21 +250,59 @@ const injectCalculator = async () => {
       document.getElementById('progress-2').style.background = '#e2e8f0';
     });
 
-    document.getElementById('reveal-price').addEventListener('click', () => {
-      state.userName = document.getElementById('calc-name').value;
-      const email = document.getElementById('calc-email').value;
-      const phone = document.getElementById('calc-phone').value;
-      const address = document.getElementById('calc-address').value;
+    document.getElementById('reveal-price').addEventListener('click', async () => {
+      state.userName = (document.getElementById('calc-name').value || '').trim();
+      const email = (document.getElementById('calc-email').value || '').trim();
+      const phone = (document.getElementById('calc-phone').value || '').trim();
+      const address = (document.getElementById('calc-address').value || '').trim();
+      const photoInput = document.getElementById('calc-photo');
       
-      if (!state.userName || !email || !phone) {
-        alert('Prosím vyplňte kontaktní údaje, abychom vám mohli odeslat kalkulaci.');
+      // --- Strict Validation ---
+      if (!state.userName || state.userName.length < 2) {
+        alert('Prosím zadejte Vaše jméno.');
+        return;
+      }
+      const nameLetters = state.userName.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
+      if (nameLetters.length < 2 || /^\d+$/.test(state.userName)) {
+        alert('Prosím zadejte platné jméno.');
         return;
       }
 
-      if (areaUnknown.checked && !address) {
-        alert('Prosím uveďte adresu pro bezplatné zaměření.');
+      if (!address || address.length < 2) {
+        alert('Prosím zadejte město nebo lokaci objektu.');
         return;
       }
+      const addrLetters = address.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
+      if (addrLetters.length < 2 || /^\d+$/.test(address)) {
+        alert('Prosím zadejte platný název obce / města.');
+        return;
+      }
+
+      if (!phone || phone.length < 9) {
+        alert('Prosím zadejte telefonní číslo.');
+        return;
+      }
+      const cleanPhone = phone.replace(/[\s\-\(\)\+]/g, '');
+      if (!/^\d{9,15}$/.test(cleanPhone) || /^(\d)\1+$/.test(cleanPhone) || cleanPhone === '123456789' || cleanPhone === '987654321') {
+        alert('Prosím zadejte platné a reálné telefonní číslo (např. 774 509 409 nebo +420774509409).');
+        return;
+      }
+
+      if (email && email.length > 0) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          alert('Prosím zadejte e-mail ve správném tvaru (např. jmeno@domena.cz).');
+          return;
+        }
+      }
+
+      const btnReveal = document.getElementById('reveal-price');
+      if (btnReveal) {
+        btnReveal.disabled = true;
+        btnReveal.innerText = 'ODESÍLÁM...';
+      }
+
+      // Upload photo if present (with Data URL fallback)
+      const photoUrl = await getPhotoPayloadUrl(photoInput);
 
       const areaValue = areaUnknown.checked ? 0 : (parseInt(areaInput.value) || 0);
       
@@ -220,25 +316,30 @@ const injectCalculator = async () => {
       document.getElementById('result-user-name').textContent = `Děkujeme, ${state.userName}!`;
       
       // Save Lead
-      import('./supabase-config.js').then(({ supabase }) => {
-        supabase.from('inquiries').insert({
+      import('./supabase-config.js').then(async ({ supabase }) => {
+        const payload = {
           name: state.userName,
           email: email,
           phone: phone,
           service: state.serviceName,
-          message: `Kalkulačka: ${state.objName}, Plocha: ${areaUnknown.checked ? 'Neznámo' : areaValue + 'm2'}, Cena: ${totalDisplay}`,
+          message: `Lokace: ${address}, Kalkulačka: ${state.objName}, Plocha: ${areaUnknown.checked ? 'Neznámo' : areaValue + ' m²'}, Odhad ceny: ${totalDisplay}${photoUrl ? '\nFotografie: ' + photoUrl : ''}`,
           source: 'Konfigurátor',
           status: 'new'
-        }).then(({ error }) => {
-          if (error) console.error('[Kalkulačka] Chyba při ukládání poptávky:', error.message, error.code);
-          else console.log('[Kalkulačka] Poptávka uložena do databáze');
-        });
+        };
+        const fullPayload = photoUrl ? { ...payload, original_photo_url: photoUrl } : payload;
+        let { error } = await supabase.from('inquiries').insert(fullPayload);
+        if (error) {
+          console.warn('[Kalkulačka] První vložení selhalo, opakuji se standardním payloadem:', error.message);
+          const fallbackRes = await supabase.from('inquiries').insert(payload);
+          if (fallbackRes.error) console.error('[Kalkulačka] Chyba při ukládání poptávky:', fallbackRes.error.message);
+          else console.log('[Kalkulačka] Poptávka uložena do databáze skrze fallback');
+        } else {
+          console.log('[Kalkulačka] Poptávka uložena do databáze');
+        }
       });
 
       document.getElementById('step-2').style.display = 'none';
       document.getElementById('step-3').style.display = 'block';
-      document.getElementById('progress-3').style.background = '#F59E0B';
-      
       window.scrollTo({ top: document.getElementById('kalkulacka').offsetTop - 50, behavior: 'smooth' });
     });
 

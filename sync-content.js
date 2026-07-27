@@ -813,14 +813,14 @@ async function syncContent() {
             if (galleryPhotos.length > 0) {
                 galleryHtml = `
                 <!-- GALLERY -->
-                <section style="padding: 7.5rem 2.5rem; background: #f8fafc;">
+                <section class="gallery-section" style="padding: 4.5rem 2.5rem; background: #f8fafc;">
                     <div style="max-width: 1200px; margin: 0 auto;">
-                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 1.25rem; color: var(--bg-dark);">Z realizací</h2>
-                        <p style="text-align: center; color: var(--text-muted); margin-bottom: 4rem; font-size: 1.15rem;">Ukázky z naší práce</p>
-                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;" class="grid grid-cols-2 md:grid-cols-4">
+                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.75rem; color: var(--bg-dark);">Z realizací</h2>
+                        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.15rem;">Ukázky z naší práce</p>
+                        <div class="service-gallery-grid">
                             ${galleryPhotos.map((url, i) => `
-                            <div style="border-radius: 1rem; overflow: hidden; aspect-ratio: 1; border: 1px solid #e2e8f0; cursor: pointer;" onclick="window.nnf_openLightbox('${url}')">
-                                <img src="${url}" alt="Realizace ${i + 1}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('${url}')">
+                                <img src="${url}" alt="Realizace ${i + 1}">
                             </div>`).join('')}
                         </div>
                     </div>

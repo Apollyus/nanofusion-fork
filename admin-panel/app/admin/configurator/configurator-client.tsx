@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { toast } from 'sonner'
 import {
   Save,
@@ -47,6 +47,16 @@ export function ConfiguratorClient({
   const [dirtyPrices, setDirtyPrices] = useState<Set<string>>(new Set())
   const [saving, setSaving] = useState(false)
   const [selectedChat, setSelectedChat] = useState<ChatSession | null>(null)
+
+  const uniquePrices = useMemo(() => {
+    const seen = new Set<string>()
+    return prices.filter((p) => {
+      const key = (p.item_key || p.label || p.id).toLowerCase()
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+  }, [prices])
 
   const handlePriceChange = (id: string, value: string) => {
     const num = parseFloat(value)
@@ -162,11 +172,11 @@ export function ConfiguratorClient({
                 </tr>
               </thead>
               <tbody>
-                {prices.map((price, i) => (
+                {uniquePrices.map((price, i) => (
                   <tr
                     key={price.id}
                     style={{
-                      borderBottom: i < prices.length - 1 ? '1px solid var(--border)' : undefined,
+                      borderBottom: i < uniquePrices.length - 1 ? '1px solid var(--border)' : undefined,
                       background: dirtyPrices.has(price.id) ? '#fffbeb' : undefined,
                     }}
                   >

@@ -120,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const launcher = document.createElement('div');
     launcher.className = 'ai-chat-launcher';
     launcher.id = 'ai-chat-launcher';
+    launcher.style.display = 'flex'; // Floating icon is always available on the site
     launcher.innerHTML = `
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
@@ -130,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatWindow = document.createElement('div');
     chatWindow.className = 'ai-chat-window';
     chatWindow.id = 'ai-chat-window';
+    chatWindow.style.display = 'none';
     chatWindow.innerHTML = `
         <div class="chat-header">
             <img src="/static/logo.jpg" alt="Nano-Asistent">
@@ -140,12 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button id="close-chat" style="margin-left: auto; background: none; border: none; color: white; cursor: pointer; font-size: 1.5rem;">&times;</button>
         </div>
         <div class="chat-messages" id="chat-messages">
-            <div id="typing" class="typing-indicator">Asistent píše...</div>
+            <div id="typing" class="typing-indicator" style="display:none;">Asistent píše...</div>
         </div>
-        <div class="chat-footer">
-            <input type="text" class="chat-input" id="chat-input" placeholder="Napište zprávu...">
-            <button class="chat-send-btn" id="chat-send">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px;">
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Napište zprávu..." autocomplete="off">
+            <button id="send-chat" aria-label="Odeslat zprávu">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                 </svg>
             </button>
@@ -153,9 +155,27 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.body.appendChild(chatWindow);
 
+    let isAutoPopEnabled = false;
+    const syncBotStatus = async () => {
+        try {
+            const { supabase } = await import('./supabase-config.js');
+            const { data } = await supabase.from('site_config').select('value').eq('key', 'nanobot_enabled').maybeSingle();
+            if (data && data.value === 'true') {
+                isAutoPopEnabled = true;
+                console.log('Nanobot: Automatické vyskakování ZAPNUTO');
+            } else {
+                isAutoPopEnabled = false;
+                console.log('Nanobot: Automatické vyskakování VYPNUTO');
+            }
+        } catch (e) {
+            console.warn('Nanobot: Kontrola stavu aktivace selhala', e);
+        }
+    };
+    syncBotStatus();
+
     const msgContainer = document.getElementById('chat-messages');
     const chatInput = document.getElementById('chat-input');
-    const sendBtn = document.getElementById('chat-send');
+    const sendBtn = document.getElementById('send-chat');
     const typing = document.getElementById('typing');
 
     // --- Notification System v2 ---
@@ -395,7 +415,6 @@ document.addEventListener('DOMContentLoaded', () => {
             handleLeadFlow(original, text); // Fallback to lead flow
         }
     };
-
     const handleLeadFlow = (original, text) => {
         switch (chatState) {
             case 'ASK_SERVICE':
@@ -405,13 +424,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
 
             case 'ASK_ADDRESS':
-                if (original.length < 5) {
-                    botSay('Prosím zadejte celou adresu (ulice, město), abychom mohli spočítat dopravu. 🏠');
+                const locLetters = text.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
+                if (text.trim().length < 2 || locLetters.length < 2 || /^\d+$/.test(text.trim())) {
+                    botSay('Napište prosím platné město nebo obec, kde se objekt nachází. 📍');
                     return;
                 }
                 userData.location = original;
                 chatState = 'ASK_AREA';
-                botSay(`Děkuji! Adresu **${userData.location}** jsem uložil. O jak **velkou plochu** (m²) se přibližně jedná?`);
+                botSay(`Děkuji! Lokaci **${userData.location}** jsem uložil. O jak **velkou plochu** (m²) se přibližně jedná?`);
                 break;
 
             case 'ASK_AREA':
@@ -426,9 +446,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
 
             case 'ASK_CONTACT':
-                const sanitizedPhone = original.replace(/\s/g, '');
-                if (sanitizedPhone.length < 9) {
-                    botSay('Zadejte prosím platné telefonní číslo (např. 777 123 456). 📱');
+                const cleanPhone = original.replace(/[\s\-\(\)\+]/g, '');
+                if (!/^\d{9,15}$/.test(cleanPhone) || /^(\d)\1+$/.test(cleanPhone) || cleanPhone === '123456789' || cleanPhone === '987654321') {
+                    botSay('Zadejte prosím platné a reálné telefonní číslo (např. 774 509 409 nebo +420774509409). 📱');
                     return;
                 }
                 userData.contact = original;
@@ -489,6 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Auto-pop logic ---
     setTimeout(() => {
+        if (!isAutoPopEnabled) return;
         const chatWindow = document.getElementById('ai-chat-window');
         if (chatWindow && chatWindow.style.display !== 'flex') {
             chatWindow.style.setProperty('display', 'flex', 'important');

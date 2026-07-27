@@ -1,5 +1,60 @@
 import { supabase } from './supabase-config.js';
 
+async function getPhotoPayloadUrl(fileInput, supabaseClient) {
+  if (!fileInput || !fileInput.files || !fileInput.files[0]) return null;
+  const file = fileInput.files[0];
+
+  // 1. Try Supabase storage upload
+  if (supabaseClient && supabaseClient.storage) {
+    try {
+      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+      const fileName = `inquiry_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data: uploadData, error: uploadErr } = await supabaseClient.storage
+        .from('gallery')
+        .upload(fileName, file, { upsert: true, cacheControl: '3600' });
+
+      if (!uploadErr && uploadData) {
+        const { data: pubData } = supabaseClient.storage.from('gallery').getPublicUrl(fileName);
+        if (pubData && pubData.publicUrl) return pubData.publicUrl;
+      }
+    } catch (e) {
+      console.warn('Storage upload fallback triggered:', e);
+    }
+  }
+
+  // 2. Fallback: Compress image to compressed JPEG Data URL
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1000;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.75));
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
+
 // --- Price mapping ---
 let localPrices = {
   roof: 190, 
@@ -65,14 +120,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     updatePrice(); // Init display
   }
 
+  const locationInput = document.getElementById('m-location');
+
   if (btnReveal) {
     btnReveal.onclick = async () => {
       const name = nameInput ? nameInput.value.trim() : '';
       const phone = phoneInput ? phoneInput.value.trim() : '';
+      const location = locationInput ? locationInput.value.trim() : '';
       const area = areaInput ? parseFloat(areaInput.value) || 0 : 0;
 
-      if (!name || !phone) {
-        alert('Prosím vyplňte vaše jméno a telefonní číslo.');
+      // --- Strict Form Validation ---
+      if (!name || name.length < 2) {
+        alert('Prosím zadejte Vaše jméno.');
+        if (nameInput) nameInput.focus();
+        return;
+      }
+      const nameLetters = name.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
+      if (nameLetters.length < 2 || /^\d+$/.test(name)) {
+        alert('Prosím zadejte platné jméno.');
+        if (nameInput) nameInput.focus();
+        return;
+      }
+
+      if (!location || location.length < 2) {
+        alert('Prosím zadejte město nebo lokaci objektu.');
+        if (locationInput) locationInput.focus();
+        return;
+      }
+      const locLetters = location.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
+      if (locLetters.length < 2 || /^\d+$/.test(location)) {
+        alert('Prosím zadejte platný název obce / města.');
+        if (locationInput) locationInput.focus();
+        return;
+      }
+
+      if (!phone || phone.length < 9) {
+        alert('Prosím zadejte telefonní číslo.');
+        if (phoneInput) phoneInput.focus();
+        return;
+      }
+      const cleanPhone = phone.replace(/[\s\-\(\)\+]/g, '');
+      if (!/^\d{9,15}$/.test(cleanPhone) || /^(\d)\1+$/.test(cleanPhone) || cleanPhone === '123456789' || cleanPhone === '987654321') {
+        alert('Prosím zadejte platné a reálné telefonní číslo (např. 774 509 409 nebo +420774509409).');
+        if (phoneInput) phoneInput.focus();
         return;
       }
 
@@ -86,17 +176,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnReveal.disabled = true;
       btnReveal.innerText = 'ODESÍLÁM...';
 
-      try {
-        const { error } = await supabase.from('inquiries').insert({
-          name: name,
-          phone: phone,
-          service: meta.title || 'Služba Detail',
-          message: `Plocha: ${area} m², Odhad ceny: ${min} - ${max} Kč`,
-          source: 'Subpage / Kalkulačka',
-          status: 'new'
-        });
+      // Upload Photo if present with guaranteed Data URL fallback
+      const photoInput = document.getElementById('m-photo');
+      const photoUrl = await getPhotoPayloadUrl(photoInput, supabase);
 
-        if (error) throw error;
+      const inquiryPayload = {
+        name: name,
+        phone: phone,
+        service: meta.title || 'Služba Detail',
+        message: `Lokace: ${location}, Plocha: ${area} m², Odhad ceny: ${min} - ${max} Kč${photoUrl ? '\nFotografie: ' + photoUrl : ''}`,
+        source: 'Subpage / Kalkulačka',
+        status: 'new'
+      };
+
+      try {
+        const fullPayload = photoUrl ? { ...inquiryPayload, original_photo_url: photoUrl } : inquiryPayload;
+        let { error } = await supabase.from('inquiries').insert(fullPayload);
+
+        if (error) {
+          console.warn('First insert failed, retrying standard payload:', error.message);
+          const fallbackRes = await supabase.from('inquiries').insert(inquiryPayload);
+          if (fallbackRes.error) throw fallbackRes.error;
+        }
 
         // Hide form and display success price estimate
         const formBlock = document.getElementById('m-form');

@@ -302,12 +302,19 @@ export function InquiriesClient({ initialInquiries }: InquiriesClientProps) {
                         {inq.message?.match(/Plocha:\s*(\d+)/)?.[1] || '—'} m²
                       </td>
                       <td className="px-5 py-4">
-                        <span className="text-xs font-medium px-2 py-1 rounded-md bg-slate-100 text-slate-600">
-                           {inq.source === 'kalkulacka' ? 'Kalkulačka' : 
-                            inq.source === 'chat' ? 'Nanobot' : 
-                            inq.source === 'ai_analyzer' ? 'AI Analýzátor' :
-                            inq.source || 'Web'}
-                        </span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs font-medium px-2 py-1 rounded-md bg-slate-100 text-slate-600">
+                             {inq.source === 'kalkulacka' ? 'Kalkulačka' : 
+                              inq.source === 'chat' ? 'Nanobot' : 
+                              inq.source === 'ai_analyzer' ? 'AI Analýzátor' :
+                              inq.source || 'Web'}
+                          </span>
+                          {inq.original_photo_url && (
+                            <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 flex items-center gap-1">
+                              📷 Foto
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-5 py-4">
                         <span
@@ -548,17 +555,27 @@ export function InquiriesClient({ initialInquiries }: InquiriesClientProps) {
 
               {selectedInquiry.original_photo_url && (
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>
-                    Fotografie z AI Analýzy
-                  </p>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                      Přiložená fotografie objektu
+                    </p>
+                    <a
+                      href={selectedInquiry.original_photo_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+                    >
+                      Otevřít v plné velikosti ↗
+                    </a>
+                  </div>
                   <div 
-                    className="relative w-full h-80 rounded-2xl overflow-hidden border bg-slate-50 flex items-center justify-center" 
+                    className="relative w-full h-80 rounded-2xl overflow-hidden border bg-slate-50 flex items-center justify-center p-2" 
                     style={{ borderColor: 'var(--border)' }}
                   >
                     <img
                       src={selectedInquiry.original_photo_url}
-                      alt="Analyzovaný povrch"
-                      className="max-h-full max-w-full object-contain"
+                      alt="Přiložená fotografie"
+                      className="max-h-full max-w-full object-contain rounded-xl"
                     />
                   </div>
                 </div>

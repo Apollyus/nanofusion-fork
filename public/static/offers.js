@@ -1,5 +1,61 @@
 /* Clean Interactivity for NANOfusion Services - Extended */
 
+async function getPhotoPayloadUrl(fileInput) {
+  if (!fileInput || !fileInput.files || !fileInput.files[0]) return null;
+  const file = fileInput.files[0];
+
+  // 1. Try Supabase storage upload
+  try {
+    const { supabase } = await import('./supabase-config.js');
+    if (supabase && supabase.storage) {
+      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+      const fileName = `inquiry_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data: uploadData, error: uploadErr } = await supabase.storage
+        .from('gallery')
+        .upload(fileName, file, { upsert: true, cacheControl: '3600' });
+
+      if (!uploadErr && uploadData) {
+        const { data: pubData } = supabase.storage.from('gallery').getPublicUrl(fileName);
+        if (pubData && pubData.publicUrl) return pubData.publicUrl;
+      }
+    }
+  } catch (e) {
+    console.warn('Storage upload fallback triggered:', e);
+  }
+
+  // 2. Fallback: Compress image to compressed JPEG Data URL
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1000;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.75));
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
+
 let servicesData = [
   {
     id: 'facade', title: 'Čištění fasád', tag: 'Prémiová ochrana',
@@ -436,7 +492,10 @@ const openServiceModal = (data) => {
               </div>
             </div>
             <input id="m-name" type="text" placeholder="Vaše jméno" style="width: 100%; padding: 0.875rem; border: 2px solid #f1f5f9; background: #f8fafc; border-radius: 1rem; margin-bottom: 0.75rem;">
-            <input id="m-phone" type="tel" placeholder="Telefonní číslo" style="width: 100%; padding: 0.875rem; border: 2px solid #f1f5f9; background: #f8fafc; border-radius: 1rem; margin-bottom: 1rem;">
+            <input id="m-location" type="text" placeholder="Město / Lokace" style="width: 100%; padding: 0.875rem; border: 2px solid #f1f5f9; background: #f8fafc; border-radius: 1rem; margin-bottom: 0.75rem;">
+            <input id="m-phone" type="tel" placeholder="Telefonní číslo" style="width: 100%; padding: 0.875rem; border: 2px solid #f1f5f9; background: #f8fafc; border-radius: 1rem; margin-bottom: 0.75rem;">
+            <label style="display: block; font-size: 0.7rem; font-weight: 700; color: #94a3b8; margin-bottom: 0.3rem; text-transform: uppercase;">Fotografie objektu (nepovinné)</label>
+            <input id="m-photo" type="file" accept="image/*" style="width: 100%; padding: 0.6rem; border: 1px dashed #cbd5e1; background: #f8fafc; border-radius: 0.75rem; margin-bottom: 1rem; font-size: 0.8rem; cursor: pointer;">
             
             <button id="m-reveal" class="calc-cta" style="width: 100%; padding: 1.125rem; border-radius: 1rem; border: none; font-weight: 800; cursor: pointer; background: #F59E0B; color: white;">
               ZOBRAZIT CENU
@@ -486,15 +545,56 @@ const openServiceModal = (data) => {
   });
 
   // Calculator logic
-  document.getElementById('m-reveal').onclick = () => {
-    const name = document.getElementById('m-name').value;
-    const phone = document.getElementById('m-phone').value;
-    const area = parseInt(document.getElementById('m-area').value) || 0;
-    if (!name || !phone) return alert('Prosím vyplňte jméno a telefon.');
+  document.getElementById('m-reveal').onclick = async () => {
+    const name = (document.getElementById('m-name')?.value || '').trim();
+    const phone = (document.getElementById('m-phone')?.value || '').trim();
+    const location = (document.getElementById('m-location')?.value || '').trim();
+    const area = parseInt(document.getElementById('m-area')?.value) || 0;
+
+    // --- Strict Validation ---
+    if (!name || name.length < 2) {
+      alert('Prosím zadejte Vaše jméno.');
+      return;
+    }
+    const nameLetters = name.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
+    if (nameLetters.length < 2 || /^\d+$/.test(name)) {
+      alert('Prosím zadejte platné jméno.');
+      return;
+    }
+
+    if (!location || location.length < 2) {
+      alert('Prosím zadejte město nebo lokaci objektu.');
+      return;
+    }
+    const locLetters = location.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
+    if (locLetters.length < 2 || /^\d+$/.test(location)) {
+      alert('Prosím zadejte platný název obce / města.');
+      return;
+    }
+
+    if (!phone || phone.length < 9) {
+      alert('Prosím zadejte telefonní číslo.');
+      return;
+    }
+    const cleanPhone = phone.replace(/[\s\-\(\)\+]/g, '');
+    if (!/^\d{9,15}$/.test(cleanPhone) || /^(\d)\1+$/.test(cleanPhone) || cleanPhone === '123456789' || cleanPhone === '987654321') {
+      alert('Prosím zadejte platné a reálné telefonní číslo (např. 774 509 409 nebo +420774509409).');
+      return;
+    }
 
     const base = (remotePrices[data.id] || 150) * area;
     const min = Math.round(base * 1.05 / 10) * 10;
     const max = Math.round(base * 1.15 / 10) * 10;
+
+    const btnReveal = document.getElementById('m-reveal');
+    if (btnReveal) {
+      btnReveal.disabled = true;
+      btnReveal.innerText = 'ODESÍLÁM...';
+    }
+
+    // Upload photo if selected (with Data URL fallback)
+    const photoInput = document.getElementById('m-photo');
+    const photoUrl = await getPhotoPayloadUrl(photoInput);
 
     document.getElementById('m-price').innerText = `${min.toLocaleString('cs-CZ')} – ${max.toLocaleString('cs-CZ')} Kč`;
     document.getElementById('m-price').style.color = '#F59E0B';
@@ -502,18 +602,25 @@ const openServiceModal = (data) => {
     document.getElementById('m-result').style.display = 'block';
 
     // --- Supabase Inquiry Saving ---
-    import('./supabase-config.js').then(({ supabase }) => {
-      supabase.from('inquiries').insert({
+    import('./supabase-config.js').then(async ({ supabase }) => {
+      const payload = {
         name: name,
         phone: phone,
         service: data.title,
-        message: `Plocha: ${area} m2, Odhad ceny: ${min} - ${max} Kč`,
+        message: `Lokace: ${location}, Plocha: ${area} m2, Odhad ceny: ${min} - ${max} Kč${photoUrl ? '\nFotografie: ' + photoUrl : ''}`,
         source: 'Modal / Kalkulačka',
         status: 'new'
-      }).then(({ error }) => {
-        if (error) console.error('Cloud Save Error:', error);
-        else console.log('Service inquiry saved to STRV Cloud');
-      });
+      };
+      const fullPayload = photoUrl ? { ...payload, original_photo_url: photoUrl } : payload;
+      let { error } = await supabase.from('inquiries').insert(fullPayload);
+      if (error) {
+        console.warn('First insert failed, retrying standard payload:', error.message);
+        const fallbackRes = await supabase.from('inquiries').insert(payload);
+        if (fallbackRes.error) console.error('Cloud Save Error:', fallbackRes.error);
+        else console.log('Service inquiry saved to STRV Cloud via fallback');
+      } else {
+        console.log('Service inquiry saved to STRV Cloud');
+      }
     });
   };
 };
