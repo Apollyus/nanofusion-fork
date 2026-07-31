@@ -19,23 +19,30 @@ export const portfolioPromise = (async () => {
 })();
 
 const injectPortfolio = async () => {
-    if (document.getElementById('realizace')) return; // Zabráníme dvojité inicializaci
+    let portfolioSection = document.getElementById('realizace');
+    if (portfolioSection && portfolioSection.dataset.initialized) return;
 
-    const portfolioSection = document.createElement('div');
-    portfolioSection.id = 'realizace';
-    portfolioSection.className = 'py-24 bg-slate-50 relative overflow-hidden';
+    if (!portfolioSection) {
+        portfolioSection = document.createElement('div');
+        portfolioSection.id = 'realizace';
+        portfolioSection.className = 'py-24 bg-slate-50 relative overflow-hidden';
 
-    // Vložíme sekci na správné místo v DOM
-    const referenceSection = document.getElementById('reference');
-    const processSection = document.getElementById('proces');
-    if (referenceSection?.parentNode) {
-        referenceSection.parentNode.insertBefore(portfolioSection, referenceSection);
-    } else if (processSection?.parentNode) {
-        processSection.parentNode.insertBefore(portfolioSection, processSection.nextSibling);
-    } else {
-        const root = document.querySelector('#root > div') || document.body;
-        root.appendChild(portfolioSection);
+        const referenceSection = document.getElementById('reference');
+        const sluzbySection = document.getElementById('sluzby');
+        const processSection = document.getElementById('proces');
+        if (referenceSection?.parentNode) {
+            referenceSection.parentNode.insertBefore(portfolioSection, referenceSection);
+        } else if (sluzbySection?.parentNode) {
+            sluzbySection.parentNode.insertBefore(portfolioSection, sluzbySection.nextSibling);
+        } else if (processSection?.parentNode) {
+            processSection.parentNode.insertBefore(portfolioSection, processSection);
+        } else {
+            const root = document.querySelector('#root > div') || document.body;
+            root.appendChild(portfolioSection);
+        }
     }
+
+    portfolioSection.dataset.initialized = 'true';
 
     let projectsData = [];
 
@@ -132,7 +139,7 @@ const injectPortfolio = async () => {
 
         modal.innerHTML = `
             <div class="modal-content" style="max-width:960px;max-height:90vh;overflow-y:auto;">
-                <button class="close-modal-btn" onclick="window.location.hash = 'realizace'">&times;</button>
+                <button class="close-modal-btn">&times;</button>
                 <div style="padding:2.5rem;">
                     <div style="position:relative;margin-bottom:1.5rem;border-radius:1.5rem;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.1);" id="portfolio-modal-media-viewport">
                         
@@ -152,16 +159,17 @@ const injectPortfolio = async () => {
                     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1.5rem;margin-bottom:1.5rem;">
                         <div style="flex:1;min-width:300px;">
                             <h2 style="font-size:2.25rem;font-weight:900;color:#0f172a;margin-bottom:1rem;line-height:1.2;">${p.title}</h2>
-                            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+                            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">
                                 <span style="background:#fff7ed;color:#f59e0b;padding:0.5rem 1.25rem;border-radius:99px;font-size:0.75rem;font-weight:900;text-transform:uppercase;letter-spacing:0.05em;">${p.work_type}</span>
                                 ${p.duration ? `<span style="background:#f1f5f9;color:#475569;padding:0.5rem 1.25rem;border-radius:99px;font-size:0.75rem;font-weight:700;">⏱ ${p.duration}</span>` : ''}
                                 ${p.location ? `<span style="background:#f1f5f9;color:#475569;padding:0.5rem 1.25rem;border-radius:99px;font-size:0.75rem;font-weight:700;">📍 ${p.location}</span>` : ''}
                             </div>
+                            ${galleryHtml}
                         </div>
                         <div style="width:100%;max-width:320px;background:#F59E0B;padding:2rem;border-radius:1.5rem;color:white;box-shadow:0 15px 35px rgba(245,158,11,0.2);">
                             <h4 style="font-weight:900;font-size:1.1rem;margin-bottom:0.5rem;">Zaujala vás tato práce?</h4>
                             <p style="font-size:0.9rem;opacity:0.9;margin-bottom:1.5rem;line-height:1.5;">Rádi pro vás připravíme nezávaznou kalkulaci zdarma.</p>
-                            <button onclick="document.getElementById('case-study-modal').style.display='none';document.getElementById('ai-chat-launcher').click();"
+                             <button onclick="if(window.nnf_closeModalAndScrollToKalkulacka){window.nnf_closeModalAndScrollToKalkulacka();}else{document.getElementById('case-study-modal').style.display='none';document.body.style.overflow='';if(window.scrollToKalkulacka){window.scrollToKalkulacka();}else{window.location.href='/#kalkulacka';}}"
                                 style="width:100%;background:white;color:#F59E0B;border:none;padding:1rem;border-radius:1rem;font-weight:900;cursor:pointer;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.05em;transition:all 0.3s;"
                                 onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 15px rgba(0,0,0,0.1)'"
                                 onmouseleave="this.style.transform='translateY(0)'">
@@ -175,29 +183,33 @@ const injectPortfolio = async () => {
                         <h4 style="font-size:0.75rem;font-weight:800;color:#94a3b8;text-transform:uppercase;margin-bottom:1rem;letter-spacing:0.1em;">Detaily realizace</h4>
                         <div style="color:#334155;line-height:1.8;font-size:1.1rem;">${p.description}</div>
                     </div>` : ''}
-                    
-                    ${p.photos && p.photos.length > 1 ? `
-                        <div style="margin-top:2.5rem;">
-                            <h4 style="font-size:0.75rem;font-weight:800;color:#94a3b8;text-transform:uppercase;margin-bottom:1rem;letter-spacing:0.1em;">Fotogalerie projektu (${p.photos.length})</h4>
-                            ${galleryHtml}
-                        </div>
-                    ` : ''}
                 </div>
             </div>
         `;
         modal.style.display = 'flex';
-        modal.querySelector('.close-modal-btn').onclick = () => {
+
+        const closeModal = () => {
             modal.style.display = 'none';
-            if (window.location.hash.startsWith('#realizace/')) {
-                window.location.hash = 'realizace';
+            if (window.location.hash.includes('#realizace')) {
+                history.replaceState(null, '', window.location.pathname + window.location.search);
             }
         };
+
+        const closeBtn = modal.querySelector('.close-modal-btn');
+        if (closeBtn) closeBtn.onclick = closeModal;
         modal.onclick = (e) => { 
             if (e.target === modal) {
-                modal.style.display = 'none';
-                if (window.location.hash.startsWith('#realizace/')) {
-                    window.location.hash = 'realizace';
-                }
+                closeModal();
+            }
+        };
+        window.nnf_closeModalAndScrollToKalkulacka = () => {
+            closeModal();
+            if (window.scrollToKalkulacka) {
+                window.scrollToKalkulacka();
+            } else {
+                const kalk = document.getElementById('kalkulacka');
+                if (kalk) kalk.scrollIntoView({ behavior: 'smooth' });
+                else window.location.href = '/#kalkulacka';
             }
         };
     };
@@ -213,6 +225,7 @@ const injectPortfolio = async () => {
         } else if (hash === '#realizace') {
             const modal = document.getElementById('case-study-modal');
             if (modal) modal.style.display = 'none';
+            history.replaceState(null, '', window.location.pathname + window.location.search);
         }
     };
 
@@ -238,9 +251,7 @@ const injectPortfolio = async () => {
     }
 
     const render = () => {
-        // Set opacity to 0 initially to prevent flickering
-        portfolioSection.style.opacity = '0';
-        portfolioSection.style.transition = 'opacity 0.6s ease-out';
+        portfolioSection.style.opacity = '1';
 
         const generateCards = (list) => list.map(p => {
             const img = window.nnf_optimizeImage(p.photos?.[0]?.url || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800', 640);
@@ -263,8 +274,8 @@ const injectPortfolio = async () => {
         portfolioSection.innerHTML = `
             <div class="container mx-auto px-4 mb-16">
                 <div class="text-center">
-                    <h2 class="text-4xl md:text-6xl font-bold text-slate-900 mb-6">Naše Realizace v detailu</h2>
-                    <p class="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">Sledujte, jak vracíme domům jejich původní krásu a lesk.</p>
+                    <h2 class="text-4xl md:text-6xl font-bold mb-6" style="color: #f59e0b;">Naše Realizace v detailu</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">Sledujte, jak vracíme povrchům jejich původní vzhled a krásu</p>
                 </div>
             </div>
             
@@ -292,9 +303,9 @@ const injectPortfolio = async () => {
             </div>
 
             <div style="display:flex;justify-content:center;padding:5rem 0;">
-                <button onclick="document.getElementById('ai-chat-launcher').click()"
+                <button onclick="if(window.scrollToKalkulacka){window.scrollToKalkulacka();}else{const el=document.getElementById('kalkulacka');if(el){el.scrollIntoView({behavior:'smooth'});}else{window.location.href='/#kalkulacka';}}"
                     class="inline-flex items-center px-12 py-6 bg-amber-500 text-white font-black rounded-2xl hover:bg-amber-600 transition-all shadow-2xl active:scale-95 uppercase tracking-widest text-sm hover:translate-y-[-2px]">
-                    CHCI TAKÉ TAKOVÉ VÝSLEDKY
+                    Spočítejte si cenu
                     <svg class="ml-3 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </button>
             </div>
@@ -473,9 +484,7 @@ const injectPortfolio = async () => {
         
         // Initial route check
         handleRouting();
-
-        // Final fade-in
-        setTimeout(() => { portfolioSection.style.opacity = '1'; }, 100);
+        portfolioSection.style.opacity = '1';
     };
 
     render();
@@ -484,12 +493,14 @@ const injectPortfolio = async () => {
 
 // --- Initialization Logic ---
 const initPortfolio = () => {
-    if (document.getElementById('realizace')) return;
+    const el = document.getElementById('realizace');
+    if (el && el.dataset.initialized) return true;
     
     const referenceSection = document.getElementById('reference');
+    const sluzbySection = document.getElementById('sluzby');
     const processSection = document.getElementById('proces');
     
-    if (referenceSection?.parentNode || processSection?.parentNode) {
+    if (referenceSection?.parentNode || sluzbySection?.parentNode || processSection?.parentNode || el) {
         injectPortfolio();
         return true;
     }

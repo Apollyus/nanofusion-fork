@@ -3,6 +3,16 @@
  * Handles Reveal System, Branding patches, and UI enhancements.
  */
 
+// Clean hash on page load/refresh if hash is #realizace so refresh always starts at top (0, 0)
+if (window.location.hash === '#realizace') {
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+}
+window.addEventListener('load', () => {
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+  }
+});
+
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -23,6 +33,161 @@ export const heroTitlePromise = (async () => {
     return null;
   }
 })();
+
+// Pre-fetch services from Supabase for dynamic card video hydration
+export const servicesPromise = (async () => {
+  try {
+    const { supabase } = await import('./supabase-config.js');
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .eq('is_active', true)
+      .order('order_index', { ascending: true });
+    if (error) throw error;
+    return data;
+  } catch (e) {
+    console.warn('NANOfusion: Pre-fetch services failed:', e);
+    return null;
+  }
+})();
+
+// Helper to send postMessage commands directly to YouTube iframes
+const sendYTCommand = (iframe, func, args = []) => {
+  try {
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage(JSON.stringify({
+        event: 'command',
+        func: func,
+        args: args
+      }), '*');
+    }
+  } catch (e) {}
+};
+
+// Global interaction trigger to unlock video autoplay on 100% of browsers
+const unlockAllVideos = () => {
+  document.querySelectorAll('iframe[src*="youtube.com"]').forEach(iframe => {
+    sendYTCommand(iframe, 'mute');
+    sendYTCommand(iframe, 'playVideo');
+  });
+  document.querySelectorAll('video').forEach(vid => {
+    vid.muted = true;
+    vid.play().catch(() => {});
+  });
+};
+
+['scroll', 'mousemove', 'touchstart', 'click', 'pointerdown'].forEach(evt => {
+  window.addEventListener(evt, unlockAllVideos, { passive: true, once: false });
+});
+
+// YouTube Iframe API loader and auto-play helper
+if (!document.getElementById('yt-api-script')) {
+  const script = document.createElement('script');
+  script.id = 'yt-api-script';
+  script.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(script);
+}
+
+const ytQueue = [];
+window.onYouTubeIframeAPIReady = () => {
+  window.nnf_ytReady = true;
+  ytQueue.forEach(fn => fn());
+};
+
+const playYouTubeIframe = (iframe) => {
+  sendYTCommand(iframe, 'mute');
+  sendYTCommand(iframe, 'playVideo');
+
+  const init = () => {
+    try {
+      if (window.YT && window.YT.Player) {
+        new window.YT.Player(iframe, {
+          events: {
+            onReady: (e) => {
+              e.target.mute();
+              e.target.playVideo();
+            }
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('NANOfusion: YT Player init warning:', e);
+    }
+  };
+
+  if (window.nnf_ytReady && window.YT && window.YT.Player) {
+    init();
+  } else {
+    ytQueue.push(init);
+  }
+};
+
+const syncServicesMedia = async () => {
+  const sluzbySection = document.getElementById('sluzby');
+  if (!sluzbySection) return;
+
+  try {
+    const services = await servicesPromise;
+    if (!services || services.length === 0) return;
+
+    const cards = sluzbySection.querySelectorAll('.group, [class*="card"], [onclick*="/sluzby/"]');
+    cards.forEach(card => {
+      const linkAttr = card.getAttribute('onclick') || card.getAttribute('href') || '';
+      const cardTitle = card.querySelector('h3')?.textContent.trim().toLowerCase();
+      
+      const match = services.find(s => 
+        (s.slug && linkAttr.includes(s.slug)) || 
+        (s.name && cardTitle && (cardTitle.includes(s.name.toLowerCase()) || s.name.toLowerCase().includes(cardTitle)))
+      );
+
+      if (match && !card.dataset.videoSynced) {
+        const video = match.video_url || match.hero_video_url;
+        if (!video) return;
+
+        const ytMatch = video.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+        const ytId = ytMatch ? ytMatch[1] : null;
+
+        const imgEl = card.querySelector('img');
+        if (!imgEl) return;
+        const mediaBox = imgEl.parentElement;
+        if (!mediaBox || mediaBox.classList.contains('p-6')) return;
+
+        if (ytId) {
+          mediaBox.style.position = 'relative';
+          let iframe = mediaBox.querySelector('iframe');
+          if (!iframe) {
+            const origin = encodeURIComponent(window.location.origin);
+            iframe = document.createElement('iframe');
+            iframe.id = `yt-card-player-${ytId}-${Math.random().toString(36).slice(2, 6)}`;
+            iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1&origin=${origin}&playsinline=1`;
+            iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1;';
+            iframe.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture';
+            mediaBox.appendChild(iframe);
+          }
+          playYouTubeIframe(iframe);
+          card.dataset.videoSynced = 'true';
+        } else if (video) {
+          mediaBox.style.position = 'relative';
+          if (!mediaBox.querySelector('video')) {
+            const vid = document.createElement('video');
+            vid.src = video;
+            vid.autoplay = true;
+            vid.loop = true;
+            vid.muted = true;
+            vid.playsInline = true;
+            vid.setAttribute('webkit-playsinline', 'true');
+            vid.className = 'w-full h-full object-cover absolute inset-0';
+            mediaBox.appendChild(vid);
+            vid.play().catch(() => {});
+          }
+          card.dataset.videoSynced = 'true';
+        }
+      }
+    });
+  } catch (e) {
+    console.warn('NANOfusion: syncServicesMedia failed:', e);
+  }
+};
 
 const syncHeroText = async (heading) => {
   try {
@@ -87,6 +252,136 @@ const observeAll = () => {
   // 2.1. Trigger Hero Media Load immediately when React mounts the hero section
   if (window.nnf_loadHeroMedia) {
     window.nnf_loadHeroMedia();
+  }
+
+  // 2.2. Hero Badges Row Patch (3 pill badges on 1 row)
+  const heroHeadingEl = document.querySelector('h1.font-heading, .hero h1');
+  if (heroHeadingEl) {
+    const parentContainer = heroHeadingEl.parentElement;
+    if (parentContainer && !parentContainer.querySelector('.hero-badges-row')) {
+      const existingBadge = parentContainer.querySelector('.inline-flex.rounded-full, [class*="rounded-full"]');
+      
+      const badgeRow = document.createElement('div');
+      badgeRow.className = 'hero-badges-row';
+      badgeRow.style.cssText = 'display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 1.5rem; z-index: 2; position: relative;';
+
+      const stylePill = 'background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 9999px; padding: 0.4rem 1.1rem; color: #ffffff; font-size: 0.875rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 14px rgba(0,0,0,0.15);';
+
+      badgeRow.innerHTML = `
+        <div style="${stylePill}">
+          <span style="color: #f59e0b; font-weight: 800;">★★★★★</span>
+          <span>950+ dokončených projektů</span>
+        </div>
+        <div style="${stylePill}">
+          <span style="font-size: 1rem;">🛡️</span>
+          <span>Pojištění odpovědnosti</span>
+        </div>
+        <div style="${stylePill}">
+          <span style="color: #f59e0b; font-weight: 800;">★ 4,9</span>
+          <span>na Firmy.cz</span>
+        </div>
+      `;
+
+      if (existingBadge) {
+        existingBadge.replaceWith(badgeRow);
+      } else {
+        parentContainer.insertBefore(badgeRow, heroHeadingEl);
+      }
+    }
+  }
+
+  // 2.3. Patch Hero Primary CTA Button ("Spočítejte si cenu" -> #kalkulacka)
+  window.scrollToKalkulacka = (e) => {
+    const kalk = document.getElementById('kalkulacka');
+    if (kalk) {
+      if (e && e.preventDefault) e.preventDefault();
+      const navHeader = document.querySelector('header, nav, .navbar');
+      const headerHeight = navHeader ? navHeader.offsetHeight : 80;
+      const elementPosition = kalk.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 15;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    } else {
+      window.location.href = '/#kalkulacka';
+    }
+  };
+  const scrollToKalkulacka = window.scrollToKalkulacka;
+
+  document.querySelectorAll('a, button').forEach(el => {
+    if (el.classList.contains('nav-cta-desktop') || el.classList.contains('drawer-cta')) return;
+    const text = el.textContent.trim();
+    const isHeroContext = !!(el.closest('section:first-of-type') || el.closest('.hero, #hero, [data-hero]') || el.closest('.max-w-4xl, .max-w-2xl'));
+    
+    if (isHeroContext && (text.includes('Nezávazná') || text.includes('cenov') || text.includes('kalkul') || text.includes('Spočítat') || text.includes('Spočítejte') || text.includes('Získat'))) {
+      el.setAttribute('href', '#kalkulacka');
+      const svg = el.querySelector('svg');
+      el.innerHTML = 'Spočítejte si cenu ' + (svg ? svg.outerHTML : '<span style="margin-left: 0.5rem;">→</span>');
+      el.dataset.heroCtaPatched = 'true';
+      el.onclick = scrollToKalkulacka;
+    }
+  });
+
+  document.querySelectorAll('a[href="#kalkulacka"]').forEach(a => {
+    a.onclick = scrollToKalkulacka;
+  });
+
+  // 2.4. Uniform gap logic across homepage sections (Hero -> Stats -> Služby -> Jak to funguje)
+  const sluzbySection = document.getElementById('sluzby');
+  if (sluzbySection) {
+    sluzbySection.style.setProperty('padding-top', '3.5rem', 'important');
+    sluzbySection.style.setProperty('padding-bottom', '1.5rem', 'important');
+    const statsSection = sluzbySection.previousElementSibling;
+    if (statsSection) {
+      statsSection.style.setProperty('padding-bottom', '1.5rem', 'important');
+      statsSection.style.setProperty('margin-bottom', '0', 'important');
+    }
+
+    // Hide "Naše služby" category label & make "Dočista kvalitní služby" heading orange
+    const categorySpan = sluzbySection.querySelector('span.uppercase, span.text-primary');
+    if (categorySpan && categorySpan.textContent.trim().toLowerCase() === 'naše služby') {
+      categorySpan.style.display = 'none';
+    }
+    const mainHeading = sluzbySection.querySelector('h2');
+    if (mainHeading) {
+      mainHeading.style.setProperty('color', '#f59e0b', 'important');
+    }
+    const subtitle = sluzbySection.querySelector('p');
+    if (subtitle && subtitle.textContent.includes('Kompletní péče')) {
+      subtitle.textContent = subtitle.textContent.replace('Kompletní péče', 'Komplexní péče');
+    }
+
+    // Hydrate YouTube / MP4 video overlay for service cards from Supabase
+    syncServicesMedia();
+  }
+
+  // Make "Naše Realizace v detailu" heading orange & patch CTA button to "Spočítejte si cenu"
+  const realizaceSection = document.getElementById('realizace');
+  if (realizaceSection) {
+    const realizaceHeading = realizaceSection.querySelector('h2');
+    if (realizaceHeading) {
+      realizaceHeading.style.setProperty('color', '#f59e0b', 'important');
+    }
+    const ctaBtn = Array.from(realizaceSection.querySelectorAll('button, a')).find(b => 
+      b.textContent.toLowerCase().includes('takové výsledky') || b.textContent.toLowerCase().includes('spočítejte si cenu')
+    );
+    if (ctaBtn) {
+      if (ctaBtn.textContent.toLowerCase().includes('takové výsledky')) {
+        ctaBtn.innerHTML = `Spočítejte si cenu <svg class="ml-3 w-6 h-6 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>`;
+      }
+      ctaBtn.onclick = (e) => {
+        e.preventDefault();
+        window.scrollToKalkulacka();
+      };
+    }
+  }
+
+  const procesSection = document.getElementById('proces');
+  if (procesSection) {
+    procesSection.style.setProperty('padding-top', '2.5rem', 'important');
+    procesSection.style.setProperty('padding-bottom', '2.5rem', 'important');
   }
 
   // 3. Remove header phone number

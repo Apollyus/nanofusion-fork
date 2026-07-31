@@ -68,6 +68,7 @@ export type Database = {
           name: string
           description: string | null
           hero_image_url: string | null
+          video_url?: string | null
           order_index: number
           is_active: boolean
           updated_at: string | null
@@ -80,6 +81,7 @@ export type Database = {
           name: string
           description?: string | null
           hero_image_url?: string | null
+          video_url?: string | null
           order_index?: number
           is_active?: boolean
           updated_at?: string | null
@@ -92,6 +94,7 @@ export type Database = {
           name?: string
           description?: string | null
           hero_image_url?: string | null
+          video_url?: string | null
           order_index?: number
           is_active?: boolean
           updated_at?: string | null

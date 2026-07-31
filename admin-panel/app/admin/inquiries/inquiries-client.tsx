@@ -534,52 +534,87 @@ export function InquiriesClient({ initialInquiries }: InquiriesClientProps) {
               </div>
 
               {/* Message */}
-              {selectedInquiry.message && (
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>
-                    Zpráva
-                  </p>
-                  <div
-                    className="rounded-xl p-4 text-sm leading-relaxed"
-                    style={{
-                      background: 'var(--bg-base)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--text-primary)',
-                      whiteSpace: 'pre-wrap',
-                    }}
-                  >
-                    {selectedInquiry.message}
-                  </div>
-                </div>
-              )}
+              {selectedInquiry.message && (() => {
+                const cleanMsg = selectedInquiry.message
+                  .replace(/Fotografie\s*(\(\d+\))?:\s*/gi, '')
+                  .replace(/data:image\/[a-zA-Z]+;base64,[A-Za-z0-9+/=]+/g, '')
+                  .replace(/https?:\/\/[^\s\n]+\.(jpg|jpeg|png|webp|gif)[^\s\n]*/gi, '')
+                  .replace(/\n\s*\n/g, '\n')
+                  .trim()
 
-              {selectedInquiry.original_photo_url && (
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                      Přiložená fotografie objektu
+                return cleanMsg ? (
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>
+                      Zpráva
                     </p>
-                    <a
-                      href={selectedInquiry.original_photo_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+                    <div
+                      className="rounded-xl p-4 text-sm leading-relaxed"
+                      style={{
+                        background: 'var(--bg-base)',
+                        border: '1px solid var(--border)',
+                        color: 'var(--text-primary)',
+                        whiteSpace: 'pre-wrap',
+                      }}
                     >
-                      Otevřít v plné velikosti ↗
-                    </a>
+                      {cleanMsg}
+                    </div>
                   </div>
-                  <div 
-                    className="relative w-full h-80 rounded-2xl overflow-hidden border bg-slate-50 flex items-center justify-center p-2" 
-                    style={{ borderColor: 'var(--border)' }}
-                  >
-                    <img
-                      src={selectedInquiry.original_photo_url}
-                      alt="Přiložená fotografie"
-                      className="max-h-full max-w-full object-contain rounded-xl"
-                    />
+                ) : null
+              })()}
+
+              {/* Photos Gallery */}
+              {(() => {
+                const photos: string[] = []
+                if (selectedInquiry.original_photo_url) photos.push(selectedInquiry.original_photo_url)
+                if (selectedInquiry.photo_url && !photos.includes(selectedInquiry.photo_url)) photos.push(selectedInquiry.photo_url)
+                if (selectedInquiry.image_url && !photos.includes(selectedInquiry.image_url)) photos.push(selectedInquiry.image_url)
+
+                if (selectedInquiry.message) {
+                  const matches = selectedInquiry.message.match(/(data:image\/[a-zA-Z]+;base64,[A-Za-z0-9+/=]+|https?:\/\/[^\s\n]+)/g)
+                  if (matches) {
+                    matches.forEach(url => {
+                      if ((url.startsWith('data:image/') || url.match(/\.(jpg|jpeg|png|webp|gif)/i) || url.includes('/storage/v1/object/public/')) && !photos.includes(url)) {
+                        photos.push(url)
+                      }
+                    })
+                  }
+                }
+
+                if (photos.length === 0) return null
+
+                return (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                        Přiložené fotografie ({photos.length})
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {photos.map((photoUrl, idx) => (
+                        <div 
+                          key={idx}
+                          className="relative w-full h-64 rounded-2xl overflow-hidden border bg-slate-50 flex items-center justify-center p-2 group" 
+                          style={{ borderColor: 'var(--border)' }}
+                        >
+                          <img
+                            src={photoUrl}
+                            alt={`Přiložená fotografia ${idx + 1}`}
+                            className="max-h-full max-w-full object-contain rounded-xl"
+                          />
+                          <a
+                            href={photoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute bottom-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg backdrop-blur-sm transition-all"
+                          >
+                            Zvětšit ↗
+                          </a>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )
+              })()}
 
               {/* Notes */}
               <div>

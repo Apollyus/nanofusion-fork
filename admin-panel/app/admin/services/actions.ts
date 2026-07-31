@@ -135,6 +135,22 @@ export async function uploadServiceHeroImage(serviceId: string, formData: FormDa
   return publicUrl
 }
 
+export async function uploadServiceVideo(serviceId: string, formData: FormData) {
+  const supabase = await createAdminClient()
+  const file = formData.get('file') as File
+  if (!file) throw new Error('Chybí soubor videa')
+  const publicUrl = await uploadFile(supabase, file, 'services', `${serviceId}/video`)
+  try {
+    await (supabase.from('services') as any)
+      .update({ video_url: publicUrl, updated_at: new Date().toISOString() })
+      .eq('id', serviceId)
+  } catch (e) {
+    console.warn('Could not update video_url column directly:', e)
+  }
+  revalidatePath(`/admin/services/${serviceId}`)
+  return publicUrl
+}
+
 // --- Service Reviews management ---
 export async function addServiceReview(serviceId: string, author: string, rating: number, content: string) {
   const supabase = await createAdminClient()

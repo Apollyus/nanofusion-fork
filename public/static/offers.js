@@ -296,6 +296,7 @@ const hydrateFromCloud = async () => {
             title: cloudService.name || cloudService.title || servicesData[index].title,
             detail: cloudService.description || cloudService.detail || servicesData[index].detail,
             image: cloudService.hero_image_url || cloudService.image || servicesData[index].image,
+            video: cloudService.video_url || cloudService.hero_video_url || cloudService.video,
             tag: cloudService.category || cloudService.tag || servicesData[index].tag,
             involves: cloudService.process_description || servicesData[index].involves,
             bulletPoints: cloudService.features || servicesData[index].bulletPoints,

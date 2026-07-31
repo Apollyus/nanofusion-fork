@@ -19,7 +19,29 @@ body {
   animation: fadeInGlobal 0.8s ease-out 0.2s forwards;
 }
 
-/* surgical-fix: moving patches from main.js to css to prevent flashing */
+/* surgical-fix: uniform section spacing across homepage (4rem / 64px gap between sections) */
+#sluzby {
+  padding-top: 3.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+#proces {
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
+}
+
+#sluzby-sec {
+  margin-bottom: 2rem !important;
+}
+
+#sluzby span.uppercase {
+  display: none !important;
+}
+
+#sluzby h2 {
+  color: #f59e0b !important;
+}
+
 footer {
   background-color: #111111 !important;
 }

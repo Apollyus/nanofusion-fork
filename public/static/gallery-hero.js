@@ -91,33 +91,34 @@ export const loadHeroMedia = async () => {
       
       const videoWrap = document.createElement('div');
       videoWrap.className = 'video-wrap';
-      videoWrap.style.cssText = 'position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;opacity:0;transition:opacity 1s cubic-bezier(0.4, 0, 0.2, 1);';
+      videoWrap.style.cssText = 'position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;opacity:1;transition:opacity 1s cubic-bezier(0.4, 0, 0.2, 1);';
       
+      const origin = encodeURIComponent(window.location.origin);
       const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&playlist=${videoId}&modestbranding=1`;
-      iframe.style.cssText = 'width:100vw;height:56.25vw;min-height:100vh;min-width:177.77vh;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);';
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&playlist=${videoId}&modestbranding=1&enablejsapi=1&origin=${origin}&playsinline=1`;
+      iframe.style.cssText = 'width:100vw;height:56.25vw;min-height:100vh;min-width:177.77vh;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);border:none;';
       iframe.frameBorder = '0';
-      iframe.allow = 'autoplay; fullscreen; encrypted-media';
+      iframe.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture';
       
       videoWrap.appendChild(iframe);
       heroSection.style.position = 'relative';
       heroSection.prepend(videoWrap);
 
-      // YouTube Iframe se prolné až když se kompletně načte do DOMu
-      iframe.onload = () => {
-        videoWrap.style.opacity = '0.55'; // Příjemná ambientní průhlednost pro text
-        fadeOutExisting();
-        console.log('NANOfusion: Hero YouTube video plynule zobrazeno:', videoId);
-        markMediaReady();
-      };
-      
-      // Fallback
-      setTimeout(markMediaReady, 1500);
+      // Trigger postMessage play command
+      setTimeout(() => {
+        try {
+          iframe.contentWindow?.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
+          iframe.contentWindow?.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
+        } catch (e) {}
+      }, 100);
+
+      fadeOutExisting();
+      markMediaReady();
+      console.log('NANOfusion: Hero YouTube video načteno:', videoId);
       
     } else if (isVideo) {
       const existingVideo = heroSection.querySelector('video');
       if (existingVideo) {
-        // Pokud video element už existuje, plynule změníme src a přehrajeme
         existingVideo.style.transition = 'opacity 0.5s ease';
         existingVideo.style.opacity = '0';
         setTimeout(() => {
@@ -130,7 +131,7 @@ export const loadHeroMedia = async () => {
         console.log('NANOfusion: Hero video plynule nahrazeno z DB:', data.url);
       } else {
         const videoWrap = document.createElement('div');
-        videoWrap.style.cssText = 'position:absolute;inset:0;z-index:0;overflow:hidden;opacity:0;transition:opacity 1s cubic-bezier(0.4, 0, 0.2, 1);';
+        videoWrap.style.cssText = 'position:absolute;inset:0;z-index:0;overflow:hidden;opacity:1;transition:opacity 1s cubic-bezier(0.4, 0, 0.2, 1);';
         
         const video = document.createElement('video');
         video.src = data.url;
@@ -138,28 +139,16 @@ export const loadHeroMedia = async () => {
         video.muted = true;
         video.loop = true;
         video.playsInline = true;
+        video.setAttribute('webkit-playsinline', 'true');
         video.style.cssText = 'width:100%;height:100%;object-fit:cover;';
         
         videoWrap.appendChild(video);
         heroSection.style.position = 'relative';
         heroSection.prepend(videoWrap);
 
-        // HTML5 video se zobrazí až ve chvíli, kdy má dostatek stažených dat
-        video.oncanplaythrough = () => {
-          videoWrap.style.opacity = '1';
-          fadeOutExisting();
-          console.log('NANOfusion: Hero HTML5 video plynule zobrazeno:', data.url);
-          markMediaReady();
-        };
-
-        // Fallback: Pokud by canplaythrough trval příliš dlouho
-        setTimeout(() => {
-          if (videoWrap.style.opacity === '0') {
-            videoWrap.style.opacity = '1';
-            fadeOutExisting();
-          }
-          markMediaReady();
-        }, 1200);
+        video.play().catch(() => {});
+        fadeOutExisting();
+        markMediaReady();
       }
     } else if (data.type === 'image') {
       const existingMedia = heroSection.querySelector('video, iframe');

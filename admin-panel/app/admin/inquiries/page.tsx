@@ -21,8 +21,8 @@ export default async function InquiriesPage() {
   // Ensure photo URLs are mapped for standard inquiries
   const inquiries = rawInquiries.map((inq: any) => {
     let photoUrl = inq.original_photo_url || inq.photo_url || inq.image_url || null
-    if (!photoUrl && inq.message && inq.message.includes('Fotografie:')) {
-      const match = inq.message.match(/Fotografie:\s*(data:image\/[^\s\n]+|https?:\/\/[^\s\n]+)/)
+    if (!photoUrl && inq.message && /Fotografie/i.test(inq.message)) {
+      const match = inq.message.match(/(data:image\/[a-zA-Z]+;base64,[A-Za-z0-9+/=]+|https?:\/\/[^\s\n]+)/)
       if (match) photoUrl = match[1]
     }
     return {

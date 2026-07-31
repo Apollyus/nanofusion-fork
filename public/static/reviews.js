@@ -21,19 +21,40 @@ const injectReviews = (list) => {
     const reviewsSection = document.getElementById('reference');
     if (!reviewsSection || reviewsSection.dataset.injected === 'true') return false;
 
+    // Double the array for smooth infinite scrolling loop
+    const displayList = list.length > 2 ? list.concat(list) : list;
+
     reviewsSection.innerHTML = `
         <div class="pt-48 pb-16 bg-slate-950 section-reveal">
             <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
+                <div class="text-center mb-12">
                     <h2 class="text-4xl md:text-6xl font-bold text-white mb-6" style="margin-top: 4rem;">Co o nás říkají naši klienti</h2>
-                    <p class="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed opacity-80">
-                        Reference čerpáme z portálu firmy.cz. Spokojenost našich klientů je pro nás prioritou číslo jedna.
+                    <p class="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed opacity-80 mb-8">
+                        Reference čerpáme z portálů Firmy.cz a Google. Spokojenost našich klientů je pro nás prioritou číslo jedna.
                     </p>
+
+                    <!-- 2 Glassmorphism Review Bubbles / Pill Buttons -->
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 2rem;">
+                        <a href="https://www.firmy.cz/detail/12954501-nanofusion-s-r-o-blucina.html#hodnoceni" target="_blank" rel="noopener noreferrer"
+                           style="background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 0.6rem 1.4rem; color: #ffffff; font-size: 0.9rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.6rem; transition: all 0.3s ease; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"
+                           onmouseover="this.style.borderColor='#f59e0b'; this.style.background='rgba(245, 158, 11, 0.18)'; this.style.transform='translateY(-2px)';"
+                           onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.background='rgba(255, 255, 255, 0.08)'; this.style.transform='translateY(0)';">
+                            <span style="color: #f59e0b; font-weight: 900;">★ 4,9</span>
+                            <span>Recenze na Firmy.cz ↗</span>
+                        </a>
+                        <a href="https://www.google.com/search?q=NANOfusion+recenze" target="_blank" rel="noopener noreferrer"
+                           style="background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 0.6rem 1.4rem; color: #ffffff; font-size: 0.9rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.6rem; transition: all 0.3s ease; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"
+                           onmouseover="this.style.borderColor='#4285F4'; this.style.background='rgba(66, 133, 244, 0.18)'; this.style.transform='translateY(-2px)';"
+                           onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.background='rgba(255, 255, 255, 0.08)'; this.style.transform='translateY(0)';">
+                            <span style="color: #4285F4; font-weight: 900;">★ 5,0</span>
+                            <span>Recenze na Google ↗</span>
+                        </a>
+                    </div>
                 </div>
 
-                <div style="position: relative; width: 100%; max-width: 1300px; margin: 0 auto;">
+                <div style="position: relative; width: 100%; max-width: 1300px; margin: 0 auto;" class="group">
                     <div id="reviews-scroller" style="display: flex; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; padding: 1rem 0 3rem; scrollbar-width: none; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
-                        ${list.map(rev => `
+                        ${displayList.map(rev => `
                             <div class="review-card-premium"
                                  style="flex: 0 0 350px; background: #1e293b; border-radius: 1.5rem; padding: 2.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 1.5rem;">
                                  <div style="display: flex; gap: 4px;">
@@ -50,8 +71,8 @@ const injectReviews = (list) => {
                         `).join('')}
                     </div>
 
-                    <!-- Premium Navigation Arrows - EXACT CLONE FROM GALLERY -->
-                    <button onclick="document.getElementById('reviews-scroller').scrollLeft -= 500"
+                    <!-- Premium Navigation Arrows -->
+                    <button id="r-arrow-left"
                         class="hidden md:flex"
                         style="position: absolute !important; left: -25px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; border-radius: 30px !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3) !important; transition: all 0.3s ease !important; padding: 0 !important;"
                         onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';"
@@ -60,7 +81,7 @@ const injectReviews = (list) => {
                         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important; display: block !important; margin: auto !important;"><path d="M15 18l-6-6 6-6"></path></svg>
                     </button>
                     
-                    <button onclick="document.getElementById('reviews-scroller').scrollLeft += 500"
+                    <button id="r-arrow-right"
                         class="hidden md:flex"
                         style="position: absolute !important; right: -25px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; border-radius: 30px !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3) !important; transition: all 0.3s ease !important; padding: 0 !important;"
                         onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';"
@@ -74,16 +95,51 @@ const injectReviews = (list) => {
         <style>
             #reviews-scroller::-webkit-scrollbar { display: none; }
             @media (max-width: 1200px) {
-                /* On smaller desktops, move them slightly in so they don't clip */
-                button[onclick*="reviews-scroller"] { left: -10px !important; right: -10px !important; }
+                button[id^="r-arrow"] { left: -10px !important; right: -10px !important; }
             }
             @media (max-width: 768px) {
                 .review-card-premium { flex: 0 0 85% !important; padding: 2rem !important; }
-                button[onclick*="reviews-scroller"] { display: none !important; }
+                button[id^="r-arrow"] { display: none !important; }
                 .pt-48 { padding-top: 6rem !important; }
             }
         </style>
     `;
+
+    // Auto-Scroller Setup
+    setTimeout(() => {
+        const scroller = document.getElementById('reviews-scroller');
+        const arrowLeft = document.getElementById('r-arrow-left');
+        const arrowRight = document.getElementById('r-arrow-right');
+
+        if (scroller) {
+            let autoplayInterval;
+            const startAutoplay = () => {
+                autoplayInterval = setInterval(() => {
+                    if (scroller.scrollLeft >= (scroller.scrollWidth / 2)) {
+                        scroller.scrollLeft = 0;
+                    } else {
+                        scroller.scrollLeft += 1;
+                    }
+                }, 30);
+            };
+            const stopAutoplay = () => clearInterval(autoplayInterval);
+
+            if (arrowLeft) {
+                arrowLeft.onclick = (e) => { e.stopPropagation(); scroller.scrollLeft -= 400; };
+                arrowLeft.onmouseenter = stopAutoplay;
+            }
+            if (arrowRight) {
+                arrowRight.onclick = (e) => { e.stopPropagation(); scroller.scrollLeft += 400; };
+                arrowRight.onmouseenter = stopAutoplay;
+            }
+
+            scroller.onmouseenter = stopAutoplay;
+            scroller.onmouseleave = startAutoplay;
+
+            startAutoplay();
+        }
+    }, 100);
+
     reviewsSection.style.opacity = '0';
     reviewsSection.style.transition = 'opacity 0.6s ease-out';
     reviewsSection.dataset.injected = 'true';

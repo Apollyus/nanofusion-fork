@@ -442,13 +442,37 @@ async function syncContent() {
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     ${dbServices.map(s => {
             const tag = s.category || s.tag || 'Služba';
-            const image = s.hero_image_url || s.image;
+            const defaultServiceImages = {
+                facade: 'https://media.base44.com/images/public/69c6b151f7a89f94f9b87555/ca9840b57_generated_23cd1d83.png',
+                roof: 'https://media.base44.com/images/public/69c6b151f7a89f94f9b87555/8a33d42db_generated_dd359d4c.png',
+                pavement: 'https://media.base44.com/images/public/69c6b151f7a89f94f9b87555/300a8ac7c_generated_bf93bc68.png',
+                pv: 'https://media.base44.com/images/public/69c6b151f7a89f94f9b87555/738b76aca_generated_b2c46e30.png',
+                graffiti: 'https://media.base44.com/images/public/69c6b151f7a89f94f9b87555/da1886573_generated_f1a4dfcc.png',
+                industrial: 'https://media.base44.com/images/public/69c6b151f7a89f94f9b87555/78f96e4dd_generated_f900fa0b.png'
+            };
+            const serviceSlug = s.slug || s.id;
+            const validImage = (s.hero_image_url && typeof s.hero_image_url === 'string' && s.hero_image_url.trim().length > 0)
+                ? s.hero_image_url
+                : (defaultServiceImages[serviceSlug] || 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800');
+
+            const video = s.video_url || s.hero_video_url || s.video;
             const title = s.name || s.title;
             const desc = s.description || s.detail;
+
+            const ytMatch = video ? video.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/) : null;
+            const ytId = ytMatch ? ytMatch[1] : null;
+
+            let mediaHtml = `<img src="${validImage}" alt="${title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">`;
+            if (ytId) {
+                mediaHtml = `<div class="relative w-full h-full overflow-hidden bg-slate-900"><img src="${validImage}" alt="${title}" class="absolute inset-0 w-full h-full object-cover"><iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1&playsinline=1" class="absolute inset-0 w-full h-full border-0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" style="width:100%;height:100%;top:0;left:0;position:absolute;"></iframe></div>`;
+            } else if (video) {
+                mediaHtml = `<video src="${video}" autoplay loop muted playsinline webkit-playsinline class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"></video>`;
+            }
+
             return `
                         <div onclick="window.location.href='/sluzby/${s.slug}'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
-                                <img src="${image}" alt="${title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                ${mediaHtml}
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-3">
@@ -476,8 +500,8 @@ async function syncContent() {
             <div class="container mx-auto px-6">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                     <div>
-                        <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4 font-heading">Naše realizace</h2>
-                        <p class="text-slate-500 text-lg max-w-xl">Ukázky naší práce z celé České republiky.</p>
+                        <h2 class="text-4xl md:text-5xl font-bold mb-4 font-heading" style="color: #f59e0b;">Naše Realizace v detailu</h2>
+                        <p class="text-slate-500 text-lg max-w-xl">Sledujte, jak vracíme povrchům jejich původní vzhled a krásu</p>
                     </div>
                 </div>
                 <div style="display: flex; gap: 1.5rem; overflow-x: auto; padding: 1rem 0 3rem; scrollbar-width: none;">
@@ -499,12 +523,30 @@ async function syncContent() {
         const reviewsHtml = `
         <section id="reference" class="py-24 bg-slate-950 text-white">
             <div class="container mx-auto px-6 text-center">
-                <h2 class="text-4xl md:text-5xl font-bold mb-16">Co o nás říkají naši klienti</h2>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 font-heading">Co o nás říkají naši klienti</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed opacity-80 mb-8">
+                    Reference čerpáme z portálů Firmy.cz a Google. Spokojenost našich klientů je pro nás prioritou číslo jedna.
+                </p>
+
+                <!-- 2 Glassmorphism Review Bubbles -->
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 3rem;">
+                    <a href="https://www.firmy.cz/detail/12954501-nanofusion-s-r-o-blucina.html#hodnoceni" target="_blank" rel="noopener noreferrer"
+                       style="background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 0.6rem 1.4rem; color: #ffffff; font-size: 0.9rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.6rem; transition: all 0.3s ease; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                        <span style="color: #f59e0b; font-weight: 900;">★ 4,9</span>
+                        <span>Recenze na Firmy.cz ↗</span>
+                    </a>
+                    <a href="https://www.google.com/search?q=NANOfusion+recenze" target="_blank" rel="noopener noreferrer"
+                       style="background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 0.6rem 1.4rem; color: #ffffff; font-size: 0.9rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.6rem; transition: all 0.3s ease; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                        <span style="color: #4285F4; font-weight: 900;">★ 5,0</span>
+                        <span>Recenze na Google ↗</span>
+                    </a>
+                </div>
+
                 <div style="display: flex; gap: 1.5rem; overflow-x: auto; padding-bottom: 2rem; scrollbar-width: none;">
                     ${(reviewsRes.data || []).map(r => {
-                        const stars = '★'.repeat(r.rating || 5) + '☆'.repeat(5 - (r.rating || 5));
-                        const sourceText = r.source === 'google' ? 'recenze z Google' : r.source === 'firmy' ? 'recenze z Firmy.cz' : 'Ověřená recenze';
-                        return `
+            const stars = '★'.repeat(r.rating || 5) + '☆'.repeat(5 - (r.rating || 5));
+            const sourceText = r.source === 'google' ? 'recenze z Google' : r.source === 'firmy' ? 'recenze z Firmy.cz' : 'Ověřená recenze';
+            return `
                         <div style="flex: 0 0 350px; background: #1e293b; border-radius: 1.5rem; padding: 2.5rem; text-align: left;">
                             <div style="color: #f59e0b; margin-bottom: 1rem;">${stars}</div>
                             <p style="color: #cbd5e1; font-style: italic; margin-bottom: 1.5rem;">"${r.content || ''}"</p>
@@ -512,7 +554,7 @@ async function syncContent() {
                             <p style="color: #64748b; font-size: 0.85rem;">${sourceText}</p>
                         </div>
                         `;
-                    }).join('')}
+        }).join('')}
                 </div>
             </div>
         </section>`;
@@ -829,46 +871,46 @@ async function syncContent() {
 
             // Dynamic Quote review compilation using service_reviews table (with fallback to external_reviews)
             const serviceSpecificReviews = dbServiceReviews.filter(r => r.service_id === s.id && r.is_visible !== false);
-            
+
             let quote = '';
             let quoteAuthor = 'recenze na Google';
-            
+
             if (serviceSpecificReviews.length > 0) {
-              quote = serviceSpecificReviews[0].content;
-              quoteAuthor = `${serviceSpecificReviews[0].author || 'Ověřený zákazník'} · zákaznická recenze`;
+                quote = serviceSpecificReviews[0].content;
+                quoteAuthor = `${serviceSpecificReviews[0].author || 'Ověřený zákazník'} · zákaznická recenze`;
             } else {
-              // Fallback to keyword match from external_reviews (reviewsRes)
-              const serviceKeywords = {
-                'facade': ['fasád', 'fasad', 'fasádu', 'smog', 'plísn'],
-                'roof': ['střech', 'střechy', 'střeše', 'mech'],
-                'pavement': ['dlažeb', 'dlažba', 'dlažby', 'chodník', 'beton'],
-                'pv': ['panely', 'solár', 'fotovolt', 'fve'],
-                'graffiti': ['graffiti', 'grafit', 'nápis'],
-                'industrial': ['hala', 'průmysl', 'haly', 'provoz'],
-                'facade-paint': ['nátěr fasá', 'malování fasá', 'barva fasá'],
-                'roof-paint': ['nátěr střech', 'barva střech', 'stříkání střech'],
-                'antislip': ['protiskluz', 'smyk', 'kluzk'],
-                'ceramfloor': ['ceram', 'ceramfloor', 'dlaždice'],
-                'antibac': ['antibakteriál', 'ochrana', 'bakteri']
-              };
-              
-              const keywords = serviceKeywords[slug] || [];
-              const dbReviews = reviewsRes.data || [];
-              const matchedReview = dbReviews.find(r => 
-                keywords.some(kw => (r.content || '').toLowerCase().includes(kw))
-              );
-              
-              if (matchedReview) {
-                quote = matchedReview.content;
-                quoteAuthor = `${matchedReview.author || 'Ověřený zákazník'} · recenze z ${matchedReview.source === 'google' ? 'Google' : matchedReview.source === 'firmy' ? 'Firmy.cz' : 'NANOfusion'}`;
-              } else if (dbReviews.length > 0) {
-                // Fallback to latest global review
-                quote = dbReviews[0].content;
-                quoteAuthor = `${dbReviews[0].author || 'Ověřený zákazník'} · recenze z ${dbReviews[0].source === 'google' ? 'Google' : dbReviews[0].source === 'firmy' ? 'Firmy.cz' : 'NANOfusion'}`;
-              } else {
-                quote = catalog.quote;
-                quoteAuthor = 'recenze na Google';
-              }
+                // Fallback to keyword match from external_reviews (reviewsRes)
+                const serviceKeywords = {
+                    'facade': ['fasád', 'fasad', 'fasádu', 'smog', 'plísn'],
+                    'roof': ['střech', 'střechy', 'střeše', 'mech'],
+                    'pavement': ['dlažeb', 'dlažba', 'dlažby', 'chodník', 'beton'],
+                    'pv': ['panely', 'solár', 'fotovolt', 'fve'],
+                    'graffiti': ['graffiti', 'grafit', 'nápis'],
+                    'industrial': ['hala', 'průmysl', 'haly', 'provoz'],
+                    'facade-paint': ['nátěr fasá', 'malování fasá', 'barva fasá'],
+                    'roof-paint': ['nátěr střech', 'barva střech', 'stříkání střech'],
+                    'antislip': ['protiskluz', 'smyk', 'kluzk'],
+                    'ceramfloor': ['ceram', 'ceramfloor', 'dlaždice'],
+                    'antibac': ['antibakteriál', 'ochrana', 'bakteri']
+                };
+
+                const keywords = serviceKeywords[slug] || [];
+                const dbReviews = reviewsRes.data || [];
+                const matchedReview = dbReviews.find(r =>
+                    keywords.some(kw => (r.content || '').toLowerCase().includes(kw))
+                );
+
+                if (matchedReview) {
+                    quote = matchedReview.content;
+                    quoteAuthor = `${matchedReview.author || 'Ověřený zákazník'} · recenze z ${matchedReview.source === 'google' ? 'Google' : matchedReview.source === 'firmy' ? 'Firmy.cz' : 'NANOfusion'}`;
+                } else if (dbReviews.length > 0) {
+                    // Fallback to latest global review
+                    quote = dbReviews[0].content;
+                    quoteAuthor = `${dbReviews[0].author || 'Ověřený zákazník'} · recenze z ${dbReviews[0].source === 'google' ? 'Google' : dbReviews[0].source === 'firmy' ? 'Firmy.cz' : 'NANOfusion'}`;
+                } else {
+                    quote = catalog.quote;
+                    quoteAuthor = 'recenze na Google';
+                }
             }
 
             // FAQ Accordion HTML compilation (DB FAQs with Local Fallbacks)

@@ -56,20 +56,49 @@ const openBlogDetail = (post) => {
         document.body.appendChild(overlay);
     }
 
+    const rawContent = post.content || post.summary || '';
+    const targetMatch = rawContent.match(/<!--\s*target_service:\s*(.*?)\s*-->/);
+    let targetService = targetMatch ? targetMatch[1] : (post.service_slug || post.target_service || null);
+
+    // Smart fallback if not explicitly set in database comment
+    if (!targetService) {
+        const text = ((post.title || '') + ' ' + (post.slug || '') + ' ' + rawContent).toLowerCase();
+        if (text.includes('fasád') || text.includes('fasad')) targetService = 'sluzby/facade';
+        else if (text.includes('střech') || text.includes('strech')) targetService = 'sluzby/roof';
+        else if (text.includes('dlažb') || text.includes('dlazb')) targetService = 'sluzby/pavement';
+        else if (text.includes('impregnac') || text.includes('ochran')) targetService = 'sluzby/impregnation';
+        else if (text.includes('graffiti')) targetService = 'sluzby/graffiti';
+        else if (text.includes('solár') || text.includes('fotovoltaik') || text.includes('pv')) targetService = 'sluzby/pv';
+        else if (text.includes('průmysl') || text.includes('prumysl')) targetService = 'sluzby/industrial';
+    }
+
+    const displayContent = rawContent.replace(/<!--\s*target_service:\s*.*?\s*-->/g, '');
+
+    let buttonOnClick = "document.getElementById('blog-modal-overlay').style.display='none'; if(window.scrollToKalkulacka){window.scrollToKalkulacka();}else{window.location.href='/#kalkulacka';}";
+    let buttonText = "Poptat tuto službu →";
+
+    if (targetService && targetService !== 'kalkulacka') {
+        const targetPath = targetService.startsWith('/') ? targetService : '/' + targetService;
+        buttonOnClick = `window.location.href='${targetPath}';`;
+        buttonText = "Poptat tuto službu →";
+    }
+
     overlay.innerHTML = `
-        <div style="background:white; width:100%; max-width:800px; max-height:90vh; border-radius:32px; overflow-y:auto; position:relative; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
-            <button onclick="document.getElementById('blog-modal-overlay').style.display='none'" style="position:sticky; top:20px; right:20px; float:right; background:#f1f5f9; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:20px; z-index:10; font-weight:bold;">&times;</button>
-            <div style="height:350px; overflow:hidden;">
-                <img src="${window.nnf_optimizeImage(post.image, 1080)}" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            <div style="padding:40px;">
-                <div style="color:#f59e0b; font-weight:800; text-transform:uppercase; font-size:12px; margin-bottom:12px; letter-spacing:0.1em;">Článek • ${post.date}</div>
-                <h2 style="font-size:32px; font-weight:800; color:#0f172a; line-height:1.2; margin-bottom:24px;">${post.title}</h2>
-                <div class="blog-content-html" style="font-size:18px; line-height:1.7; color:#475569;">${post.content || post.summary}</div>
-                
-                <div style="margin-top:40px; padding-top:30px; border-top:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
-                    <div style="font-weight:700; color:#1e293b;">Zaujal vás článek?</div>
-                    <button onclick="document.getElementById('blog-modal-overlay').style.display='none'; setTimeout(() => document.getElementById('ai-chat-launcher').click(), 200)" style="background:#f59e0b; color:white; border:none; padding:12px 24px; border-radius:12px; font-weight:800; cursor:pointer;">Poptat podobnou službu</button>
+        <div style="background:white; width:100%; max-width:840px; max-height:90vh; border-radius:32px; overflow-y:auto; position:relative; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+            <button onclick="document.getElementById('blog-modal-overlay').style.display='none'" style="position:absolute; top:20px; right:20px; background:#f1f5f9; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:20px; z-index:20; font-weight:bold; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.15); transition:all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">&times;</button>
+            <div style="padding:2.5rem;">
+                <div style="position:relative; height:380px; margin-bottom:2rem; border-radius:1.5rem; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.1);">
+                    <img src="${window.nnf_optimizeImage(post.image, 1080)}" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div>
+                    <div style="color:#f59e0b; font-weight:800; text-transform:uppercase; font-size:12px; margin-bottom:12px; letter-spacing:0.1em;">Článek • ${post.date}</div>
+                    <h2 style="font-size:32px; font-weight:800; color:#0f172a; line-height:1.2; margin-bottom:24px;">${post.title}</h2>
+                    <div class="blog-content-html" style="font-size:18px; line-height:1.7; color:#475569;">${displayContent}</div>
+                    
+                    <div style="margin-top:40px; padding-top:30px; border-top:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                        <div style="font-weight:700; color:#1e293b;">Zaujal vás článek?</div>
+                        <button onclick="${buttonOnClick}" style="background:#f59e0b; color:white; border:none; padding:12px 24px; border-radius:12px; font-weight:800; cursor:pointer; transition:all 0.2s;" onmouseenter="this.style.background='#d97706'" onmouseleave="this.style.background='#f59e0b'">${buttonText}</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -121,17 +150,19 @@ const injectBlog = async () => {
     }
 
     const render = () => {
+        const displayPosts = blogPostsData.length > 2 ? blogPostsData.concat(blogPostsData) : blogPostsData;
+
         blogSection.innerHTML = `
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16 md:mb-24">
-                    <h2 class="text-3xl md:text-5xl font-bold text-slate-800 mb-6 font-heading">Nano-Magazín & Tipy</h2>
+                    <h2 class="text-3xl md:text-5xl font-bold mb-6 font-heading" style="color: #f59e0b;">Nano-Magazín & Tipy</h2>
                     <p class="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">Sledujte rady a novinky, jak pečovat o váš dům s moderními technologiemi.</p>
                 </div>
                 
-                <div style="position:relative; width:100%; max-width:1400px; margin:0 auto;">
+                <div style="position:relative; width:100%; max-width:1400px; margin:0 auto;" class="group">
                     <!-- Track Container -->
-                    <div id="blog-scroller" style="display: flex; gap: 2rem; overflow-x: auto; scroll-behavior: smooth; padding: 1rem 0 3rem; scrollbar-width: none;">
-                        ${blogPostsData.map(post => `
+                    <div id="blog-scroller" style="display: flex; gap: 2rem; overflow-x: auto; scroll-behavior: smooth; padding: 1rem 0 3rem; scrollbar-width: none; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);">
+                        ${displayPosts.map(post => `
                             <div class="blog-card-modern" 
                                 onclick="window.nnf_openBlog('${post.id}')"
                                 style="flex: 0 0 calc(33.333% - 1.34rem); min-width: 320px; background: white; border-radius: 2rem; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: all 0.3s ease; cursor: pointer; display: flex; flex-direction: column;" 
@@ -150,8 +181,8 @@ const injectBlog = async () => {
                         `).join('')}
                     </div>
 
-                    <!-- Premium Navigation Arrows (Side Positioned) -->
-                    <button onclick="document.getElementById('blog-scroller').scrollLeft -= 500" 
+                    <!-- Premium Navigation Arrows -->
+                    <button id="b-arrow-left" 
                         class="hidden md:flex"
                         style="position: absolute; left: -25px; top: 50%; transform: translateY(-50%); z-index: 10; width: 60px; height: 60px; border-radius: 30px; background: #f59e0b !important; border: none; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3); transition: all 0.3s ease;"
                         onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';"
@@ -160,7 +191,7 @@ const injectBlog = async () => {
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important;"><path d="M15 18l-6-6 6-6"></path></svg> 
                     </button>
                     
-                    <button onclick="document.getElementById('blog-scroller').scrollLeft += 500" 
+                    <button id="b-arrow-right" 
                         class="hidden md:flex"
                         style="position: absolute; right: -25px; top: 50%; transform: translateY(-50%); z-index: 10; width: 60px; height: 60px; border-radius: 30px; background: #f59e0b !important; border: none; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3); transition: all 0.3s ease;"
                         onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';"
@@ -178,6 +209,41 @@ const injectBlog = async () => {
                 }
             </style>
         `;
+
+        // Auto-Scroller setup
+        setTimeout(() => {
+            const scroller = document.getElementById('blog-scroller');
+            const arrowLeft = document.getElementById('b-arrow-left');
+            const arrowRight = document.getElementById('b-arrow-right');
+
+            if (scroller) {
+                let autoplayInterval;
+                const startAutoplay = () => {
+                    autoplayInterval = setInterval(() => {
+                        if (scroller.scrollLeft >= (scroller.scrollWidth / 2)) {
+                            scroller.scrollLeft = 0;
+                        } else {
+                            scroller.scrollLeft += 1;
+                        }
+                    }, 30);
+                };
+                const stopAutoplay = () => clearInterval(autoplayInterval);
+
+                if (arrowLeft) {
+                    arrowLeft.onclick = (e) => { e.stopPropagation(); scroller.scrollLeft -= 450; };
+                    arrowLeft.onmouseenter = stopAutoplay;
+                }
+                if (arrowRight) {
+                    arrowRight.onclick = (e) => { e.stopPropagation(); scroller.scrollLeft += 450; };
+                    arrowRight.onmouseenter = stopAutoplay;
+                }
+
+                scroller.onmouseenter = stopAutoplay;
+                scroller.onmouseleave = startAutoplay;
+
+                startAutoplay();
+            }
+        }, 100);
     };
 
     render();

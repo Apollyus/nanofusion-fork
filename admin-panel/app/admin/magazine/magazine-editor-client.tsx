@@ -254,8 +254,59 @@ export function MagazineEditorClient({ article: initialArticle }: Props) {
               </div>
             </div>
 
+            <div className="pt-6 border-t space-y-4" style={{ borderColor: 'var(--border)' }}>
+              <h3 className="font-bold flex items-center gap-2 text-sm">
+                <Globe size={18} className="text-amber-500" />
+                Cílové tlačítko v článku
+              </h3>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase text-slate-400">
+                  Na jakou službu má tlačítko v článku přesměrovat?
+                </label>
+                {(() => {
+                  const content = article.content || ''
+                  const match = content.match(/<!--\s*target_service:\s*(.*?)\s*-->/)
+                  const currentTarget = match ? match[1] : 'kalkulacka'
+
+                  const servicesList = [
+                    { value: 'kalkulacka', label: 'Konfigurátor (Spočítejte si cenu)' },
+                    { value: 'sluzby/facade', label: 'Čištění fasád' },
+                    { value: 'sluzby/roof', label: 'Čištění střech' },
+                    { value: 'sluzby/pavement', label: 'Čištění dlažeb' },
+                    { value: 'sluzby/pv', label: 'Solární panely' },
+                    { value: 'sluzby/graffiti', label: 'Odstranění graffiti' },
+                    { value: 'sluzby/industrial', label: 'Průmyslové objekty' },
+                    { value: 'sluzby/facade-paint', label: 'Nátěry fasád' },
+                    { value: 'sluzby/roof-paint', label: 'Nátěry střech' },
+                    { value: 'sluzby/impregnation', label: 'Impregnace' },
+                    { value: 'sluzby/antislip', label: 'Protiskluzné nátěry' },
+                    { value: 'sluzby/ceramfloor', label: 'Ochrana dlažeb & keramik' },
+                    { value: 'sluzby/antibac', label: 'Antibakteriální nátěry' }
+                  ]
+
+                  return (
+                    <select
+                      value={currentTarget}
+                      onChange={(e) => {
+                        const newTarget = e.target.value
+                        const clean = content.replace(/<!--\s*target_service:\s*.*?\s*-->/g, '').trim()
+                        const updatedContent = newTarget === 'kalkulacka' ? clean : `${clean}\n<!-- target_service: ${newTarget} -->`
+                        setArticle({ ...article, content: updatedContent })
+                      }}
+                      className="w-full px-3 py-2.5 rounded-xl border text-xs font-semibold outline-none cursor-pointer"
+                      style={{ background: 'var(--bg-base)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
+                    >
+                      {servicesList.map(s => (
+                        <option key={s.value} value={s.value}>{s.label}</option>
+                      ))}
+                    </select>
+                  )
+                })()}
+              </div>
+            </div>
+
             <div className="pt-6 border-t" style={{ borderColor: 'var(--border)' }}>
-               <h3 className="font-bold flex items-center gap-2 mb-4">
+               <h3 className="font-bold flex items-center gap-2 mb-4 text-sm">
                 <Type size={18} />
                 Publikační info
               </h3>

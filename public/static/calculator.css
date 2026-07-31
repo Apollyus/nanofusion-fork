@@ -56,15 +56,15 @@
 
 .calc-input:focus, .calc-select:focus {
   outline: none;
-  border-color: #f97316; /* NANOfusion Orange */
-  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+  border-color: #f59e0b; /* NANOfusion Brand Amber Orange */
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
 }
 
 .calc-result-box {
   background: white;
   padding: 1.5rem;
   border-radius: 1rem;
-  border: 2px dashed #f97316;
+  border: 2px dashed #f59e0b;
   text-align: center;
   margin-top: 1rem;
 }
@@ -78,25 +78,30 @@
 .calc-result-value {
   font-size: 2.25rem;
   font-weight: 800;
-  color: #f97316;
+  color: #f59e0b;
 }
 
 .calc-cta {
   display: block;
   width: 100%;
-  padding: 1rem;
-  background: #f97316;
-  color: white;
-  font-weight: 700;
+  padding: 1.15rem 1rem;
+  background: #f59e0b !important;
+  color: white !important;
+  font-weight: 800;
   text-align: center;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   margin-top: 1.5rem;
   text-decoration: none;
-  transition: background-color 0.2s;
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 20px rgba(245, 158, 11, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .calc-cta:hover {
-  background: #ea580c;
+  background: #d97706 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 25px rgba(245, 158, 11, 0.35);
 }
 
 .calc-note {
@@ -116,13 +121,13 @@
   border-radius: 0.5rem;
   transition: all 0.2s;
   background: white;
-  color: #f97316;
-  border: 2px solid #f97316;
+  color: #f59e0b;
+  border: 2px solid #f59e0b;
   cursor: pointer;
 }
 
 .hero-btn-calc:hover {
-  background: #f97316;
+  background: #f59e0b;
   color: white;
 }
 
@@ -141,5 +146,5 @@
 }
 
 .footer-link-item:hover {
-  color: #f97316;
+  color: #f59e0b;
 }

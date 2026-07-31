@@ -73,12 +73,29 @@ export function ServiceDetailClient({
   const [savingProcess, setSavingProcess] = useState(false)
   const [saving, setSaving] = useState(false)
   const [uploadingHero, setUploadingHero] = useState(false)
+  const [uploadingVideo, setUploadingVideo] = useState(false)
   const [showAddBeforeAfter, setShowAddBeforeAfter] = useState(false)
   const [addingBeforeAfter, setAddingBeforeAfter] = useState(false)
   const heroFileRef = useRef<HTMLInputElement>(null)
+  const videoFileRef = useRef<HTMLInputElement>(null)
   const beforeFileRef = useRef<HTMLInputElement>(null)
   const afterFileRef = useRef<HTMLInputElement>(null)
   const [baCaption, setBaCaption] = useState('')
+
+  const handleVideoUpload = async (file: File) => {
+    setUploadingVideo(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const url = await import('../actions').then(m => m.uploadServiceVideo(service.id, fd))
+      setService({ ...service, video_url: url })
+      toast.success('Krátké video pro náhled služby nahráno')
+    } catch (err: any) {
+      toast.error('Chyba uploadu videa: ' + err.message)
+    } finally {
+      setUploadingVideo(false)
+    }
+  }
 
   // Reviews Tab State
   const [showAddReview, setShowAddReview] = useState(false)
@@ -346,6 +363,64 @@ export function ServiceDetailClient({
                   <img src={service.hero_image_url} alt="Hero preview" className="w-full h-40 object-cover" />
                 </div>
               )}
+            </div>
+
+            {/* Krátké video náhledu (volitelné místo fotky) */}
+            <div className="space-y-2 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Náhledové video (Volitelné: Nahrazuje fotografii v kartě služby)
+              </label>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={service.video_url || ''}
+                  onChange={(e) => setService({ ...service, video_url: e.target.value })}
+                  className="flex-1 px-4 py-3 rounded-xl border outline-none font-mono text-sm"
+                  style={{ background: 'var(--bg-base)', borderColor: 'var(--border)' }}
+                  placeholder="URL videa (.mp4 / webm) nebo nahrajte soubor →"
+                />
+                <input
+                  ref={videoFileRef}
+                  type="file"
+                  accept="video/*"
+                  className="hidden"
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) handleVideoUpload(f) }}
+                />
+                <button
+                  onClick={() => videoFileRef.current?.click()}
+                  disabled={uploadingVideo}
+                  className="px-4 py-3 rounded-xl border flex items-center gap-2 text-sm font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50"
+                >
+                  {uploadingVideo ? <Loader2 size={18} className="animate-spin" /> : <Upload size={18} />}
+                  {uploadingVideo ? 'Nahrávám...' : 'Nahrát video'}
+                </button>
+              </div>
+              {service.video_url && (() => {
+                const ytMatch = service.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+                const ytId = ytMatch ? ytMatch[1] : null;
+                return (
+                  <div className="mt-3 rounded-xl overflow-hidden border relative" style={{ borderColor: 'var(--border)' }}>
+                    {ytId ? (
+                      <div className="aspect-video w-full">
+                        <iframe
+                          src={`https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}`}
+                          className="w-full h-48 border-0"
+                          allow="autoplay; encrypted-media"
+                        />
+                      </div>
+                    ) : (
+                      <video src={service.video_url} autoPlay loop muted playsInline className="w-full h-48 object-cover" />
+                    )}
+                    <button
+                      onClick={() => setService({ ...service, video_url: '' })}
+                      className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/60 text-white hover:bg-black/80 transition-colors z-10"
+                      title="Odstranit video"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                )
+              })()}
             </div>
           </div>
         )}

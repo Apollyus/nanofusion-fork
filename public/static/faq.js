@@ -77,7 +77,7 @@ const injectFaqs = async () => {
             `
             : `
             <div class="text-center" style="margin-bottom: 3.5rem;">
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4 font-heading">Časté dotazy</h2>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 font-heading" style="color: #f59e0b;">Na co se nás nejčastěji ptáte</h2>
                 <p class="text-slate-500 max-w-2xl mx-auto text-sm md:text-base">Vše, co potřebujete vědět o našich technologiích a postupech.</p>
             </div>
             `;

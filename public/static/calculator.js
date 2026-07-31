@@ -1,59 +1,50 @@
 /* Pokročilá kalkulačka s napojením na Supabase (Admin Panel) pro NANOfusion */
 
-async function getPhotoPayloadUrl(fileInput) {
-  if (!fileInput || !fileInput.files || !fileInput.files[0]) return null;
-  const file = fileInput.files[0];
+async function getPhotoPayloadUrls(fileInput) {
+  if (!fileInput || !fileInput.files || fileInput.files.length === 0) return [];
+  const files = Array.from(fileInput.files);
+  const urls = [];
 
-  // 1. Try Supabase storage upload
-  try {
-    const { supabase } = await import('./supabase-config.js');
-    if (supabase && supabase.storage) {
-      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-      const fileName = `inquiry_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-      const { data: uploadData, error: uploadErr } = await supabase.storage
-        .from('gallery')
-        .upload(fileName, file, { upsert: true, cacheControl: '3600' });
-
-      if (!uploadErr && uploadData) {
-        const { data: pubData } = supabase.storage.from('gallery').getPublicUrl(fileName);
-        if (pubData && pubData.publicUrl) return pubData.publicUrl;
-      }
+  for (const file of files) {
+    try {
+      const dataUrl = await new Promise((resolve) => {
+        const timeoutId = setTimeout(() => resolve(null), 2000);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            clearTimeout(timeoutId);
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            const maxDim = 800;
+            if (width > maxDim || height > maxDim) {
+              if (width > height) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              } else {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.6));
+          };
+          img.onerror = () => { clearTimeout(timeoutId); resolve(e.target.result); };
+          img.src = e.target.result;
+        };
+        reader.onerror = () => { clearTimeout(timeoutId); resolve(null); };
+        reader.readAsDataURL(file);
+      });
+      if (dataUrl) urls.push(dataUrl);
+    } catch (e) {
+      console.warn('Photo processing error:', e);
     }
-  } catch (e) {
-    console.warn('Storage upload fallback triggered:', e);
   }
-
-  // 2. Fallback: Compress image to compressed JPEG Data URL
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 1000;
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/jpeg', 0.75));
-      };
-      img.onerror = () => resolve(e.target.result);
-      img.src = e.target.result;
-    };
-    reader.onerror = () => resolve(null);
-    reader.readAsDataURL(file);
-  });
+  return urls;
 }
 
 const injectCalculator = async () => {
@@ -62,18 +53,17 @@ const injectCalculator = async () => {
     
     // Defaultní ceny jako záloha (kdyby Supabase neodpovídal)
     let services = [
-      { id: 'roof', name: 'Čištění střech', price: 190, desc: 'Čištění + nano-ochrana' },
-      { id: 'facade', name: 'Čištění fasád', price: 150, desc: 'Čištění + nano-ochrana' },
-      { id: 'pavement', name: 'Čištění dlažeb', price: 120, desc: 'Čištění + ochrana' },
-      { id: 'pv', name: 'Solární panely', price: 80, desc: 'Čištění panelů' },
-      { id: 'graffiti', name: 'Odstranění graffiti', price: 250, desc: 'Čištění + prevence' },
-      { id: 'industrial', name: 'Průmyslové čištění', price: 130, desc: 'Haly a konstrukce' },
-      { id: 'facade-paint', name: 'Nátěry fasád', price: 200, desc: 'Caparol barvy' },
-      { id: 'roof-paint', name: 'Nátěry střech', price: 180, desc: 'Dvousložkové barvy' },
-      { id: 'impregnation', name: 'Nano impregnace', price: 70, desc: 'Ochrana povrchů' },
-      { id: 'antislip', name: 'Protiskluz', price: 120, desc: 'Bezpečnost povrchů' },
-      { id: 'ceramfloor', name: 'IG CeramFloor', price: 250, desc: 'Ochrana podlah' },
-      { id: 'antibac', name: 'Antibakteriální', price: 80, desc: 'Ochrana 120 dní' }
+      { id: 'roof', name: 'Čištění střechy', price: 190, desc: 'Čištění + ochrana' },
+      { id: 'facade', name: 'Čištění fasády', price: 150, desc: 'Čištění + ochrana' },
+      { id: 'pavement', name: 'Čištění dlažby', price: 120, desc: 'Čištění + ochrana' },
+      { id: 'pv', name: 'Čištění FVE panelů', price: 80, desc: 'Čištění panelů' },
+      { id: 'graffiti', name: 'Odstranění graffiti', price: 250, desc: 'Čištění + antigraffiti nátěry' },
+      { id: 'industrial', name: 'Průmyslové čištění', price: 130, desc: 'Stropy, opláštění a podlahy' },
+      { id: 'facade-paint', name: 'Nátěry fasád', price: 200, desc: 'Čištění, penetrace a 2 vrstvy barvy' },
+      { id: 'roof-paint', name: 'Nátěry střech', price: 180, desc: 'Kvalitními barvami' },
+      { id: 'impregnation', name: 'Nano impregnace', price: 70, desc: 'Ochrana různých povrchů' },
+      { id: 'antislip', name: 'Protiskluz', price: 120, desc: 'Pro bezpečnou podlahu' },
+      { id: 'ceramfloor', name: 'IG CeramFloor', price: 250, desc: 'Revoluční ochrana podlah' }
     ];
 
     // --- LIVE SYNC S ADMINEM (SUPABASE) ---
@@ -86,7 +76,7 @@ const injectCalculator = async () => {
         // Přepíšeme defaultní ceny těmi z databáze
         services = services.map(localS => {
           const remoteS = remotePrices.find(r => r.item_key === localS.id);
-          return remoteS ? { ...localS, price: remoteS.price } : localS;
+          return remoteS ? { ...localS, price: remoteS.price, name: remoteS.label || localS.name } : localS;
         });
       }
     } catch (e) {
@@ -152,19 +142,20 @@ const injectCalculator = async () => {
               <p class="calc-label" style="margin-bottom: 1rem; text-align: center;">Uveďte kontakt pro zaslání kalkulace</p>
               <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                 <input class="calc-input" id="calc-name" name="name" placeholder="Vaše jméno *" style="width: 100%; border-radius: 0.75rem;" type="text">
-                <input class="calc-input" id="calc-address" name="address" placeholder="Město / Lokace objektu *" style="width: 100%; border-radius: 0.75rem;" type="text">
+                <input class="calc-input" id="calc-address" name="address" placeholder="Přesná adresa místa, kde by se práce prováděly *" style="width: 100%; border-radius: 0.75rem;" type="text">
                 <input class="calc-input" id="calc-phone" name="phone" placeholder="Telefonní číslo *" style="width: 100%; border-radius: 0.75rem;" type="tel">
-                <input class="calc-input" id="calc-email" name="email" placeholder="E-mail (nepovinný)" style="width: 100%; border-radius: 0.75rem;" type="email">
+                <input class="calc-input" id="calc-email" name="email" placeholder="E-mail *" style="width: 100%; border-radius: 0.75rem;" type="email">
                 <div style="margin-top: 0.5rem; text-align: left;">
-                  <label style="display: block; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: #64748b; margin-bottom: 0.4rem;">Fotografie objektu (nepovinné)</label>
-                  <input class="calc-input" id="calc-photo" name="photo" type="file" accept="image/*" style="width: 100%; padding: 0.6rem; border: 1px dashed #cbd5e1; border-radius: 0.75rem; background: #ffffff; font-size: 0.85rem; cursor: pointer;">
+                  <label style="display: block; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: #64748b; margin-bottom: 0.4rem;">Fotografie objektu (povinné – min. 2 fotografie) *</label>
+                  <input class="calc-input" id="calc-photo" name="photo" type="file" accept="image/*" multiple style="width: 100%; padding: 0.6rem; border: 1px dashed #cbd5e1; border-radius: 0.75rem; background: #ffffff; font-size: 0.85rem; cursor: pointer;">
+                  <div id="calc-photo-info" style="margin-top: 0.4rem; font-size: 0.85rem; font-weight: 700; color: #64748b;"></div>
                 </div>
               </div>
             </div>
 
             <div style="display: flex; gap: 1rem; align-items: stretch;">
               <button id="back-to-step-1" style="flex: 1; height: 60px; background: #e2e8f0; color: #475569; border-radius: 1rem; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 0.875rem; display: flex; align-items: center; justify-content: center; margin: 0; transition: all 0.2s;">Zpět</button>
-              <button class="calc-cta" id="reveal-price" style="flex: 1; height: 60px; border: none; cursor: pointer; background: #f97316; color: white; border-radius: 1rem; font-weight: 800; text-transform: uppercase; font-size: 0.875rem; display: flex; align-items: center; justify-content: center; margin: 0; transition: all 0.2s;">Zobrazit kalkulaci</button>
+              <button class="calc-cta" id="reveal-price" style="flex: 1; height: 60px; border: none; cursor: pointer; background: #f59e0b; color: white; border-radius: 1rem; font-weight: 800; text-transform: uppercase; font-size: 0.875rem; display: flex; align-items: center; justify-content: center; margin: 0; transition: all 0.2s;">Zobrazit kalkulaci</button>
             </div>
           </div>
 
@@ -195,7 +186,25 @@ const injectCalculator = async () => {
     const objCards = document.querySelectorAll('.calc-obj-card');
     const areaInput = document.getElementById('area');
     const areaUnknown = document.getElementById('area-unknown');
+    const photoInput = document.getElementById('calc-photo');
+    const photoInfo = document.getElementById('calc-photo-info');
     
+    if (photoInput && photoInfo) {
+      photoInput.addEventListener('change', () => {
+        const count = photoInput.files ? photoInput.files.length : 0;
+        if (count === 0) {
+          photoInfo.textContent = '❌ Žádná fotografie nevybrána (požadovány min. 2).';
+          photoInfo.style.color = '#ef4444';
+        } else if (count === 1) {
+          photoInfo.textContent = '⚠️ Vybrána 1 fotografie (ještě 1 chybí - zadejte min. 2).';
+          photoInfo.style.color = '#f59e0b';
+        } else {
+          photoInfo.textContent = `✅ Vybrány ${count} fotografie.`;
+          photoInfo.style.color = '#10b981';
+        }
+      });
+    }
+
     let state = {
       pricePerUnit: services[0].price,
       serviceName: services[0].name,
@@ -216,8 +225,8 @@ const injectCalculator = async () => {
     serviceCards.forEach(card => {
       card.addEventListener('click', () => {
         serviceCards.forEach(c => { c.style.borderColor = '#e2e8f0'; c.style.backgroundColor = 'transparent'; });
-        card.style.borderColor = '#f97316';
-        card.style.backgroundColor = '#fff7ed';
+        card.style.borderColor = '#F59E0B';
+        card.style.backgroundColor = '#FEF3C7';
         state.pricePerUnit = parseInt(card.dataset.price);
         state.serviceName = card.innerText.split('\n')[0];
       });
@@ -226,8 +235,8 @@ const injectCalculator = async () => {
     objCards.forEach(card => {
       card.addEventListener('click', () => {
         objCards.forEach(c => { c.style.borderColor = '#e2e8f0'; c.style.backgroundColor = 'transparent'; });
-        card.style.borderColor = '#f97316';
-        card.style.backgroundColor = '#fff7ed';
+        card.style.borderColor = '#F59E0B';
+        card.style.backgroundColor = '#FEF3C7';
         state.objName = card.innerText;
       });
     });
@@ -255,7 +264,7 @@ const injectCalculator = async () => {
       const email = (document.getElementById('calc-email').value || '').trim();
       const phone = (document.getElementById('calc-phone').value || '').trim();
       const address = (document.getElementById('calc-address').value || '').trim();
-      const photoInput = document.getElementById('calc-photo');
+      const photoInputEl = document.getElementById('calc-photo');
       
       // --- Strict Validation ---
       if (!state.userName || state.userName.length < 2) {
@@ -269,12 +278,12 @@ const injectCalculator = async () => {
       }
 
       if (!address || address.length < 2) {
-        alert('Prosím zadejte město nebo lokaci objektu.');
+        alert('Prosím zadejte přesnou adresu realizace.');
         return;
       }
       const addrLetters = address.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
       if (addrLetters.length < 2 || /^\d+$/.test(address)) {
-        alert('Prosím zadejte platný název obce / města.');
+        alert('Prosím zadejte platnou adresu realizace (např. Ulice 123, Město).');
         return;
       }
 
@@ -288,24 +297,18 @@ const injectCalculator = async () => {
         return;
       }
 
-      if (email && email.length > 0) {
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          alert('Prosím zadejte e-mail ve správném tvaru (např. jmeno@domena.cz).');
-          return;
-        }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Prosím zadejte platný e-mail (e-mail je povinný).');
+        return;
       }
 
-      const btnReveal = document.getElementById('reveal-price');
-      if (btnReveal) {
-        btnReveal.disabled = true;
-        btnReveal.innerText = 'ODESÍLÁM...';
+      const files = photoInputEl?.files ? Array.from(photoInputEl.files) : [];
+      if (files.length < 2) {
+        alert('Prosím nahrajte alespoň 2 fotografie objektu (fotografie jsou povinné).');
+        return;
       }
-
-      // Upload photo if present (with Data URL fallback)
-      const photoUrl = await getPhotoPayloadUrl(photoInput);
 
       const areaValue = areaUnknown.checked ? 0 : (parseInt(areaInput.value) || 0);
-      
       const baseTotal = state.pricePerUnit * areaValue;
       const minTotal = Math.round(baseTotal * 1.05 / 10) * 10;
       const maxTotal = Math.round(baseTotal * 1.15 / 10) * 10;
@@ -315,32 +318,43 @@ const injectCalculator = async () => {
       document.getElementById('result').textContent = totalDisplay;
       document.getElementById('result-user-name').textContent = `Děkujeme, ${state.userName}!`;
       
-      // Save Lead
-      import('./supabase-config.js').then(async ({ supabase }) => {
-        const payload = {
-          name: state.userName,
-          email: email,
-          phone: phone,
-          service: state.serviceName,
-          message: `Lokace: ${address}, Kalkulačka: ${state.objName}, Plocha: ${areaUnknown.checked ? 'Neznámo' : areaValue + ' m²'}, Odhad ceny: ${totalDisplay}${photoUrl ? '\nFotografie: ' + photoUrl : ''}`,
-          source: 'Konfigurátor',
-          status: 'new'
-        };
-        const fullPayload = photoUrl ? { ...payload, original_photo_url: photoUrl } : payload;
-        let { error } = await supabase.from('inquiries').insert(fullPayload);
-        if (error) {
-          console.warn('[Kalkulačka] První vložení selhalo, opakuji se standardním payloadem:', error.message);
-          const fallbackRes = await supabase.from('inquiries').insert(payload);
-          if (fallbackRes.error) console.error('[Kalkulačka] Chyba při ukládání poptávky:', fallbackRes.error.message);
-          else console.log('[Kalkulačka] Poptávka uložena do databáze skrze fallback');
-        } else {
-          console.log('[Kalkulačka] Poptávka uložena do databáze');
-        }
-      });
-
+      // Instant Step 3 display!
       document.getElementById('step-2').style.display = 'none';
       document.getElementById('step-3').style.display = 'block';
+      const progress3 = document.getElementById('progress-3');
+      if (progress3) progress3.style.background = '#F59E0B';
+
       window.scrollTo({ top: document.getElementById('kalkulacka').offsetTop - 50, behavior: 'smooth' });
+
+      // Asynchronous background photo processing & Supabase lead saving
+      (async () => {
+        try {
+          const photoUrls = await getPhotoPayloadUrls(photoInputEl);
+          const joinedPhotos = photoUrls.join('\n');
+          const primaryPhoto = photoUrls[0] || null;
+
+          const { supabase } = await import('./supabase-config.js');
+          const payload = {
+            name: state.userName,
+            email: email,
+            phone: phone,
+            service: state.serviceName,
+            message: `Lokace: ${address}, Kalkulačka: ${state.objName}, Plocha: ${areaUnknown.checked ? 'Neznámo' : areaValue + ' m²'}, Odhad ceny: ${totalDisplay}${joinedPhotos ? '\nFotografie (' + photoUrls.length + '):\n' + joinedPhotos : ''}`,
+            source: 'Konfigurátor',
+            status: 'new'
+          };
+          const fullPayload = primaryPhoto ? { ...payload, original_photo_url: primaryPhoto } : payload;
+          let { error } = await supabase.from('inquiries').insert(fullPayload);
+          if (error) {
+            console.warn('[Kalkulačka] První vložení selhalo, opakuji se standardním payloadem:', error.message);
+            await supabase.from('inquiries').insert(payload);
+          } else {
+            console.log('[Kalkulačka] Poptávka uložena do databáze');
+          }
+        } catch (err) {
+          console.warn('[Kalkulačka] Chyba při uložení v pozadí:', err);
+        }
+      })();
     });
 
     // Reset Calculator Logic (CTO Fix)
