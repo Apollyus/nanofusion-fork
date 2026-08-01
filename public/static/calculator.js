@@ -53,8 +53,8 @@ const injectCalculator = async () => {
     
     // Defaultní ceny jako záloha (kdyby Supabase neodpovídal)
     let services = [
-      { id: 'roof', name: 'Čištění střechy', price: 190, desc: 'Čištění + ochrana' },
-      { id: 'facade', name: 'Čištění fasády', price: 150, desc: 'Čištění + ochrana' },
+      { id: 'roof', name: 'Čištění střech', price: 190, desc: 'Čištění + ochrana' },
+      { id: 'facade', name: 'Čištění fasád', price: 150, desc: 'Čištění + ochrana' },
       { id: 'pavement', name: 'Čištění dlažby', price: 120, desc: 'Čištění + ochrana' },
       { id: 'pv', name: 'Čištění FVE panelů', price: 80, desc: 'Čištění panelů' },
       { id: 'graffiti', name: 'Odstranění graffiti', price: 250, desc: 'Čištění + antigraffiti nátěry' },
