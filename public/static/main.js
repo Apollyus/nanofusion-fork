@@ -484,15 +484,24 @@ const observeAll = () => {
 
   // 6. Active link state & smooth scroll for in-page anchors & CTA buttons
   document.addEventListener('click', (e) => {
-    // Exclude blog section cards/buttons from kalkulacka click interceptor
+    // Exclude blog/portfolio modals
     if (e.target.closest('#blog, .blog-card-modern, #blog-modal-overlay')) return;
 
-    const link = e.target.closest('a[href*="#"], a[href="/poptavka"], .nav-cta-desktop, .drawer-cta, [data-hero-cta-patched]');
+    const heroBtn = e.target.closest('section:first-of-type a, section:first-of-type button, .hero a, .hero button, [data-hero] a, [data-hero] button, a[href*="#kalkulacka"], a[href="/poptavka"], .nav-cta-desktop, .drawer-cta, [data-hero-cta-patched]');
+    if (heroBtn && !heroBtn.closest('#blog, #realizace, #sluzby')) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.scrollToKalkulacka(e);
+      return;
+    }
+
+    const link = e.target.closest('a[href*="#"]');
     if (!link) return;
     const href = link.getAttribute('href') || '';
 
     if (href === '/poptavka' || href.includes('#kalkulacka')) {
       e.preventDefault();
+      e.stopPropagation();
       window.scrollToKalkulacka(e);
       return;
     }
@@ -506,7 +515,7 @@ const observeAll = () => {
       e.preventDefault();
       targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  });
+  }, true);
 
   const currentPath = window.location.pathname;
   document.querySelectorAll('header nav a').forEach(a => {

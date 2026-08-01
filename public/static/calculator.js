@@ -346,8 +346,17 @@ const injectCalculator = async () => {
           const fullPayload = primaryPhoto ? { ...payload, original_photo_url: primaryPhoto } : payload;
           let { error } = await supabase.from('inquiries').insert(fullPayload);
           if (error) {
-            console.warn('[Kalkulačka] První vložení selhalo, opakuji se standardním payloadem:', error.message);
-            await supabase.from('inquiries').insert(payload);
+            console.warn('[Kalkulačka] První vložení selhalo, opakuji se záložním payloadem:', error.message);
+            const fallbackPayload = {
+              name: state.userName,
+              email: email,
+              phone: phone,
+              service: state.serviceName,
+              message: `Lokace: ${address}, Kalkulačka: ${state.objName}, Plocha: ${areaUnknown.checked ? 'Neznámo' : areaValue + ' m²'}, Odhad ceny: ${totalDisplay}\nFotografie: 2 soubory přiloženy`,
+              source: 'Konfigurátor',
+              status: 'new'
+            };
+            await supabase.from('inquiries').insert(fallbackPayload);
           } else {
             console.log('[Kalkulačka] Poptávka uložena do databáze');
           }
