@@ -1,5 +1,9 @@
 /* Interaktivní kalkulačka pro NANOfusion */
 
+#kalkulacka {
+  scroll-margin-top: 100px !important;
+}
+
 .calc-section {
   padding: 4rem 1rem;
   background: #f9fafb;

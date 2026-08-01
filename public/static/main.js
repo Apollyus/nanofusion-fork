@@ -307,19 +307,10 @@ const observeAll = () => {
       try { await window.nnf_injectCalculator(); } catch (err) {}
     }
 
-    const kalk = document.getElementById('kalkulacka') || document.getElementById('kontakt');
+    const kalk = document.getElementById('kalkulacka');
     if (kalk) {
-      const navHeader = document.querySelector('header, nav, .navbar');
-      const headerHeight = navHeader ? navHeader.offsetHeight : 80;
-      const elementPosition = kalk.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 15;
-
-      window.scrollTo({
-        top: Math.max(0, offsetPosition),
-        behavior: 'smooth'
-      });
+      kalk.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-      window.location.hash = 'kalkulacka';
       window.location.href = '/#kalkulacka';
     }
   };
@@ -443,13 +434,10 @@ const observeAll = () => {
   if (referenceLink && !referenceLink.dataset.navPatched) {
     const isRoot = window.location.pathname === '/' || window.location.pathname === '/index.html';
     
-    // Standardize hash links and FAQ links
+    // Standardize hash links
     navLinks.forEach(a => {
       const href = a.getAttribute('href');
-      if (href === '/faq') {
-        const faqSec = document.getElementById('faq');
-        a.href = faqSec ? '#faq' : '/#faq';
-      } else if (href && href.startsWith('#') && !isRoot) {
+      if (href && href.startsWith('#') && !isRoot) {
         const targetId = href.substring(1);
         if (!document.getElementById(targetId)) {
           a.href = '/' + href;
