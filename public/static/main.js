@@ -297,12 +297,17 @@ const observeAll = () => {
   }
 
   // 2.3. Patch Hero Primary CTA Button ("Spočítejte si cenu" -> #kalkulacka)
-  window.scrollToKalkulacka = (e) => {
+  window.scrollToKalkulacka = async (e) => {
     if (e) {
       if (e.preventDefault) e.preventDefault();
       if (e.stopPropagation) e.stopPropagation();
     }
-    const kalk = document.getElementById('kalkulacka');
+
+    if (!document.getElementById('kalkulacka') && window.nnf_injectCalculator) {
+      try { await window.nnf_injectCalculator(); } catch (err) {}
+    }
+
+    const kalk = document.getElementById('kalkulacka') || document.getElementById('kontakt');
     if (kalk) {
       const navHeader = document.querySelector('header, nav, .navbar');
       const headerHeight = navHeader ? navHeader.offsetHeight : 80;
@@ -314,6 +319,7 @@ const observeAll = () => {
         behavior: 'smooth'
       });
     } else {
+      window.location.hash = 'kalkulacka';
       window.location.href = '/#kalkulacka';
     }
   };
@@ -330,8 +336,6 @@ const observeAll = () => {
           el.setAttribute('href', '#kalkulacka');
           el.style.cursor = 'pointer';
           el.style.pointerEvents = 'auto';
-          const svg = el.querySelector('svg');
-          el.innerHTML = 'Spočítejte si cenu ' + (svg ? svg.outerHTML : '<span style="margin-left: 0.5rem;">→</span>');
           el.dataset.heroCtaPatched = 'true';
           el.onclick = scrollToKalkulacka;
         }

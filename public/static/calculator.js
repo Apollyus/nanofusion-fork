@@ -457,6 +457,8 @@ const runInjection = () => {
   setupLeadCapture();
 };
 
+window.nnf_injectCalculator = runInjection;
+
 // MutationObserver — čeká dokud main.js nevytvoří #kontakt v DOM
 const initCalculator = () => {
   // Pokud #kontakt již existuje, spusť rovnou
@@ -480,8 +482,14 @@ const initCalculator = () => {
     if (!document.getElementById('kalkulacka')) {
       // Pokud #kontakt stále neexistuje, vlož před footer
       const footer = document.querySelector('footer');
-      if (footer) footer.parentNode.insertBefore(document.createElement('div'), footer);
-      runInjection();
+      if (footer && footer.parentNode) {
+        const dummy = document.createElement('div');
+        dummy.id = 'kontakt';
+        footer.parentNode.insertBefore(dummy, footer);
+        runInjection();
+      } else {
+        runInjection();
+      }
     }
   }, 8000);
 };
