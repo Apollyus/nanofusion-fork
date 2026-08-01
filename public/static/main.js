@@ -336,6 +336,8 @@ const observeAll = () => {
           el.setAttribute('href', '#kalkulacka');
           el.style.cursor = 'pointer';
           el.style.pointerEvents = 'auto';
+          const svg = el.querySelector('svg');
+          el.innerHTML = 'Spočítejte si to ' + (svg ? svg.outerHTML : '<span style="margin-left: 0.5rem;">→</span>');
           el.dataset.heroCtaPatched = 'true';
           el.onclick = scrollToKalkulacka;
         }
@@ -381,7 +383,7 @@ const observeAll = () => {
     syncServicesMedia();
   }
 
-  // Make "Naše Realizace v detailu" heading orange & patch CTA button to "Spočítejte si cenu"
+  // Make "Naše Realizace v detailu" heading orange & patch CTA button to "Spočítejte si to"
   const realizaceSection = document.getElementById('realizace');
   if (realizaceSection) {
     const realizaceHeading = realizaceSection.querySelector('h2');
@@ -389,12 +391,10 @@ const observeAll = () => {
       realizaceHeading.style.setProperty('color', '#f59e0b', 'important');
     }
     const ctaBtn = Array.from(realizaceSection.querySelectorAll('button, a')).find(b => 
-      b.textContent.toLowerCase().includes('takové výsledky') || b.textContent.toLowerCase().includes('spočítejte si cenu')
+      b.textContent.toLowerCase().includes('takové výsledky') || b.textContent.toLowerCase().includes('spočítejte')
     );
     if (ctaBtn) {
-      if (ctaBtn.textContent.toLowerCase().includes('takové výsledky')) {
-        ctaBtn.innerHTML = `Spočítejte si cenu <svg class="ml-3 w-6 h-6 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>`;
-      }
+      ctaBtn.innerHTML = `Spočítejte si to <svg class="ml-3 w-6 h-6 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>`;
       ctaBtn.onclick = (e) => {
         e.preventDefault();
         window.scrollToKalkulacka();
