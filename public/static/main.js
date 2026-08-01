@@ -3,15 +3,21 @@
  * Handles Reveal System, Branding patches, and UI enhancements.
  */
 
-// Clean hash on page load/refresh if hash is #realizace so refresh always starts at top (0, 0)
-if (window.location.hash === '#realizace') {
-  history.replaceState(null, '', window.location.pathname + window.location.search);
+// Disable automatic scroll restoration so page refresh always starts clean at top (0,0)
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
 }
-window.addEventListener('load', () => {
-  if (!window.location.hash) {
-    window.scrollTo(0, 0);
+
+if (!window.location.hash || window.location.hash === '#faq' || window.location.hash === '#realizace') {
+  if (window.location.hash) {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
   }
-});
+  window.scrollTo(0, 0);
+  document.addEventListener('DOMContentLoaded', () => window.scrollTo(0, 0));
+  window.addEventListener('load', () => window.scrollTo(0, 0));
+  setTimeout(() => window.scrollTo(0, 0), 10);
+  setTimeout(() => window.scrollTo(0, 0), 100);
+}
 
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -292,16 +298,19 @@ const observeAll = () => {
 
   // 2.3. Patch Hero Primary CTA Button ("Spočítejte si cenu" -> #kalkulacka)
   window.scrollToKalkulacka = (e) => {
+    if (e) {
+      if (e.preventDefault) e.preventDefault();
+      if (e.stopPropagation) e.stopPropagation();
+    }
     const kalk = document.getElementById('kalkulacka');
     if (kalk) {
-      if (e && e.preventDefault) e.preventDefault();
       const navHeader = document.querySelector('header, nav, .navbar');
       const headerHeight = navHeader ? navHeader.offsetHeight : 80;
       const elementPosition = kalk.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 15;
 
       window.scrollTo({
-        top: offsetPosition,
+        top: Math.max(0, offsetPosition),
         behavior: 'smooth'
       });
     } else {
@@ -310,23 +319,34 @@ const observeAll = () => {
   };
   const scrollToKalkulacka = window.scrollToKalkulacka;
 
-  document.querySelectorAll('a, button').forEach(el => {
-    if (el.classList.contains('nav-cta-desktop') || el.classList.contains('drawer-cta')) return;
-    const text = el.textContent.trim();
-    const isHeroContext = !!(el.closest('section:first-of-type') || el.closest('.hero, #hero, [data-hero]') || el.closest('.max-w-4xl, .max-w-2xl'));
-    
-    if (isHeroContext && (text.includes('Nezávazná') || text.includes('cenov') || text.includes('kalkul') || text.includes('Spočítat') || text.includes('Spočítejte') || text.includes('Získat'))) {
-      el.setAttribute('href', '#kalkulacka');
-      const svg = el.querySelector('svg');
-      el.innerHTML = 'Spočítejte si cenu ' + (svg ? svg.outerHTML : '<span style="margin-left: 0.5rem;">→</span>');
-      el.dataset.heroCtaPatched = 'true';
-      el.onclick = scrollToKalkulacka;
-    }
-  });
+  const patchHeroButtons = () => {
+    document.querySelectorAll('a, button').forEach(el => {
+      const heroSec = el.closest('section:first-of-type') || el.closest('.hero, #hero, [data-hero]');
+      const isHeroContext = !!(heroSec && !heroSec.closest('#blog') && !heroSec.closest('#realizace') && !heroSec.closest('#sluzby'));
+      
+      if (isHeroContext) {
+        const text = el.textContent.trim().toLowerCase();
+        if (text.includes('nezávazná') || text.includes('cenov') || text.includes('kalkul') || text.includes('spočítat') || text.includes('spočítejte') || text.includes('získat')) {
+          el.setAttribute('href', '#kalkulacka');
+          el.style.cursor = 'pointer';
+          el.style.pointerEvents = 'auto';
+          const svg = el.querySelector('svg');
+          el.innerHTML = 'Spočítejte si cenu ' + (svg ? svg.outerHTML : '<span style="margin-left: 0.5rem;">→</span>');
+          el.dataset.heroCtaPatched = 'true';
+          el.onclick = scrollToKalkulacka;
+        }
+      }
+    });
 
-  document.querySelectorAll('a[href="#kalkulacka"]').forEach(a => {
-    a.onclick = scrollToKalkulacka;
-  });
+    document.querySelectorAll('a[href="#kalkulacka"], a[href="/poptavka"]').forEach(a => {
+      a.style.cursor = 'pointer';
+      a.onclick = scrollToKalkulacka;
+    });
+  };
+
+  patchHeroButtons();
+  setTimeout(patchHeroButtons, 500);
+  setTimeout(patchHeroButtons, 1500);
 
   // 2.4. Uniform gap logic across homepage sections (Hero -> Stats -> Služby -> Jak to funguje)
   const sluzbySection = document.getElementById('sluzby');
@@ -464,20 +484,17 @@ const observeAll = () => {
 
   // 6. Active link state & smooth scroll for in-page anchors & CTA buttons
   document.addEventListener('click', (e) => {
-    const link = e.target.closest('a[href*="#"], a[href="/poptavka"], .nav-cta-desktop, .drawer-cta');
+    // Exclude blog section cards/buttons from kalkulacka click interceptor
+    if (e.target.closest('#blog, .blog-card-modern, #blog-modal-overlay')) return;
+
+    const link = e.target.closest('a[href*="#"], a[href="/poptavka"], .nav-cta-desktop, .drawer-cta, [data-hero-cta-patched]');
     if (!link) return;
-    const href = link.getAttribute('href');
-    if (!href) return;
+    const href = link.getAttribute('href') || '';
 
     if (href === '/poptavka' || href.includes('#kalkulacka')) {
-      const calcCard = document.getElementById('kalkulacka') || document.getElementById('m-form') || document.getElementById('kontakt');
-      if (calcCard) {
-        e.preventDefault();
-        calcCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        const input = document.getElementById('m-area') || document.getElementById('m-name');
-        if (input) setTimeout(() => input.focus(), 400);
-        return;
-      }
+      e.preventDefault();
+      window.scrollToKalkulacka(e);
+      return;
     }
 
     const hashIdx = href.indexOf('#');

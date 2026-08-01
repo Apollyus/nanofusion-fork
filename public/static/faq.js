@@ -6,10 +6,7 @@ const injectFaqs = async () => {
     let faqSection = document.getElementById('faq');
     if (!faqSection || faqSection.dataset.injected === 'true') return;
 
-    // Clear section immediately to prevent "flickering" of old hardcoded content
-    faqSection.innerHTML = '<div style="opacity: 0; height: 300px;"></div>';
-    faqSection.style.transition = 'opacity 0.5s ease-in-out';
-    faqSection.style.opacity = '0';
+    faqSection.style.transition = 'opacity 0.3s ease-in-out';
 
     const hydrateFaqs = async () => {
         try {
