@@ -47,41 +47,45 @@ async function getPhotoPayloadUrls(fileInput) {
   return urls;
 }
 
-const injectCalculator = async () => {
-  const contactSection = document.getElementById('kontakt');
-  if (contactSection && !document.getElementById('kalkulacka')) {
-    
-    // Defaultní ceny jako záloha (kdyby Supabase neodpovídal)
-    let services = [
-      { id: 'roof', name: 'Čištění střech', price: 190, desc: 'Čištění + ochrana' },
-      { id: 'facade', name: 'Čištění fasád', price: 150, desc: 'Čištění + ochrana' },
-      { id: 'pavement', name: 'Čištění dlažby', price: 120, desc: 'Čištění + ochrana' },
-      { id: 'pv', name: 'Čištění FVE panelů', price: 80, desc: 'Čištění panelů' },
-      { id: 'graffiti', name: 'Odstranění graffiti', price: 250, desc: 'Čištění + antigraffiti nátěry' },
-      { id: 'industrial', name: 'Průmyslové čištění', price: 130, desc: 'Stropy, opláštění a podlahy' },
-      { id: 'facade-paint', name: 'Nátěry fasád', price: 200, desc: 'Čištění, penetrace a 2 vrstvy barvy' },
-      { id: 'roof-paint', name: 'Nátěry střech', price: 180, desc: 'Kvalitními barvami' },
-      { id: 'impregnation', name: 'Nano impregnace', price: 70, desc: 'Ochrana různých povrchů' },
-      { id: 'antislip', name: 'Protiskluz', price: 120, desc: 'Pro bezpečnou podlahu' },
-      { id: 'ceramfloor', name: 'IG CeramFloor', price: 250, desc: 'Revoluční ochrana podlah' }
-    ];
+const injectCalculator = () => {
+  if (document.getElementById('kalkulacka')) return document.getElementById('kalkulacka');
 
-    // --- LIVE SYNC S ADMINEM (SUPABASE) ---
+  const contactSection = document.getElementById('kontakt') || document.querySelector('footer');
+  if (!contactSection) return null;
+
+  // Defaultní ceny jako záloha (kdyby Supabase neodpovídal)
+  let services = [
+    { id: 'roof', name: 'Čištění střech', price: 190, desc: 'Čištění + ochrana' },
+    { id: 'facade', name: 'Čištění fasád', price: 150, desc: 'Čištění + ochrana' },
+    { id: 'pavement', name: 'Čištění dlažby', price: 120, desc: 'Čištění + ochrana' },
+    { id: 'pv', name: 'Čištění FVE panelů', price: 80, desc: 'Čištění panelů' },
+    { id: 'graffiti', name: 'Odstranění graffiti', price: 250, desc: 'Čištění + antigraffiti nátěry' },
+    { id: 'industrial', name: 'Průmyslové čištění', price: 130, desc: 'Stropy, opláštění a podlahy' },
+    { id: 'facade-paint', name: 'Nátěry fasád', price: 200, desc: 'Čištění, penetrace a 2 vrstvy barvy' },
+    { id: 'roof-paint', name: 'Nátěry střech', price: 180, desc: 'Kvalitními barvami' },
+    { id: 'impregnation', name: 'Nano impregnace', price: 70, desc: 'Ochrana různých povrchů' },
+    { id: 'antislip', name: 'Protiskluz', price: 120, desc: 'Pro bezpečnou podlahu' },
+    { id: 'ceramfloor', name: 'IG CeramFloor', price: 250, desc: 'Revoluční ochrana podlah' }
+  ];
+
+  // --- LIVE SYNC S ADMINEM (SUPABASE) na pozadí ---
+  (async () => {
     try {
       const { supabase } = await import('./supabase-config.js');
       const { data: remotePrices, error } = await supabase.from('configurator_prices').select('*');
       
       if (!error && remotePrices && remotePrices.length > 0) {
-        console.log('NANOfusion: Ceny načteny z Admin Panelu');
-        // Přepíšeme defaultní ceny těmi z databáze
-        services = services.map(localS => {
-          const remoteS = remotePrices.find(r => r.item_key === localS.id);
-          return remoteS ? { ...localS, price: remoteS.price, name: remoteS.label || localS.name } : localS;
+        remotePrices.forEach(remoteS => {
+          const card = document.querySelector(`.calc-service-card[data-id="${remoteS.item_key}"]`);
+          if (card) {
+            card.dataset.price = remoteS.price;
+          }
         });
       }
     } catch (e) {
       console.warn('NANOfusion: Cloud Sync nedostupný, používám lokální ceny.');
     }
+  })();
 
     const objectTypes = [
       { id: 'rd', name: 'Rodinný dům' },
@@ -415,10 +419,8 @@ const injectCalculator = async () => {
       });
     }
 
-    return true;
-  }
-  return false;
-};
+    return document.getElementById('kalkulacka');
+  };
 
 // Lead Capture Logic
 const setupLeadCapture = () => {
@@ -453,45 +455,40 @@ const setupLeadCapture = () => {
 };
 
 const runInjection = () => {
-  injectCalculator();
+  const el = injectCalculator();
   setupLeadCapture();
+  return el || document.getElementById('kalkulacka');
 };
 
 window.nnf_injectCalculator = runInjection;
 
-// MutationObserver — čeká dokud main.js nevytvoří #kontakt v DOM
 const initCalculator = () => {
-  // Pokud #kontakt již existuje, spusť rovnou
-  if (document.getElementById('kontakt')) {
-    runInjection();
-    return;
+  const tryInject = () => {
+    if (!document.getElementById('kalkulacka')) {
+      const target = document.getElementById('kontakt') || document.querySelector('footer') || document.querySelector('main') || document.getElementById('root');
+      if (target) {
+        runInjection();
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
+  };
+
+  // Run immediately
+  if (!tryInject()) {
+    const observer = new MutationObserver(() => {
+      tryInject();
+    });
+    observer.observe(document.documentElement || document.body, { childList: true, subtree: true });
   }
 
-  // Jinak sleduj DOM a čekej
-  const observer = new MutationObserver(() => {
-    if (document.getElementById('kontakt')) {
-      observer.disconnect();
-      runInjection();
-    }
-  });
-  observer.observe(document.body, { childList: true, subtree: true });
-
-  // Fallback po 8s — spusť i bez #kontakt (vloží na konec body)
-  setTimeout(() => {
-    observer.disconnect();
-    if (!document.getElementById('kalkulacka')) {
-      // Pokud #kontakt stále neexistuje, vlož před footer
-      const footer = document.querySelector('footer');
-      if (footer && footer.parentNode) {
-        const dummy = document.createElement('div');
-        dummy.id = 'kontakt';
-        footer.parentNode.insertBefore(dummy, footer);
-        runInjection();
-      } else {
-        runInjection();
-      }
-    }
-  }, 8000);
+  // Also retry on DOMContentLoaded and load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryInject);
+  }
+  window.addEventListener('load', tryInject);
 };
 
 initCalculator();

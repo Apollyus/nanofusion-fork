@@ -46,6 +46,15 @@ footer {
   background-color: #111111 !important;
 }
 
+/* Mobile Navigation Drawer & Dropdown Styling */
+header div.lg\:hidden.border-t,
+header div.space-y-1 {
+  position: relative !important;
+  z-index: 99999 !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
 header img:not(.chat-logo):not(.ai-chat-launcher img), 
 nav img:not(.chat-logo),
 footer img {

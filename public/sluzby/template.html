@@ -15,6 +15,54 @@
   <link href="/static/calculator.css" rel="stylesheet" />
   <link href="/static/ai-chat.css" rel="stylesheet" />
 
+  <!-- SEO & AI Schema.org (JSON-LD) -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Domů",
+          "item": "https://nanofusion.cz"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Služby",
+          "item": "https://nanofusion.cz/#sluzby"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{title}}",
+          "item": "https://nanofusion.cz/sluzby/{{slug}}"
+        }
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "{{title}}",
+      "serviceType": "{{title}}",
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "NANOfusion s.r.o.",
+        "url": "https://nanofusion.cz",
+        "telephone": "+420774509409"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Czech Republic"
+      },
+      "description": "{{meta_description}}",
+      "url": "https://nanofusion.cz/sluzby/{{slug}}"
+    }
+  </script>
+
   <style>
     :root {
       --primary: #f59e0b;
@@ -127,12 +175,21 @@
       font-weight: 900 !important;
     }
 
-    /* ── RESPONSIVE BREAKPOINTS ── */
+    /* ── RESPONSIVE BREAKPOINTS & DEVICE OPTIMIZATIONS ── */
+    html, body {
+      overflow-x: clip;
+      max-width: 100%;
+    }
+
     @media (max-width: 1024px) {
       .nav-desktop { display: none !important; }
       .nav-cta-desktop { display: none !important; }
       .nav-mobile-toggle { display: flex !important; }
       .nav-mobile-drawer { display: flex; }
+      .hero-grid {
+        grid-template-columns: 1fr !important;
+        gap: 3rem !important;
+      }
     }
 
     @media (max-width: 768px) {
@@ -141,53 +198,59 @@
         flex-direction: column;
         gap: 0.4rem;
         text-align: center;
-        padding: 0.6rem 1rem;
+        padding: 0.5rem 1rem !important;
       }
-      .top-info-bar-contacts { gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+      .top-info-bar-contacts {
+        gap: 1rem !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-size: 0.8rem !important;
+      }
 
       /* Main nav */
-      .nav-logo-img { height: 44px !important; }
-      .nav-main-bar { padding: 0.6rem 1.25rem !important; }
+      .nav-logo-img { height: 42px !important; }
+      .nav-main-bar { padding: 0.6rem 1rem !important; }
 
-      /* Hero */
-      .hero-grid {
-        grid-template-columns: 1fr !important;
-        gap: 2rem !important;
-      }
-      .hero-section { padding: 9.5rem 1.25rem 3rem !important; }
-      .service-hero-title { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
-      .hero-subtitle { font-size: 1.1rem !important; }
-      .hero-badges { gap: 1rem !important; flex-direction: column !important; }
+      /* Hero section */
+      .hero-section { padding: 13.5rem 1.25rem 3rem !important; }
+      .hero-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+      .service-hero-title { font-size: clamp(2rem, 7vw, 3.25rem) !important; line-height: 1.2 !important; }
+      .hero-subtitle { font-size: clamp(1rem, 3.5vw, 1.25rem) !important; line-height: 1.6 !important; margin-bottom: 1.75rem !important; }
+      .hero-badges { gap: 0.75rem 1.5rem !important; }
+
+      /* Calculator card */
+      .hero-calc-card { padding: 1.5rem 1.25rem !important; border-radius: 1.25rem !important; }
 
       /* What's included */
-      .whats-included-section { padding: 2.75rem 1.25rem !important; }
-      .whats-included-box { padding: 1.75rem !important; }
-      .benefits-grid { grid-template-columns: 1fr !important; }
+      .whats-included-section { padding: 3rem 1rem !important; }
+      .whats-included-box { padding: 1.5rem 1.25rem !important; border-radius: 1.25rem !important; }
+      .benefits-grid { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
 
-      /* Process */
-      .process-section { padding: 2.75rem 1.25rem !important; }
-      .service-section-title { font-size: clamp(1.8rem, 6vw, 3rem) !important; }
+      /* Process & sections */
+      .process-section, .quote-section, .faq-section, .cta-section { padding: 3rem 1rem !important; }
+      .service-section-title { font-size: clamp(1.75rem, 5.5vw, 2.5rem) !important; }
 
       /* Pull quote */
-      .quote-section { padding: 2.75rem 1.25rem !important; }
-      .quote-text { font-size: 1.2rem !important; }
-
-      /* FAQ */
-      .faq-section { padding: 2.75rem 1.25rem !important; }
+      .quote-text { font-size: 1.15rem !important; }
 
       /* CTA */
-      .cta-section { padding: 2.75rem 1.25rem !important; }
-      .cta-buttons { flex-direction: column !important; align-items: center !important; }
+      .cta-buttons { flex-direction: column !important; align-items: stretch !important; gap: 0.75rem !important; }
       .cta-buttons a, .cta-buttons button { width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
 
       /* Footer */
-      .footer-root { padding: 3rem 1.25rem 2rem !important; }
-      .footer-grid { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+      .footer-root { padding: 3rem 1rem 2rem !important; }
+      .footer-grid { grid-template-columns: 1fr !important; gap: 2.25rem !important; }
       .footer-legal { flex-direction: column !important; text-align: center !important; gap: 0.75rem !important; }
     }
 
-    @media (max-width: 480px) {
-      .hero-calc-card { padding: 1.5rem !important; }
+    @media (max-width: 520px) {
+      .step1-name-grid { grid-template-columns: 1fr !important; gap: 0.85rem !important; }
+      .hero-calc-card { padding: 1.25rem 1rem !important; }
+      .ba-container { border-width: 2.5px !important; border-radius: 1rem !important; }
+      .ba-handle-btn { width: 2.65rem !important; height: 2.65rem !important; font-size: 0.95rem !important; }
+      .ba-badge-pred, .ba-badge-po { padding: 0.35rem 0.75rem !important; font-size: 0.75rem !important; top: 0.75rem !important; }
+      .ba-badge-pred { left: 0.75rem !important; }
+      .ba-badge-po { right: 0.75rem !important; }
     }
   </style>
 </head>
@@ -195,19 +258,20 @@
 <body class="bg-slate-50">
 
   <!-- Premium Static Navigation Header (Matches the official live site navbar 1:1) -->
-  <!-- Premium Two-Tier Navigation Header (Matches the official live site 1:1) -->
+  <!-- Premium Two-Tier Navigation Header (Matches the official main site 1:1) -->
   <header
-    style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
 
     <!-- Top Info Bar (Black background, white text) -->
     <div
       style="background: #1c1c1e; color: #e5e5ea; font-size: 0.85rem; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.05);">
       <div class="top-info-bar-inner"
         style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 2.5rem;">
-        <div>Jezdíme po celé ČR · Po–Pá 7:00–18:00</div>
+        <div>Jezdíme po celé ČR · Po–Pá 8:00–17:00</div>
         <div class="top-info-bar-contacts" style="display: flex; gap: 1.5rem; align-items: center;">
           <a href="tel:+420774509409"
-            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">
+            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s;"
+            onmouseover="this.style.color='#f59e0b';" onmouseout="this.style.color='inherit';">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <path
@@ -217,7 +281,8 @@
             +420 774 509 409
           </a>
           <a href="mailto:info@nanofusion.cz"
-            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">
+            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s;"
+            onmouseover="this.style.color='#f59e0b';" onmouseout="this.style.color='inherit';">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -230,38 +295,37 @@
     </div>
 
     <!-- Main Navigation Bar (White background, dark text) -->
-    <div class="nav-main-bar" style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 0.85rem 2.5rem;">
+    <div class="nav-main-bar" style="background: transparent; padding: 0.85rem 2.5rem;">
       <div
         style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
         <a href="/" style="display: flex; align-items: center; text-decoration: none;">
-          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 60px; width: auto;" data-patched="true">
+          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 58px; width: auto;" data-patched="true">
         </a>
-        <nav class="nav-desktop" style="display: flex; gap: 2rem; align-items: center;" data-nav-patched="true">
+        <nav class="nav-desktop" style="display: flex; gap: 1rem; align-items: center;" data-nav-patched="true">
           <a href="/#sluzby"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Služby</a>
-          <a href="#kalkulacka"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
+          <a href="/#kalkulacka"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Konfigurátor</a>
           <a href="/#realizace"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Reference</a>
           <a href="/#blog"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Blog</a>
           <a href="/#galerie"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Galerie</a>
-          <a href="/o-nas"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
+          <a href="/#o-nas"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">O nás</a>
-          <a href="#kontakt"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; transition: color 0.2s;"
+          <a href="/#kontakt"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Kontakt</a>
         </nav>
-        <a class="nav-cta-desktop" href="#kalkulacka"
-          style="background: var(--primary); color: white; padding: 0.75rem 2rem; border-radius: 99px; text-decoration: none; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25); transition: all 0.2s;">Nezávazná
-          poptávka</a>
+        <a class="nav-cta-desktop" href="/#kalkulacka"
+          style="background: #f59e0b; color: white; padding: 0.75rem 1.8rem; border-radius: 99px; text-decoration: none; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25); transition: all 0.2s;">Spočítejte si cenu</a>
         <!-- Hamburger toggle -->
         <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
           <span></span><span></span><span></span>
@@ -271,13 +335,13 @@
     <!-- Mobile Drawer -->
     <div class="nav-mobile-drawer" id="nav-drawer">
       <a href="/#sluzby">Služby</a>
-      <a href="#kalkulacka">Konfigurátor</a>
+      <a href="/#kalkulacka">Konfigurátor</a>
       <a href="/#realizace">Reference</a>
       <a href="/#blog">Blog</a>
       <a href="/#galerie">Galerie</a>
-      <a href="/o-nas">O nás</a>
-      <a href="#kontakt">Kontakt</a>
-      <a href="#kalkulacka" class="drawer-cta">Nezávazná poptávka</a>
+      <a href="/#o-nas">O nás</a>
+      <a href="/#kontakt">Kontakt</a>
+      <a href="/#kalkulacka" class="drawer-cta">Spočítejte si cenu</a>
     </div>
   </header>
 
@@ -286,90 +350,112 @@
 
     <!-- HERO -->
     <section class="hero-section"
-      style="padding: 12.5rem 2.5rem 4.5rem; background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.8) 50%, rgba(26, 35, 50, 0.6) 100%), url('{{hero_image}}') center/cover no-repeat; color: white;">
+      style="padding: 12.5rem 2.5rem 4.5rem; background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.82) 50%, rgba(26, 35, 50, 0.65) 100%), url('{{hero_image}}') center/cover no-repeat; color: white;">
       <div class="hero-grid"
         style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr; gap: 4rem; align-items: center;">
         <div>
 
-          <h1 class="service-hero-title" style="margin-bottom: 1.75rem;">{{title}}</h1>
+          <h1 class="service-hero-title" style="margin-bottom: 1.75rem; font-size: 3.5rem; font-weight: 900; line-height: 1.15; color: #ffffff;">{{title_html}}</h1>
           <p class="hero-subtitle" style="font-size: 1.35rem; color: #cbd5e1; max-width: 700px; line-height: 1.7; margin-bottom: 2.5rem;">
             {{subtitle}}</p>
           <div class="hero-badges" style="display: flex; flex-wrap: wrap; gap: 2.5rem;">
             <div
               style="display: flex; align-items: center; gap: 0.6rem; color: #cbd5e1; font-size: 0.95rem; font-weight: 600;">
-              📅 14 let zkušeností</div>
+              14 let zkušeností</div>
             <div
               style="display: flex; align-items: center; gap: 0.6rem; color: #cbd5e1; font-size: 0.95rem; font-weight: 600;">
-              💼 950+ dokončených projektů</div>
+              950+ dokončených projektů</div>
             <div
               style="display: flex; align-items: center; gap: 0.6rem; color: #cbd5e1; font-size: 0.95rem; font-weight: 600;">
-              🤝 100% bezplatná konzultace</div>
+              100% bezplatná konzultace</div>
           </div>
         </div>
 
-        <!-- QUICK CALC CARD (Matches live calculator inputs as requested) -->
+        <!-- QUICK CALC CARD (2-STEP FLOW) -->
         <div class="hero-calc-card" id="kalkulacka"
-          style="background: white; border-radius: 1.5rem; padding: 2.25rem; box-shadow: 0 20px 50px rgba(0,0,0,0.35); color: var(--text-main); border: 2px solid #f59e0b;">
+          style="background: #ffffff; border-radius: 1.5rem; padding: 2.25rem; box-shadow: 0 20px 50px rgba(245, 158, 11, 0.18); color: #0f172a; border: 2.5px solid #f59e0b; position: relative;">
           <div id="m-form">
-            <div style="font-weight: 900; font-size: 1.15rem; margin-bottom: 0.4rem; color: var(--text-main);">Kalkulace
-              zdarma do 24 h</div>
-            <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Získejte okamžitý odhad
-              ceny pro váš projekt.</div>
+            
+            <!-- STEP INDICATOR -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+              <span id="m-step-badge" style="background: rgba(245, 158, 11, 0.12); color: #d97706; font-weight: 800; font-size: 0.75rem; padding: 0.35rem 0.9rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;">Část 1 ze 2: Kontakty</span>
+              <span style="font-size: 0.8rem; font-weight: 700; color: #94a3b8;">Kalkulace zdarma</span>
+            </div>
 
-            <div style="margin-bottom: 1rem;">
-              <label
-                style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Plocha
-                v m²</label>
-              <div style="position: relative;">
-                <input id="m-area" type="number" value="100" min="10" max="10000"
-                  style="width: 100%; padding: 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1.15rem; font-weight: 700; background: #f8fafc; color: var(--text-main);">
-                <span
-                  style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted);">m²</span>
+            <!-- STEP 1: Kontaktní údaje -->
+            <div id="m-step1-container" style="display: block;">
+              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Získejte přesný odhad ceny</div>
+              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte kontaktní údaje pro zaslání kalkulace:</div>
+
+              <div class="step1-name-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem;">
+                <div>
+                  <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Jméno *</label>
+                  <input id="m-firstname" type="text" placeholder="Jan" required
+                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+                </div>
+                <div>
+                  <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Příjmení *</label>
+                  <input id="m-lastname" type="text" placeholder="Novák" required
+                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+                </div>
+              </div>
+
+              <div style="margin-bottom: 0.85rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Přesná lokace *</label>
+                <input id="m-location" type="text" placeholder="Např. Praha 4, U Lesa 12" required
+                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+              </div>
+
+              <div style="margin-bottom: 0.85rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Telefon *</label>
+                <input id="m-phone" type="tel" placeholder="+420 777 123 456" required
+                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+              </div>
+
+              <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">E-mail *</label>
+                <input id="m-email" type="email" placeholder="jan.novak@email.cz" required
+                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+              </div>
+
+              <button id="m-next-btn" type="button"
+                style="display: block; text-align: center; width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Pokračovat →</button>
+            </div>
+
+            <!-- STEP 2: Metry a fotografie -->
+            <div id="m-step2-container" style="display: none;">
+              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Specifikace zakázky</div>
+              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte výměru plochy a nahrajte foto (nepovinné):</div>
+
+              <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Plocha v m² *</label>
+                <div style="position: relative;">
+                  <input id="m-area" type="number" value="100" min="10" max="10000"
+                    style="width: 100%; padding: 0.9rem; border: 1.5px solid #fed7aa; border-radius: 0.65rem; font-size: 1.2rem; font-weight: 800; background: #fffbe6; color: #0f172a; outline: none;">
+                  <span style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 800; color: #d97706;">m²</span>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Fotografie objektu (nepovinné)</label>
+                <input id="m-photo" type="file" accept="image/*"
+                  style="width: 100%; padding: 0.85rem; border: 1.5px dashed #f59e0b; border-radius: 0.65rem; font-size: 0.875rem; background: #fffbe6; color: #0f172a; cursor: pointer;">
+              </div>
+
+              <div style="display: flex; gap: 0.75rem;">
+                <button id="m-back-btn" type="button"
+                  style="flex: 0 0 80px; background: #f1f5f9; color: #475569; padding: 1.05rem 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.65rem; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">← Zpět</button>
+                <button id="m-reveal" type="button"
+                  style="flex: 1; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Zobrazit cenu</button>
               </div>
             </div>
 
-            <div style="margin-bottom: 1rem;">
-              <label
-                style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Vaše
-                jméno</label>
-              <input id="m-name" type="text" placeholder="Vaše jméno"
-                style="width: 100%; padding: 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1rem; background: #f8fafc; color: var(--text-main);">
-            </div>
-
-            <div style="margin-bottom: 1rem;">
-              <label
-                style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Město / Lokace</label>
-              <input id="m-location" type="text" placeholder="Např. Praha, Brno, Beroun..."
-                style="width: 100%; padding: 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1rem; background: #f8fafc; color: var(--text-main);">
-            </div>
-
-            <div style="margin-bottom: 1rem;">
-              <label
-                style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Telefonní
-                číslo</label>
-              <input id="m-phone" type="tel" placeholder="Telefonní číslo"
-                style="width: 100%; padding: 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.65rem; font-size: 1rem; background: #f8fafc; color: var(--text-main);">
-            </div>
-
-            <div style="margin-bottom: 1.25rem;">
-              <label
-                style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Fotografie objektu (nepovinné)</label>
-              <input id="m-photo" type="file" accept="image/*"
-                style="width: 100%; padding: 0.75rem; border: 1px dashed #cbd5e1; border-radius: 0.65rem; font-size: 0.875rem; background: #f8fafc; color: var(--text-main); cursor: pointer;">
-            </div>
-
-            <button id="m-reveal"
-              style="display: block; text-align: center; width: 100%; background: var(--primary); color: white; padding: 1.1rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.9rem;">Zobrazit
-              cenu</button>
-            <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 1rem;">Nezávazné a
-              zdarma · odpověď do 24 h</div>
+            <div style="text-align: center; color: #64748b; font-size: 0.8rem; margin-top: 1rem;">Nezávazné a zdarma · odpovídáme do 24 h</div>
           </div>
 
           <div id="m-result" style="display: none; text-align: center; padding: 2rem 1rem;">
-            <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 600;">Předběžná cena pro vaši
-              plochu:</span>
-            <div id="m-price" style="font-size: 2.25rem; font-weight: 900; color: var(--primary); margin: 0.5rem 0;">0
-              Kč</div>
+            <span style="font-size: 0.875rem; color: #64748b; font-weight: 600;">Předběžná cena pro vaši plochu:</span>
+            <div id="m-price" style="font-size: 2.25rem; font-weight: 900; color: #f59e0b; margin: 0.5rem 0;">0 Kč</div>
             <div
               style="padding: 1rem; background: #f0fdf4; border-radius: 1rem; color: #166534; font-size: 0.813rem; font-weight: 700; border: 1px solid #dcfce7; margin-top: 1rem;">
               ✓ Úspěšně odesláno. Zavoláme vám.</div>
@@ -379,26 +465,24 @@
     </section>
 
     <!-- WHAT'S INCLUDED -->
-    <section class="whats-included-section" style="padding: 4.5rem 2.5rem; background: white;">
-      <div style="max-width: 1100px; margin: 0 auto;">
+    <section class="whats-included-section" style="padding: 3rem 1.5rem; background: white;">
+      <div style="max-width: 1050px; margin: 0 auto;">
 
-        <h2 class="service-section-title" style="margin-bottom: 2rem; color: var(--bg-dark);">{{title}}</h2>
         <div class="service-main-description"
-          style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 2.5rem; max-width: 800px; line-height: 1.8;">
+          style="color: #475569; font-size: 1.15rem; margin-bottom: 1.75rem; max-width: 800px; line-height: 1.7;">
           {{description}}</div>
 
         <div
-          class="whats-included-box" style="background: #eff6ff; border: 3px solid #f59e0b; border-radius: 1.75rem; padding: 3rem;">
-          <div style="display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.75rem;">
-            <span style="font-size: 1.75rem;">📋</span>
-            <h3 style="font-size: 1rem; text-transform: uppercase; color: #1e40af; font-weight: 900;">Co to obsahuje?
+          class="whats-included-box" style="background: #fffbf0; border: 2px solid #f59e0b; border-radius: 1.25rem; padding: 2rem; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.06);">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+            <h3 style="font-size: 0.95rem; text-transform: uppercase; color: #d97706; font-weight: 900;">Co to obsahuje?
             </h3>
           </div>
           <div class="service-process-description"
-            style="color: var(--text-main); font-size: 1.05rem; line-height: 1.8; margin-bottom: 2.25rem; max-width: 800px;">
+            style="color: var(--text-main); font-size: 1rem; line-height: 1.7; margin-bottom: 1.75rem; max-width: 800px;">
             {{what_included}}
           </div>
-          <div class="benefits-grid grid grid-cols-1 md:grid-cols-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.5rem;">
+          <div class="benefits-grid grid grid-cols-1 md:grid-cols-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem 2rem;">
             {{benefits_html}}
           </div>
         </div>
@@ -408,19 +492,19 @@
     <!-- BEFORE & AFTER (Slider) -->
     {{before_after_html}}
 
-    <!-- PROCESS -->
-    <section class="process-section" id="postup" style="padding: 4.5rem 2.5rem; background: white;">
-      <div style="max-width: 1200px; margin: 0 auto;">
-        <h2 class="service-section-title" style="text-align: center; margin-bottom: 1.25rem; color: var(--bg-dark);">Jak
+    <!-- PROCESS (Compact) -->
+    <section class="process-section" id="postup" style="padding: 2.25rem 1.5rem; background: white;">
+      <div style="max-width: 1050px; margin: 0 auto;">
+        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.4rem; color: #f59e0b; font-size: 1.6rem; font-weight: 900;">Jak
           čištění probíhá</h2>
-        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.15rem;">Žádné
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">Žádné
           překvapení — postup krok za krokem</p>
         <div
-          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;"
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           {{process_html}}
         </div>
-        <div style="text-align: center; color: var(--text-muted); font-size: 1rem; font-weight: 600;">⏱️
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.875rem; font-weight: 600;">⏱️
           {{process_note}}</div>
       </div>
     </section>
@@ -430,46 +514,49 @@
 
     <!-- PULL QUOTE (Dynamic Latest Review) -->
     <section class="quote-section"
-      style="padding: 4rem 2.5rem; background: white; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
-      <div style="max-width: 900px; margin: 0 auto; text-align: center;">
-        <div style="color: var(--primary); font-size: 4rem; font-weight: 900; line-height: 1; margin-bottom: 0.5rem;">“
+      style="padding: 2.5rem 1.5rem; background: white; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+      <div style="max-width: 850px; margin: 0 auto; text-align: center;">
+        <div style="color: #f59e0b; font-size: 2.5rem; font-weight: 900; line-height: 1; margin-bottom: 0.25rem;">“
         </div>
-        <div style="color: #fbbf24; font-size: 1.5rem; margin-bottom: 1.5rem;">★★★★★</div>
+        <div style="color: #fbbf24; font-size: 1.25rem; margin-bottom: 0.85rem;">★★★★★</div>
         <p class="quote-text"
-          style="font-size: 1.6rem; font-weight: 600; color: var(--text-main); line-height: 1.6; font-style: italic; margin-bottom: 1.75rem;">
+          style="font-size: 1.25rem; font-weight: 600; color: var(--text-main); line-height: 1.5; font-style: italic; margin-bottom: 1rem;">
           {{quote}}</p>
-        <div style="color: var(--text-muted); font-weight: 700;">{{quote_author}}</div>
+        <div style="color: var(--text-muted); font-weight: 700; font-size: 0.875rem;">{{quote_author}}</div>
       </div>
     </section>
 
+    <!-- SERVICE VIDEO (Placed exactly between Reviews and FAQ) -->
+    {{video_html}}
+
     <!-- FAQ (Matches live accordion design) -->
-    <section class="faq-section" id="faq" style="padding: 4.5rem 2.5rem; background: #f8fafc;">
-      <div style="max-width: 900px; margin: 0 auto;">
-        <h2 class="service-section-title" style="text-align: center; margin-bottom: 1.25rem; color: var(--bg-dark);">
-          Často kladené otázky</h2>
-        <p
-          style="text-align: center; color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.15rem; line-height: 1.7;">
-          Vše, co jste chtěli vědět</p>
-        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+    <section class="faq-section" id="faq" style="padding: 2.75rem 1.5rem; background: #f8fafc;">
+      <div style="max-width: 850px; margin: 0 auto;">
+        <h2 class="service-section-title" style="text-align: center; margin-bottom: 1.75rem; color: #f59e0b; font-size: 1.75rem; font-weight: 900;">
+          Na co se nás nejčastěji ptáte</h2>
+        <div style="display: flex; flex-direction: column; gap: 0.85rem;">
           {{faq_html}}
         </div>
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta-section" id="kontakt" style="padding: 4.5rem 2.5rem; background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2332 100%);">
-      <div style="max-width: 1200px; margin: 0 auto; text-align: center; color: white;">
-        <h2 class="service-section-title" style="color: white; margin-bottom: 1.75rem;">Chcete vědět více?</h2>
+    <!-- CTA (Compact & Elegant) -->
+    <section class="cta-section" style="padding: 2.25rem 1.5rem; background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2332 100%);">
+      <div style="max-width: 850px; margin: 0 auto; text-align: center; color: white;">
+        <h2 style="color: #f59e0b; margin-bottom: 0.5rem; font-size: 1.6rem; font-weight: 900;">Chcete vědět více?</h2>
         <p
-          style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 3rem; line-height: 1.7; max-width: 800px; margin-left: auto; margin-right: auto;">
+          style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 1.25rem; line-height: 1.5; max-width: 600px; margin-left: auto; margin-right: auto;">
           Kontaktujte nás pro nezávaznou konzultaci a kalkulaci vašeho projektu po celé ČR zdarma.</p>
-        <div class="cta-buttons flex flex-col sm:flex-row items-center justify-content: center" style="display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap;">
+        <div class="cta-buttons" style="display: flex; gap: 0.85rem; justify-content: center; align-items: center; flex-wrap: wrap;">
           <button
-            onclick="document.getElementById('m-area').focus(); document.getElementById('m-area').scrollIntoView({ behavior: 'smooth', block: 'center' });"
-            style="background: var(--primary); color: white; padding: 1.15rem 3.25rem; border-radius: 0.75rem; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 1.05rem;">Zadat
-            poptávku</button>
+            onclick="window.scrollToKalkulacka(event)"
+            style="background: var(--primary); color: white; padding: 0.8rem 1.8rem; border-radius: 0.55rem; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; box-shadow: 0 4px 14px rgba(245,158,11,0.3); transition: all 0.2s;"
+            onmouseover="this.style.background='#d97706';"
+            onmouseout="this.style.background='var(--primary)';"
+          >Zadat poptávku</button>
           <a href="tel:+420774509409"
-            style="background: transparent; color: white; padding: 1.15rem 3.25rem; border-radius: 0.75rem; border: 2px solid rgba(255,255,255,0.3); font-weight: 900; text-decoration: none; text-transform: uppercase; font-size: 1.05rem;">📞
+            style="background: transparent; color: white; padding: 0.65rem 1.6rem; border-radius: 0.55rem; border: 1.5px solid rgba(255,255,255,0.3); font-weight: 800; text-decoration: none; font-size: 0.825rem; transition: border 0.2s;"
+            onmouseover="this.style.borderColor='#f59e0b';" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)';">
             +420 774 509 409</a>
         </div>
       </div>
@@ -477,30 +564,30 @@
 
   </main>
 
-  <!-- Premium Static Footer (Matches the official live site footer 1:1) -->
+  <!-- Premium Static Footer (Compact & Balanced Layout) -->
   <footer id="kontakt" class="footer-root"
-    style="background: #111111; color: #94a3b8; padding: 5rem 2.5rem 3rem; border-top: 1px solid #1e293b; font-size: 0.95rem;">
-    <div class="footer-grid grid grid-cols-1 md:grid-cols-3" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr 1.3fr; gap: 4rem;">
+    style="background: #111111; color: #94a3b8; padding: 3rem 1.5rem 2rem; border-top: 1px solid #1e293b; font-size: 0.875rem;">
+    <div class="footer-grid grid grid-cols-1 md:grid-cols-3" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 2.5rem;">
 
       <!-- Left Column: Branding, Tagline & Social Icons -->
       <div>
-        <img src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 60px; width: auto; margin-bottom: 1.5rem;"
+        <img src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 48px; width: auto; margin-bottom: 1rem;"
           data-patched="true">
-        <p style="line-height: 1.7; color: #94a3b8; margin-bottom: 2rem;">Profesionální čištění, impregnace a
+        <p style="line-height: 1.6; color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.875rem;">Profesionální čištění, impregnace a
           nátěry.<br>Již 14 let pečujeme o váš majetek po celé ČR.</p>
 
         <!-- Social Circle Icons -->
-        <div style="display: flex; gap: 0.75rem;">
+        <div style="display: flex; gap: 0.6rem;">
           <a href="https://www.facebook.com/nanofusioncz" target="_blank" rel="noopener noreferrer"
-            style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; transition: background 0.2s;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
             </svg>
           </a>
           <a href="https://www.instagram.com/nano_fusion_cz/" target="_blank"
-            style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; transition: background 0.2s;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
               <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -508,8 +595,8 @@
             </svg>
           </a>
           <a href="https://www.linkedin.com/company/nanofusion/" target="_blank"
-            style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; transition: background 0.2s;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
               <rect x="2" y="9" width="4" height="12"></rect>
@@ -517,8 +604,8 @@
             </svg>
           </a>
           <a href="https://www.youtube.com/channel/UCBX5e_PVDcAKmurD9GsdYSA" target="_blank" rel="noopener noreferrer"
-            style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; transition: background 0.2s;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <path
                 d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z">
@@ -527,8 +614,8 @@
             </svg>
           </a>
           <a href="https://www.tiktok.com/@nano_fusion_cz" target="_blank"
-            style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; transition: background 0.2s;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
             </svg>
@@ -536,32 +623,32 @@
         </div>
       </div>
 
-      <!-- Center Column: Services List -->
+      <!-- Center Column: Services List (Czech SEO Links) -->
       <div>
         <h4
-          style="color: #f59e0b; font-weight: 800; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.05em; margin-bottom: 1.5rem;">
+          style="color: #f59e0b; font-weight: 800; text-transform: uppercase; font-size: 0.825rem; letter-spacing: 0.05em; margin-bottom: 1rem;">
           Služby</h4>
-        <div style="display: flex; flex-direction: column; gap: 0.65rem;">
-          <a href="/sluzby/facade" class="footer-hover-link">Čištění fasád</a>
-          <a href="/sluzby/roof" class="footer-hover-link">Čištění střech</a>
-          <a href="/sluzby/pavement" class="footer-hover-link">Čištění dlažeb</a>
-          <a href="/sluzby/pv" class="footer-hover-link">Solární panely</a>
-          <a href="/sluzby/graffiti" class="footer-hover-link">Odstranění graffiti</a>
-          <a href="/sluzby/industrial" class="footer-hover-link">Průmyslové čištění</a>
-          <a href="/sluzby/facade-paint" class="footer-hover-link">Nátěry fasád</a>
-          <a href="/sluzby/roof-paint" class="footer-hover-link">Nátěry střech</a>
-          <a href="/sluzby/antislip" class="footer-hover-link">Protiskluzová úprava</a>
-          <a href="/sluzby/ceramfloor" class="footer-hover-link">IG CeramFloor</a>
-          <a href="/sluzby/antibac" class="footer-hover-link">Antibakteriální ochrana</a>
+        <div style="display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.875rem;">
+          <a href="/sluzby/cisteni-fasad" class="footer-hover-link">Čištění fasád</a>
+          <a href="/sluzby/cisteni-strech" class="footer-hover-link">Čištění střech</a>
+          <a href="/sluzby/cisteni-dlazby" class="footer-hover-link">Čištění dlažeb</a>
+          <a href="/sluzby/cisteni-fotovoltaiky" class="footer-hover-link">Solární panely</a>
+          <a href="/sluzby/odstraneni-graffiti" class="footer-hover-link">Odstranění graffiti</a>
+          <a href="/sluzby/prumyslove-cisteni" class="footer-hover-link">Průmyslové čištění</a>
+          <a href="/sluzby/natery-fasad" class="footer-hover-link">Nátěry fasád</a>
+          <a href="/sluzby/natery-strech" class="footer-hover-link">Nátěry střech</a>
+          <a href="/sluzby/protiskluzove-natery" class="footer-hover-link">Protiskluzová úprava</a>
+          <a href="/sluzby/ochrana-podlah-ceramfloor" class="footer-hover-link">IG CeramFloor</a>
+          <a href="/sluzby/antibakterialni-ochrana" class="footer-hover-link">Antibakteriální ochrana</a>
         </div>
       </div>
 
       <!-- Right Column: Contact Details & Google Map -->
       <div>
         <h4
-          style="color: #f59e0b; font-weight: 800; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.05em; margin-bottom: 1.5rem;">
+          style="color: #f59e0b; font-weight: 800; text-transform: uppercase; font-size: 0.825rem; letter-spacing: 0.05em; margin-bottom: 1rem;">
           Kontakt</h4>
-        <div style="display: flex; flex-direction: column; gap: 0.65rem; color: #94a3b8; font-size: 0.95rem;">
+        <div style="display: flex; flex-direction: column; gap: 0.45rem; color: #94a3b8; font-size: 0.875rem;">
           <div style="font-weight: 500;">
             <a href="tel:+420774509409" class="footer-hover-link">+420 774 509 409</a>
           </div>
@@ -573,25 +660,26 @@
 
           <!-- Google Maps Iframe matching layout -->
           <div class="footer-map-container"
-            style="margin-top: 1.25rem; border-radius: 1rem; overflow: hidden; border: 2px solid #f59e0b; height: 160px; position: relative;">
-            <iframe src="https://www.google.com/maps?q=Cezavy%20627,664%2056%20Blučina&amp;output=embed" width="100%"
+            style="margin-top: 0.85rem; border-radius: 0.85rem; overflow: hidden; border: 2px solid #f59e0b; height: 135px; position: relative;">
+            <iframe src="https://www.google.com/maps?q=NANOfusion%20s.r.o.,%20Blučina&amp;output=embed" width="100%"
               height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-            <div style="position: absolute; inset: 0; background: transparent;"
-              onclick="window.open('https://www.google.com/maps?q=Cezavy%20627,664%2056%20Blučina', '_blank')"></div>
+            <div style="position: absolute; inset: 0; background: transparent; cursor: pointer;"
+              onclick="window.open('https://www.google.com/maps?q=NANOfusion+s.r.o.,+Blučina', '_blank')"></div>
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- Legal, IČO & Links -->
+    <!-- Legal, IČO & Links (Identical 1:1 to main page footer) -->
     <div class="footer-legal"
-      style="max-width: 1400px; margin: 4rem auto 0; padding-top: 2rem; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: #475569;">
+      style="max-width: 1200px; margin: 2.5rem auto 0; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; font-size: 0.775rem; color: #64748b;">
       <div>© 2026 NANOfusion s.r.o. Všechna práva vyhrazena.</div>
       <div>
-        © 2026 NANOfusion s.r.o. | IČ: 29375363 |
-        <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" class="footer-eshop-link">E-shop</a> |
-        <a href="https://nanofusion-j3bs.vercel.app/admin/login" class="footer-admin-link">Zaměstnanci</a>
+        IČ: 29375363 |
+        <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" style="color: #f59e0b; font-weight: 700; text-decoration: underline;">E-shop</a> |
+        <a href="https://nanofusion-j3bs.vercel.app/admin/login" style="color: inherit; text-decoration: none;">Zaměstnanci</a> |
+        <a href="https://www.aerisq.tech" target="_blank" rel="noopener noreferrer" style="color: #94a3b8; text-decoration: none; font-weight: 600;">Created by 💚</a>
       </div>
     </div>
   </footer>
@@ -608,6 +696,7 @@
   <!-- Core Scripts (No SPA bundle imported to prevent route conflicts) -->
   <script src="/static/main.js" type="module"></script>
   <script src="/static/service-detail.js" type="module"></script>
+  <script src="/static/about-us.js" type="module"></script>
   <script src="/static/ai-chat.js" type="module"></script>
 
   <!-- Mobile Hamburger Menu Script -->

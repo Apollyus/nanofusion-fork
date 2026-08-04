@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Protiskluzová úprava | NANOfusion</title>
+  <meta content="Protiskluzová úprava pro mokré povrchy (keramika, žula, mramor)." name="description">
+
+  <link href="/static/logo.jpg" rel="icon" type="image/jpeg" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" crossorigin href="/assets/index-D7rL3D6v.css">
+  <link rel="stylesheet" href="/static/modern-ui.css">
+  <link href="/static/calculator.css" rel="stylesheet" />
+  <link href="/static/ai-chat.css" rel="stylesheet" />
+
+  <!-- SEO & AI Schema.org (JSON-LD) -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Domů",
+          "item": "https://nanofusion.cz"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Služby",
+          "item": "https://nanofusion.cz/#sluzby"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Protiskluzová úprava",
+          "item": "https://nanofusion.cz/sluzby/protiskluzove-natery"
+        }
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Protiskluzová úprava",
+      "serviceType": "Protiskluzová úprava",
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "NANOfusion s.r.o.",
+        "url": "https://nanofusion.cz",
+        "telephone": "+420774509409"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Czech Republic"
+      },
+      "description": "Protiskluzová úprava pro mokré povrchy (keramika, žula, mramor).",
+      "url": "https://nanofusion.cz/sluzby/protiskluzove-natery"
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary: #f59e0b;
+      --bg-dark: #0f172a;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-main);
+      background: white;
+      scroll-behavior: smooth;
+      /* Prevent React SPA CSS from hiding body on static subpages */
+      opacity: 1 !important;
+      overflow: auto !important;
+    }
+
+    .service-hero-title {
+      font-size: min(7vw, 4.3rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .service-section-title {
+      font-size: min(6vw, 3.3rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .service-subsection-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .service-main-description p {
+      margin-bottom: 1rem;
+    }
+    .service-main-description p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ── MOBILE HAMBURGER MENU ── */
+    .nav-mobile-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1100;
+    }
+    .nav-mobile-toggle span {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: #1e293b;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .nav-mobile-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-mobile-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-mobile-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-desktop { display: flex; }
+    .nav-cta-desktop { display: flex; }
+
+    .nav-mobile-drawer {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: white;
+      z-index: 1050;
+      padding: 6rem 2rem 2rem;
+      gap: 0.25rem;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.35s ease;
+    }
+    .nav-mobile-drawer.open {
+      transform: translateX(0);
+    }
+    .nav-mobile-drawer a {
+      display: block;
+      padding: 1rem 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+      text-decoration: none;
+      border-bottom: 1px solid #f1f5f9;
+      transition: color 0.2s;
+    }
+    .nav-mobile-drawer a:hover { color: #f59e0b; }
+    .nav-mobile-drawer .drawer-cta {
+      margin-top: 1.5rem;
+      display: block;
+      background: #f59e0b;
+      color: white !important;
+      text-align: center;
+      padding: 1rem !important;
+      border-radius: 0.75rem;
+      border-bottom: none !important;
+      font-weight: 900 !important;
+    }
+
+    /* ── RESPONSIVE BREAKPOINTS & DEVICE OPTIMIZATIONS ── */
+    html, body {
+      overflow-x: clip;
+      max-width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      .nav-desktop { display: none !important; }
+      .nav-cta-desktop { display: none !important; }
+      .nav-mobile-toggle { display: flex !important; }
+      .nav-mobile-drawer { display: flex; }
+      .hero-grid {
+        grid-template-columns: 1fr !important;
+        gap: 3rem !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      /* Top info bar */
+      .top-info-bar-inner {
+        flex-direction: column;
+        gap: 0.4rem;
+        text-align: center;
+        padding: 0.5rem 1rem !important;
+      }
+      .top-info-bar-contacts {
+        gap: 1rem !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-size: 0.8rem !important;
+      }
+
+      /* Main nav */
+      .nav-logo-img { height: 42px !important; }
+      .nav-main-bar { padding: 0.6rem 1rem !important; }
+
+      /* Hero section */
+      .hero-section { padding: 13.5rem 1.25rem 3rem !important; }
+      .hero-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+      .service-hero-title { font-size: clamp(2rem, 7vw, 3.25rem) !important; line-height: 1.2 !important; }
+      .hero-subtitle { font-size: clamp(1rem, 3.5vw, 1.25rem) !important; line-height: 1.6 !important; margin-bottom: 1.75rem !important; }
+      .hero-badges { gap: 0.75rem 1.5rem !important; }
+
+      /* Calculator card */
+      .hero-calc-card { padding: 1.5rem 1.25rem !important; border-radius: 1.25rem !important; }
+
+      /* What's included */
+      .whats-included-section { padding: 3rem 1rem !important; }
+      .whats-included-box { padding: 1.5rem 1.25rem !important; border-radius: 1.25rem !important; }
+      .benefits-grid { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
+
+      /* Process & sections */
+      .process-section, .quote-section, .faq-section, .cta-section { padding: 3rem 1rem !important; }
+      .service-section-title { font-size: clamp(1.75rem, 5.5vw, 2.5rem) !important; }
+
+      /* Pull quote */
+      .quote-text { font-size: 1.15rem !important; }
+
+      /* CTA */
+      .cta-buttons { flex-direction: column !important; align-items: stretch !important; gap: 0.75rem !important; }
+      .cta-buttons a, .cta-buttons button { width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
+
+      /* Footer */
+      .footer-root { padding: 3rem 1rem 2rem !important; }
+      .footer-grid { grid-template-columns: 1fr !important; gap: 2.25rem !important; }
+      .footer-legal { flex-direction: column !important; text-align: center !important; gap: 0.75rem !important; }
+    }
+
+    @media (max-width: 520px) {
+      .step1-name-grid { grid-template-columns: 1fr !important; gap: 0.85rem !important; }
+      .hero-calc-card { padding: 1.25rem 1rem !important; }
+      .ba-container { border-width: 2.5px !important; border-radius: 1rem !important; }
+      .ba-handle-btn { width: 2.65rem !important; height: 2.65rem !important; font-size: 0.95rem !important; }
+      .ba-badge-pred, .ba-badge-po { padding: 0.35rem 0.75rem !important; font-size: 0.75rem !important; top: 0.75rem !important; }
+      .ba-badge-pred { left: 0.75rem !important; }
+      .ba-badge-po { right: 0.75rem !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50">
+
+  <!-- Premium Static Navigation Header (Matches the official live site navbar 1:1) -->
+  <!-- Premium Two-Tier Navigation Header (Matches the official main site 1:1) -->
+  <header
+    style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+
+    <!-- Top Info Bar (Black background, white text) -->
+    <div
+      style="background: #1c1c1e; color: #e5e5ea; font-size: 0.85rem; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.05);">
+      <div class="top-info-bar-inner"
+        style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 2.5rem;">
+        <div>Jezdíme po celé ČR · Po–Pá 8:00–17:00</div>
+        <div class="top-info-bar-contacts" style="display: flex; gap: 1.5rem; align-items: center;">
+          <a href="tel:+420774509409"
+            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s;"
+            onmouseover="this.style.color='#f59e0b';" onmouseout="this.style.color='inherit';">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+              </path>
+            </svg>
+            +420 774 509 409
+          </a>
+          <a href="mailto:info@nanofusion.cz"
+            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s;"
+            onmouseover="this.style.color='#f59e0b';" onmouseout="this.style.color='inherit';">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            info@nanofusion.cz
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar (White background, dark text) -->
+    <div class="nav-main-bar" style="background: transparent; padding: 0.85rem 2.5rem;">
+      <div
+        style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+        <a href="/" style="display: flex; align-items: center; text-decoration: none;">
+          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 58px; width: auto;" data-patched="true">
+        </a>
+        <nav class="nav-desktop" style="display: flex; gap: 1rem; align-items: center;" data-nav-patched="true">
+          <a href="/#sluzby"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Služby</a>
+          <a href="/#kalkulacka"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Konfigurátor</a>
+          <a href="/#realizace"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Reference</a>
+          <a href="/#blog"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Blog</a>
+          <a href="/#galerie"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Galerie</a>
+          <a href="/#o-nas"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">O nás</a>
+          <a href="/#kontakt"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Kontakt</a>
+        </nav>
+        <a class="nav-cta-desktop" href="/#kalkulacka"
+          style="background: #f59e0b; color: white; padding: 0.75rem 1.8rem; border-radius: 99px; text-decoration: none; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25); transition: all 0.2s;">Spočítejte si cenu</a>
+        <!-- Hamburger toggle -->
+        <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Drawer -->
+    <div class="nav-mobile-drawer" id="nav-drawer">
+      <a href="/#sluzby">Služby</a>
+      <a href="/#kalkulacka">Konfigurátor</a>
+      <a href="/#realizace">Reference</a>
+      <a href="/#blog">Blog</a>
+      <a href="/#galerie">Galerie</a>
+      <a href="/#o-nas">O nás</a>
+      <a href="/#kontakt">Kontakt</a>
+      <a href="/#kalkulacka" class="drawer-cta">Spočítejte si cenu</a>
+    </div>
+  </header>
+
+  <!-- Main static content -->
+  <main class="pt-32 bg-white">
+
+    <!-- HERO -->
+    <section class="hero-section"
+      style="padding: 12.5rem 2.5rem 4.5rem; background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.82) 50%, rgba(26, 35, 50, 0.65) 100%), url('https://images.unsplash.com/photo-1520004434532-668416a08753?w=800') center/cover no-repeat; color: white;">
+      <div class="hero-grid"
+        style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr; gap: 4rem; align-items: center;">
+        <div>
+
+          <h1 class="service-hero-title" style="margin-bottom: 1.75rem; font-size: 3.5rem; font-weight: 900; line-height: 1.15; color: #ffffff;"><span style="color: #ffffff;">Protiskluzová</span> <span style="color: #f59e0b;">úprava</span></h1>
+          <p class="hero-subtitle" style="font-size: 1.35rem; color: #cbd5e1; max-width: 700px; line-height: 1.7; margin-bottom: 2.5rem;">
+            Chemická protiskluzová úprava mokrých povrchů bez změny vzhledu materiálu.</p>
+          <div class="hero-badges" style="display: flex; flex-wrap: wrap; gap: 2.5rem;">
+            <div
+              style="display: flex; align-items: center; gap: 0.6rem; color: #cbd5e1; font-size: 0.95rem; font-weight: 600;">
+              14 let zkušeností</div>
+            <div
+              style="display: flex; align-items: center; gap: 0.6rem; color: #cbd5e1; font-size: 0.95rem; font-weight: 600;">
+              950+ dokončených projektů</div>
+            <div
+              style="display: flex; align-items: center; gap: 0.6rem; color: #cbd5e1; font-size: 0.95rem; font-weight: 600;">
+              100% bezplatná konzultace</div>
+          </div>
+        </div>
+
+        <!-- QUICK CALC CARD (2-STEP FLOW) -->
+        <div class="hero-calc-card" id="kalkulacka"
+          style="background: #ffffff; border-radius: 1.5rem; padding: 2.25rem; box-shadow: 0 20px 50px rgba(245, 158, 11, 0.18); color: #0f172a; border: 2.5px solid #f59e0b; position: relative;">
+          <div id="m-form">
+            
+            <!-- STEP INDICATOR -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+              <span id="m-step-badge" style="background: rgba(245, 158, 11, 0.12); color: #d97706; font-weight: 800; font-size: 0.75rem; padding: 0.35rem 0.9rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;">Část 1 ze 2: Kontakty</span>
+              <span style="font-size: 0.8rem; font-weight: 700; color: #94a3b8;">Kalkulace zdarma</span>
+            </div>
+
+            <!-- STEP 1: Kontaktní údaje -->
+            <div id="m-step1-container" style="display: block;">
+              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Získejte přesný odhad ceny</div>
+              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte kontaktní údaje pro zaslání kalkulace:</div>
+
+              <div class="step1-name-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem;">
+                <div>
+                  <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Jméno *</label>
+                  <input id="m-firstname" type="text" placeholder="Jan" required
+                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+                </div>
+                <div>
+                  <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Příjmení *</label>
+                  <input id="m-lastname" type="text" placeholder="Novák" required
+                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+                </div>
+              </div>
+
+              <div style="margin-bottom: 0.85rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Přesná lokace *</label>
+                <input id="m-location" type="text" placeholder="Např. Praha 4, U Lesa 12" required
+                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+              </div>
+
+              <div style="margin-bottom: 0.85rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Telefon *</label>
+                <input id="m-phone" type="tel" placeholder="+420 777 123 456" required
+                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+              </div>
+
+              <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">E-mail *</label>
+                <input id="m-email" type="email" placeholder="jan.novak@email.cz" required
+                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+              </div>
+
+              <button id="m-next-btn" type="button"
+                style="display: block; text-align: center; width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Pokračovat →</button>
+            </div>
+
+            <!-- STEP 2: Metry a fotografie -->
+            <div id="m-step2-container" style="display: none;">
+              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Specifikace zakázky</div>
+              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte výměru plochy a nahrajte foto (nepovinné):</div>
+
+              <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Plocha v m² *</label>
+                <div style="position: relative;">
+                  <input id="m-area" type="number" value="100" min="10" max="10000"
+                    style="width: 100%; padding: 0.9rem; border: 1.5px solid #fed7aa; border-radius: 0.65rem; font-size: 1.2rem; font-weight: 800; background: #fffbe6; color: #0f172a; outline: none;">
+                  <span style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 800; color: #d97706;">m²</span>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Fotografie objektu (nepovinné)</label>
+                <input id="m-photo" type="file" accept="image/*"
+                  style="width: 100%; padding: 0.85rem; border: 1.5px dashed #f59e0b; border-radius: 0.65rem; font-size: 0.875rem; background: #fffbe6; color: #0f172a; cursor: pointer;">
+              </div>
+
+              <div style="display: flex; gap: 0.75rem;">
+                <button id="m-back-btn" type="button"
+                  style="flex: 0 0 80px; background: #f1f5f9; color: #475569; padding: 1.05rem 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.65rem; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">← Zpět</button>
+                <button id="m-reveal" type="button"
+                  style="flex: 1; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Zobrazit cenu</button>
+              </div>
+            </div>
+
+            <div style="text-align: center; color: #64748b; font-size: 0.8rem; margin-top: 1rem;">Nezávazné a zdarma · odpovídáme do 24 h</div>
+          </div>
+
+          <div id="m-result" style="display: none; text-align: center; padding: 2rem 1rem;">
+            <span style="font-size: 0.875rem; color: #64748b; font-weight: 600;">Předběžná cena pro vaši plochu:</span>
+            <div id="m-price" style="font-size: 2.25rem; font-weight: 900; color: #f59e0b; margin: 0.5rem 0;">0 Kč</div>
+            <div
+              style="padding: 1rem; background: #f0fdf4; border-radius: 1rem; color: #166534; font-size: 0.813rem; font-weight: 700; border: 1px solid #dcfce7; margin-top: 1rem;">
+              ✓ Úspěšně odesláno. Zavoláme vám.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT'S INCLUDED -->
+    <section class="whats-included-section" style="padding: 3rem 1.5rem; background: white;">
+      <div style="max-width: 1050px; margin: 0 auto;">
+
+        <div class="service-main-description"
+          style="color: #475569; font-size: 1.15rem; margin-bottom: 1.75rem; max-width: 800px; line-height: 1.7;">
+          Protiskluzová úprava pro mokré povrchy (keramika, žula, mramor).</div>
+
+        <div
+          class="whats-included-box" style="background: #fffbf0; border: 2px solid #f59e0b; border-radius: 1.25rem; padding: 2rem; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.06);">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+            <h3 style="font-size: 0.95rem; text-transform: uppercase; color: #d97706; font-weight: 900;">Co to obsahuje?
+            </h3>
+          </div>
+          <div class="service-process-description"
+            style="color: var(--text-main); font-size: 1rem; line-height: 1.7; margin-bottom: 1.75rem; max-width: 800px;">
+            Aplikace protiskluzové úpravy na mokré povrchy – bazény, chodby, koupelny.
+          </div>
+          <div class="benefits-grid grid grid-cols-1 md:grid-cols-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem 2rem;">
+            
+                <div style="display: flex; gap: 1rem;">
+                    <span style="color: #f59e0b; font-weight: 900; flex-shrink: 0; font-size: 1.2rem;">✓</span>
+                    <div>
+                        <div style="font-weight: 800; color: var(--text-main); font-size: 1.02rem;">Bezpečnost na mokrém povrchu</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <span style="color: #f59e0b; font-weight: 900; flex-shrink: 0; font-size: 1.2rem;">✓</span>
+                    <div>
+                        <div style="font-weight: 800; color: var(--text-main); font-size: 1.02rem;">Pro keramiku, žulu i mramor</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <span style="color: #f59e0b; font-weight: 900; flex-shrink: 0; font-size: 1.2rem;">✓</span>
+                    <div>
+                        <div style="font-weight: 800; color: var(--text-main); font-size: 1.02rem;">Vhodné pro bazény a koupelny</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <span style="color: #f59e0b; font-weight: 900; flex-shrink: 0; font-size: 1.2rem;">✓</span>
+                    <div>
+                        <div style="font-weight: 800; color: var(--text-main); font-size: 1.02rem;">Bez změny vzhledu povrchu</div>
+                    </div>
+                </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEFORE & AFTER (Slider) -->
+    
+                <!-- BEFORE & AFTER (Compact Web Style) -->
+                <section style="padding: 2.5rem 1.5rem; background: #f8fafc;">
+                    <div style="max-width: 600px; margin: 0 auto;">
+                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.4rem; font-size: 1.75rem; font-weight: 900; color: #f59e0b;">
+                          Před a Po
+                        </h2>
+                        <p style="text-align: center; color: #64748b; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">Táhněte posuvníkem a porovnejte rozdíl sami</p>
+                        <div style="position: relative; border-radius: 1.25rem; overflow: hidden; aspect-ratio: 16/10; user-select: none; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 2px solid #f59e0b;">
+                            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800" alt="Po" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+                            <div id="antislip-clip" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; clip-path: inset(0 50% 0 0);">
+                                <img src="https://images.unsplash.com/photo-1520004434532-668416a08753?w=800" alt="Před" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div id="antislip-handle" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.7); pointer-events: none; z-index: 5;">
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2.75rem; height: 2.75rem; background: #f59e0b; border: 2.5px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.6); color: white; font-weight: 900; font-size: 0.95rem; animation: pulse-slider 2s infinite ease-in-out;">⟷</div>
+                            </div>
+                            <div style="position: absolute; top: 0.85rem; left: 0.85rem; background: #f59e0b; color: white; padding: 0.35rem 0.85rem; border-radius: 99px; font-weight: 900; font-size: 0.75rem; z-index: 6; pointer-events: none; box-shadow: 0 3px 10px rgba(0,0,0,0.15);">PŘED</div>
+                            <div style="position: absolute; top: 0.85rem; right: 0.85rem; background: #f59e0b; color: white; padding: 0.35rem 0.85rem; border-radius: 99px; font-weight: 900; font-size: 0.75rem; z-index: 6; pointer-events: none; box-shadow: 0 3px 10px rgba(0,0,0,0.15);">PO</div>
+                            <input class="ba-range" data-slug="antislip" type="range" min="0" max="100" value="50" style="position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; z-index: 10;">
+                        </div>
+                    </div>
+                    <style>
+                        @keyframes pulse-slider {
+                            0%, 100% { transform: translate(-50%,-50%) scale(1); box-shadow: 0 4px 16px rgba(245, 158, 11, 0.6); }
+                            50% { transform: translate(-50%,-50%) scale(1.12); box-shadow: 0 0 24px rgba(245, 158, 11, 0.95); }
+                        }
+                    </style>
+                </section>
+
+    <!-- PROCESS (Compact) -->
+    <section class="process-section" id="postup" style="padding: 2.25rem 1.5rem; background: white;">
+      <div style="max-width: 1050px; margin: 0 auto;">
+        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.4rem; color: #f59e0b; font-size: 1.6rem; font-weight: 900;">Jak
+          čištění probíhá</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">Žádné
+          překvapení — postup krok za krokem</p>
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+          
+            <div style="background: white; border: 1.5px solid #f59e0b; border-radius: 1rem; padding: 1.35rem 1.15rem; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 14px rgba(245,158,11,0.06);">
+                <div style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #f59e0b; color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.95rem; margin-bottom: 0.85rem; box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);">01</div>
+                <h3 style="font-size: 1rem; margin-bottom: 0.4rem; color: #f59e0b; font-weight: 800;">Mytí</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">Důkladné očištění a odmaštění podlahové plochy.</p>
+            </div>
+            <div style="background: white; border: 1.5px solid #f59e0b; border-radius: 1rem; padding: 1.35rem 1.15rem; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 14px rgba(245,158,11,0.06);">
+                <div style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #f59e0b; color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.95rem; margin-bottom: 0.85rem; box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);">02</div>
+                <h3 style="font-size: 1rem; margin-bottom: 0.4rem; color: #f59e0b; font-weight: 800;">Aplikace</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">Nanesení protiskluzového roztoku na povrch.</p>
+            </div>
+            <div style="background: white; border: 1.5px solid #f59e0b; border-radius: 1rem; padding: 1.35rem 1.15rem; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 14px rgba(245,158,11,0.06);">
+                <div style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #f59e0b; color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.95rem; margin-bottom: 0.85rem; box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);">03</div>
+                <h3 style="font-size: 1rem; margin-bottom: 0.4rem; color: #f59e0b; font-weight: 800;">Reakce</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">Kontrolované působení přípravku (mikroskopické zdrsnění).</p>
+            </div>
+            <div style="background: white; border: 1.5px solid #f59e0b; border-radius: 1rem; padding: 1.35rem 1.15rem; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 14px rgba(245,158,11,0.06);">
+                <div style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #f59e0b; color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.95rem; margin-bottom: 0.85rem; box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);">04</div>
+                <h3 style="font-size: 1rem; margin-bottom: 0.4rem; color: #f59e0b; font-weight: 800;">Oplach</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">Neutralizace a oplach čistou vodou.</p>
+            </div>
+        </div>
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.875rem; font-weight: 600;">⏱️
+          Aplikaci v koupelně nebo u bazénu rodinného domu stihneme za 2 až 4 hodiny.</div>
+      </div>
+    </section>
+
+    <!-- GALLERY (Dynamic Realization Photos) -->
+    
+                <!-- GALLERY (Compact Web Style) -->
+                <section class="gallery-section" style="padding: 2.5rem 1.5rem; background: #ffffff;">
+                    <div style="max-width: 1050px; margin: 0 auto;">
+                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.4rem; font-size: 1.75rem; font-weight: 900; color: #f59e0b;">Z realizací</h2>
+                        <p style="text-align: center; color: #64748b; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">Reálné ukázky našich dokončených prací</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                            
+                            <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1520004434532-668416a08753?w=600')">
+                                <img src="https://images.unsplash.com/photo-1520004434532-668416a08753?w=600" alt="Realizace 1" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
+                            </div>
+                            <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600')">
+                                <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600" alt="Realizace 2" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
+                            </div>
+                            <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600')">
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600" alt="Realizace 3" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
+                            </div>
+                            <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600" alt="Realizace 4" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
+                            </div>
+                            <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600" alt="Realizace 5" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
+                            </div>
+                            <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600" alt="Realizace 6" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
+                            </div>
+                            <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600" alt="Realizace 7" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
+                            </div>
+                            <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=600')">
+                                <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=600" alt="Realizace 8" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+    <!-- PULL QUOTE (Dynamic Latest Review) -->
+    <section class="quote-section"
+      style="padding: 2.5rem 1.5rem; background: white; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+      <div style="max-width: 850px; margin: 0 auto; text-align: center;">
+        <div style="color: #f59e0b; font-size: 2.5rem; font-weight: 900; line-height: 1; margin-bottom: 0.25rem;">“
+        </div>
+        <div style="color: #fbbf24; font-size: 1.25rem; margin-bottom: 0.85rem;">★★★★★</div>
+        <p class="quote-text"
+          style="font-size: 1.25rem; font-weight: 600; color: var(--text-main); line-height: 1.5; font-style: italic; margin-bottom: 1rem;">
+          Skvělá práce, střecha vypadá jako nová!</p>
+        <div style="color: var(--text-muted); font-weight: 700; font-size: 0.875rem;">Jan Novák · recenze z NANOfusion</div>
+      </div>
+    </section>
+
+    <!-- SERVICE VIDEO (Placed exactly between Reviews and FAQ) -->
+    
+
+    <!-- FAQ (Matches live accordion design) -->
+    <section class="faq-section" id="faq" style="padding: 2.75rem 1.5rem; background: #f8fafc;">
+      <div style="max-width: 850px; margin: 0 auto;">
+        <h2 class="service-section-title" style="text-align: center; margin-bottom: 1.75rem; color: #f59e0b; font-size: 1.75rem; font-weight: 900;">
+          Na co se nás nejčastěji ptáte</h2>
+        <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+          
+                <div class="faq-item" style="border: 1px solid #e2e8f0; border-radius: 0.875rem; overflow: hidden; background: white; transition: all 0.3s ease;">
+                    <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer;">
+                        <span style="font-weight: 700; color: #1e293b; font-size: 0.938rem;">Jak dlouho trvá realizace?</span>
+                        <svg class="faq-arrow transition-transform flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(0deg); transition: transform 0.2s;">
+                            <path d="M6 9l6 6 6-6"></path>
+                        </svg>
+                    </button>
+                    <div class="faq-answer" style="display: none; padding: 0 1.5rem 1.25rem; color: #64748b; line-height: 1.6; font-size: 0.875rem;">
+                        Většinu standardních rodinných domů stihneme ošetřit za 1-2 dny. U větších objektů nebo průmyslových hal se doba realizace stanovuje individuálně.
+                    </div>
+                </div>
+                <div class="faq-item" style="border: 1px solid #e2e8f0; border-radius: 0.875rem; overflow: hidden; background: white; transition: all 0.3s ease;">
+                    <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer;">
+                        <span style="font-weight: 700; color: #1e293b; font-size: 0.938rem;">Je vaše chemie bezpečná?</span>
+                        <svg class="faq-arrow transition-transform flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(0deg); transition: transform 0.2s;">
+                            <path d="M6 9l6 6 6-6"></path>
+                        </svg>
+                    </button>
+                    <div class="faq-answer" style="display: none; padding: 0 1.5rem 1.25rem; color: #64748b; line-height: 1.6; font-size: 0.875rem;">
+                        Ano, používáme výhradně ekologicky odbouratelnou a certifikovanou chemii, která je naprosto bezpečná pro lidi, domácí mazlíčky i zahradní výsadbu.
+                    </div>
+                </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA (Compact & Elegant) -->
+    <section class="cta-section" style="padding: 2.25rem 1.5rem; background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2332 100%);">
+      <div style="max-width: 850px; margin: 0 auto; text-align: center; color: white;">
+        <h2 style="color: #f59e0b; margin-bottom: 0.5rem; font-size: 1.6rem; font-weight: 900;">Chcete vědět více?</h2>
+        <p
+          style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 1.25rem; line-height: 1.5; max-width: 600px; margin-left: auto; margin-right: auto;">
+          Kontaktujte nás pro nezávaznou konzultaci a kalkulaci vašeho projektu po celé ČR zdarma.</p>
+        <div class="cta-buttons" style="display: flex; gap: 0.85rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+          <button
+            onclick="window.scrollToKalkulacka(event)"
+            style="background: var(--primary); color: white; padding: 0.8rem 1.8rem; border-radius: 0.55rem; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; box-shadow: 0 4px 14px rgba(245,158,11,0.3); transition: all 0.2s;"
+            onmouseover="this.style.background='#d97706';"
+            onmouseout="this.style.background='var(--primary)';"
+          >Zadat poptávku</button>
+          <a href="tel:+420774509409"
+            style="background: transparent; color: white; padding: 0.65rem 1.6rem; border-radius: 0.55rem; border: 1.5px solid rgba(255,255,255,0.3); font-weight: 800; text-decoration: none; font-size: 0.825rem; transition: border 0.2s;"
+            onmouseover="this.style.borderColor='#f59e0b';" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)';">
+            +420 774 509 409</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Premium Static Footer (Compact & Balanced Layout) -->
+  <footer id="kontakt" class="footer-root"
+    style="background: #111111; color: #94a3b8; padding: 3rem 1.5rem 2rem; border-top: 1px solid #1e293b; font-size: 0.875rem;">
+    <div class="footer-grid grid grid-cols-1 md:grid-cols-3" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 2.5rem;">
+
+      <!-- Left Column: Branding, Tagline & Social Icons -->
+      <div>
+        <img src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 48px; width: auto; margin-bottom: 1rem;"
+          data-patched="true">
+        <p style="line-height: 1.6; color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.875rem;">Profesionální čištění, impregnace a
+          nátěry.<br>Již 14 let pečujeme o váš majetek po celé ČR.</p>
+
+        <!-- Social Circle Icons -->
+        <div style="display: flex; gap: 0.6rem;">
+          <a href="https://www.facebook.com/nanofusioncz" target="_blank" rel="noopener noreferrer"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/nano_fusion_cz/" target="_blank"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/company/nanofusion/" target="_blank"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+          <a href="https://www.youtube.com/channel/UCBX5e_PVDcAKmurD9GsdYSA" target="_blank" rel="noopener noreferrer"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z">
+              </path>
+              <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+            </svg>
+          </a>
+          <a href="https://www.tiktok.com/@nano_fusion_cz" target="_blank"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; transition: background 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Center Column: Services List (Czech SEO Links) -->
+      <div>
+        <h4
+          style="color: #f59e0b; font-weight: 800; text-transform: uppercase; font-size: 0.825rem; letter-spacing: 0.05em; margin-bottom: 1rem;">
+          Služby</h4>
+        <div style="display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.875rem;">
+          <a href="/sluzby/cisteni-fasad" class="footer-hover-link">Čištění fasád</a>
+          <a href="/sluzby/cisteni-strech" class="footer-hover-link">Čištění střech</a>
+          <a href="/sluzby/cisteni-dlazby" class="footer-hover-link">Čištění dlažeb</a>
+          <a href="/sluzby/cisteni-fotovoltaiky" class="footer-hover-link">Solární panely</a>
+          <a href="/sluzby/odstraneni-graffiti" class="footer-hover-link">Odstranění graffiti</a>
+          <a href="/sluzby/prumyslove-cisteni" class="footer-hover-link">Průmyslové čištění</a>
+          <a href="/sluzby/natery-fasad" class="footer-hover-link">Nátěry fasád</a>
+          <a href="/sluzby/natery-strech" class="footer-hover-link">Nátěry střech</a>
+          <a href="/sluzby/protiskluzove-natery" class="footer-hover-link">Protiskluzová úprava</a>
+          <a href="/sluzby/ochrana-podlah-ceramfloor" class="footer-hover-link">IG CeramFloor</a>
+          <a href="/sluzby/antibakterialni-ochrana" class="footer-hover-link">Antibakteriální ochrana</a>
+        </div>
+      </div>
+
+      <!-- Right Column: Contact Details & Google Map -->
+      <div>
+        <h4
+          style="color: #f59e0b; font-weight: 800; text-transform: uppercase; font-size: 0.825rem; letter-spacing: 0.05em; margin-bottom: 1rem;">
+          Kontakt</h4>
+        <div style="display: flex; flex-direction: column; gap: 0.45rem; color: #94a3b8; font-size: 0.875rem;">
+          <div style="font-weight: 500;">
+            <a href="tel:+420774509409" class="footer-hover-link">+420 774 509 409</a>
+          </div>
+          <div style="font-weight: 500;">
+            <a href="mailto:info@nanofusion.cz" class="footer-hover-link">info@nanofusion.cz</a>
+          </div>
+          <div>Celá Česká republika</div>
+          <div>Po–Pá 7:00–18:00</div>
+
+          <!-- Google Maps Iframe matching layout -->
+          <div class="footer-map-container"
+            style="margin-top: 0.85rem; border-radius: 0.85rem; overflow: hidden; border: 2px solid #f59e0b; height: 135px; position: relative;">
+            <iframe src="https://www.google.com/maps?q=NANOfusion%20s.r.o.,%20Blučina&amp;output=embed" width="100%"
+              height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            <div style="position: absolute; inset: 0; background: transparent; cursor: pointer;"
+              onclick="window.open('https://www.google.com/maps?q=NANOfusion+s.r.o.,+Blučina', '_blank')"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Legal, IČO & Links (Identical 1:1 to main page footer) -->
+    <div class="footer-legal"
+      style="max-width: 1200px; margin: 2.5rem auto 0; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; font-size: 0.775rem; color: #64748b;">
+      <div>© 2026 NANOfusion s.r.o. Všechna práva vyhrazena.</div>
+      <div>
+        IČ: 29375363 |
+        <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" style="color: #f59e0b; font-weight: 700; text-decoration: underline;">E-shop</a> |
+        <a href="https://nanofusion-j3bs.vercel.app/admin/login" style="color: inherit; text-decoration: none;">Zaměstnanci</a> |
+        <a href="https://www.aerisq.tech" target="_blank" rel="noopener noreferrer" style="color: #94a3b8; text-decoration: none; font-weight: 600;">Created by 💚</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- State parameters exposed to behavioral scripts -->
+  <script>
+    window.__nnf_service_meta = {
+      id: "protiskluzove-natery",
+      title: "Protiskluzová úprava",
+      price_key: "antislip"
+    };
+  </script>
+
+  <!-- Core Scripts (No SPA bundle imported to prevent route conflicts) -->
+  <script src="/static/main.js" type="module"></script>
+  <script src="/static/service-detail.js" type="module"></script>
+  <script src="/static/about-us.js" type="module"></script>
+  <script src="/static/ai-chat.js" type="module"></script>
+
+  <!-- Mobile Hamburger Menu Script -->
+  <script>
+    (function() {
+      const toggle = document.getElementById('nav-toggle');
+      const drawer = document.getElementById('nav-drawer');
+      if (!toggle || !drawer) return;
+      toggle.addEventListener('click', function() {
+        const open = drawer.classList.toggle('open');
+        toggle.classList.toggle('open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      });
+      drawer.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', function() {
+          drawer.classList.remove('open');
+          toggle.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>

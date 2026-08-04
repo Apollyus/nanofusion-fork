@@ -20528,7 +20528,8 @@ function YO() {
                     S.jsxs("a", {
                       href: "tel:+420774509409",
                       className:
-                        "hidden md:flex items-center gap-2 text-sm font-semibold text-neutral-700",
+                        "hidden items-center gap-2 text-sm font-semibold text-neutral-700",
+                      style: { display: "none" },
                       children: [
                         S.jsx("div", {
                           className:
@@ -26773,14 +26774,16 @@ function bD() {
                   size: "lg",
                   className:
                     "bg-primary hover:bg-primary/90 text-white font-semibold px-8 rounded-full text-base group",
-                  onClick: () => {
-                    var e;
-                    return (e = document.getElementById("kontakt")) == null
-                      ? void 0
-                      : e.scrollIntoView({ behavior: "smooth" });
+                  onClick: (ev) => {
+                    if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+                    if (window.scrollToKalkulacka) { window.scrollToKalkulacka(ev); }
+                    else {
+                      var e = document.getElementById("kalkulacka") || document.getElementById("kontakt");
+                      if (e) e.scrollIntoView({ behavior: "smooth" });
+                    }
                   },
                   children: [
-                    "Nezávazná cenová nabídka",
+                    "Spočítejte si cenu",
                     S.jsx(wx, {
                       className:
                         "ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform",

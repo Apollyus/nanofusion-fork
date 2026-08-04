@@ -43,5 +43,19 @@
       "destination": "/index.html"
     }
   ],
+  "redirects": [
+    { "source": "/sluzby/facade", "destination": "/sluzby/cisteni-fasad", "permanent": true },
+    { "source": "/sluzby/roof", "destination": "/sluzby/cisteni-strech", "permanent": true },
+    { "source": "/sluzby/pavement", "destination": "/sluzby/cisteni-dlazby", "permanent": true },
+    { "source": "/sluzby/pv", "destination": "/sluzby/cisteni-fotovoltaiky", "permanent": true },
+    { "source": "/sluzby/graffiti", "destination": "/sluzby/odstraneni-graffiti", "permanent": true },
+    { "source": "/sluzby/industrial", "destination": "/sluzby/prumyslove-cisteni", "permanent": true },
+    { "source": "/sluzby/facade-paint", "destination": "/sluzby/natery-fasad", "permanent": true },
+    { "source": "/sluzby/roof-paint", "destination": "/sluzby/natery-strech", "permanent": true },
+    { "source": "/sluzby/impregnation", "destination": "/sluzby/nano-impregnace", "permanent": true },
+    { "source": "/sluzby/antislip", "destination": "/sluzby/protiskluzove-natery", "permanent": true },
+    { "source": "/sluzby/ceramfloor", "destination": "/sluzby/ochrana-podlah-ceramfloor", "permanent": true },
+    { "source": "/sluzby/antibac", "destination": "/sluzby/antibakterialni-ochrana", "permanent": true }
+  ],
   "cleanUrls": true
 }

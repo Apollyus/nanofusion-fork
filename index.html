@@ -52,10 +52,13 @@
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "name": "NANOfusion s.r.o.",
+      "legalName": "NANOfusion s.r.o.",
       "image": "https://nanofusion.cz/static/logo.jpg",
-      "@id": "https://nanofusion.cz",
+      "@id": "https://nanofusion.cz/#organization",
       "url": "https://nanofusion.cz",
       "telephone": "+420774509409",
+      "email": "info@nanofusion.cz",
+      "priceRange": "$$",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Cezavy 627",
@@ -65,17 +68,31 @@
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 49.8175,
-        "longitude": 15.473
+        "latitude": 49.0553,
+        "longitude": 16.6432
       },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
         "dayOfWeek": [
           "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
         ],
-        "opens": "08:00",
-        "closes": "17:00"
+        "opens": "07:00",
+        "closes": "18:00"
       },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.95",
+        "reviewCount": "180",
+        "bestRating": "5"
+      },
+      "areaServed": [
+        { "@type": "Country", "name": "Česká republika" },
+        { "@type": "City", "name": "Brno" },
+        { "@type": "City", "name": "Praha" },
+        { "@type": "City", "name": "Olomouc" },
+        { "@type": "City", "name": "Zlín" },
+        { "@type": "City", "name": "Ostrava" }
+      ],
       "sameAs": [
         "https://www.facebook.com/nanofusioncz",
         "https://www.instagram.com/nano_fusion_cz/",
@@ -87,11 +104,24 @@
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://nanofusion.cz/#website",
+      "url": "https://nanofusion.cz",
+      "name": "NANOfusion",
+      "description": "Specialisté na čištění a nano-ochranu střech, fasád, dlažeb a fotovoltaiky v ČR",
+      "publisher": {
+        "@id": "https://nanofusion.cz/#organization"
+      },
+      "inLanguage": "cs-CZ"
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
       "@type": "Service",
       "serviceType": "Čištění a nano-ochrana povrchů",
       "provider": {
-        "@type": "LocalBusiness",
-        "name": "NANOfusion s.r.o."
+        "@id": "https://nanofusion.cz/#organization"
       },
       "areaServed": {
         "@type": "Country",
@@ -186,7 +216,7 @@
             <div class="container mx-auto px-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     
-                        <div onclick="window.location.href='/sluzby/facade'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/cisteni-fasad'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <div class="relative w-full h-full overflow-hidden bg-slate-900"><img src="https://media.base44.com/images/public/69c6b151f7a89f94f9b87555/ca9840b57_generated_23cd1d83.png" alt="Čištění fasád" class="absolute inset-0 w-full h-full object-cover"><iframe src="https://www.youtube.com/embed/ZnG0Fovg8OU?autoplay=1&mute=1&loop=1&playlist=ZnG0Fovg8OU&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1&playsinline=1" class="absolute inset-0 w-full h-full border-0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" style="width:100%;height:100%;top:0;left:0;position:absolute;"></iframe></div>
                             </div>
@@ -194,7 +224,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Čištění fasád</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Čištění</span> <span style="color: #f59e0b;">fasád</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2"><p>Přemýšlíte nad vyčištěním vaší fasády?</p><p></p></div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -205,7 +235,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/roof'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/cisteni-strech'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/6d579ded-7c4f-45c2-b85a-4e353526fa0d/1778587606619-ebccdd4b-0112-4940-9c8f-dc74a6d2a964.jpg" alt="Čištění střech " class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -213,7 +243,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Čištění střech </h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Čištění</span> <span style="color: #f59e0b;">střech</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2"><p>Nebyla vaše střecha čištěna 10, 15 či 20 let? Nevadí, my jí vrátíme původní vzhled!</p></div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -224,7 +254,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/pavement'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/cisteni-dlazby'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/d3a3e70f-75a6-4e7f-939e-0b37a31dbe7e/1782719190553-1363c65c-5ebb-4537-8301-e557488d1193.jpg" alt="Čištění dlažeb" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -232,7 +262,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Čištění dlažeb</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Čištění</span> <span style="color: #f59e0b;">dlažeb</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2"><p>Hloubkové čištění zámkové dlažby, chodníků a jiných povrchů z betonu. Čištění pomocí horké vody a speciálního čističe povrchů. Odstranění mechů, lišejníků a jiných nečistot.</p></div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -243,7 +273,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/pv'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/cisteni-fotovoltaiky'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/b4a44704-7c51-4519-bce9-1aec045ba0a4/1782724082936-019f6bac-e616-4276-9a60-0476ed2efca6.jpg" alt="Solární panely" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -251,7 +281,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Solární panely</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Solární</span> <span style="color: #f59e0b;">panely</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2"><p>Profesionální čištění pro vyšší účinnost panelů. Čištění pomocí účinné chemie, demineralizované vody a čistících kartáčů. Možnost ošetření keramickou impregnací.</p></div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -262,7 +292,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/graffiti'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/odstraneni-graffiti'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/ae650994-a138-416a-9799-33c6b26292ed/1782724804145-2f23f37e-a05e-4662-8656-75f28e327919.jpg" alt="Odstranění graffiti" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -270,7 +300,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Odstranění graffiti</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Odstranění</span> <span style="color: #f59e0b;">graffiti</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2"><p><span style="color: rgb(102, 102, 102); font-family: Outfit, sans-serif;">Provádíme odstranění a vyčištění graffiti z různých druhů povrchů. Aplikujeme vysoce účinnou a transparentní antigraffiti ochranu, která vydrží až 10 cyklů odstranění.</span></p><p></p></div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -281,7 +311,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/industrial'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/prumyslove-cisteni'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/cb86cbf5-34a6-4f7e-9a91-dd1266c6dddf/1782730331685-6ab2b2d4-6318-42b2-bf7b-4ffab38a4876.jpg" alt="Průmyslové čištění" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -289,7 +319,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Průmyslové čištění</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Průmyslové</span> <span style="color: #f59e0b;">čištění</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2"><p><span>Nabízíme komplexní průmyslové čištění od stropu až po podlahu. Čistíme stropy, světlíky, opláštění budov, podlahy, jeřábové dráhy, technologické rozvody a další těžko přístupná místa.</span></p></div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -300,7 +330,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/facade-paint'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/natery-fasad'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800" alt="Nátěry fasád" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -308,7 +338,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Nátěry fasád</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Nátěry</span> <span style="color: #f59e0b;">fasád</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2">Ve spolupráci s firmou Caparol nabízíme nátěry fasád té nejvyšší kvality.</div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -319,7 +349,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/roof-paint'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/natery-strech'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800" alt="Nátěry střech" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -327,7 +357,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Nátěry střech</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Nátěry</span> <span style="color: #f59e0b;">střech</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2">Nátěry všech druhů střech pomocí vysoce kvalitních dvousložkových barev.</div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -338,7 +368,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/impregnation'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/nano-impregnace'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800" alt="Nano impregnace" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -346,7 +376,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Nano impregnace</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Nano</span> <span style="color: #f59e0b;">impregnace</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2">Inovativní technologie chrání a prodlužují životnost ošetřených materiálů.</div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -357,7 +387,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/antislip'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/protiskluzove-natery'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800" alt="Protiskluzová úprava" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -365,7 +395,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Protiskluzová úprava</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Protiskluzová</span> <span style="color: #f59e0b;">úprava</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2">Protiskluzová úprava pro mokré povrchy (keramika, žula, mramor).</div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -376,7 +406,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/ceramfloor'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/ochrana-podlah-ceramfloor'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800" alt="IG CeramFloor" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -384,7 +414,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">IG CeramFloor</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">IG</span> <span style="color: #f59e0b;">CeramFloor</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2">Vysoce účinná polymerní ochrana podlah s protiskluzovým efektem.</div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -395,7 +425,7 @@
                             </div>
                         </div>
                         
-                        <div onclick="window.location.href='/sluzby/antibac'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/antibakterialni-ochrana'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800" alt="Antibakteriální ochrana" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -403,7 +433,7 @@
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">Antibakteriální ochrana</h3>
+                                <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Antibakteriální</span> <span style="color: #f59e0b;">ochrana</span></h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2">Antibakteriální a antivirová ochrana povrchů s účinností až 120 dní.</div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -419,11 +449,11 @@
         </section>
                     </section>
                     <section id="realizace-sec" style="margin-bottom: 4rem;">
-        <section id="realizace" class="py-32 bg-slate-50 relative overflow-hidden">
+        <section id="realizace" class="py-32 bg-slate-50 relative">
             <div class="container mx-auto px-6">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                     <div>
-                        <h2 class="text-4xl md:text-5xl font-bold mb-4 font-heading" style="color: #f59e0b;">Naše Realizace v detailu</h2>
+                        <h2 class="text-4xl md:text-5xl font-bold mb-4 font-heading" style="color: #f59e0b;">Naše realizace v detailu</h2>
                         <p class="text-slate-500 text-lg max-w-xl">Sledujte, jak vracíme povrchům jejich původní vzhled a krásu</p>
                     </div>
                 </div>
@@ -590,6 +620,30 @@ Test</p>
                 </div>
             </div></section>
                     <section id="faq-sec" style="margin-bottom: 4rem;">
+        <script type="application/ld+json">
+        {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "testest",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "TestTestTestTest"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak dlouho vydrží nano-ochrana?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Garantujeme funkčnost 5 až 10 let."
+      }
+    }
+  ]
+}
+        </script>
         <section id="faq" class="py-24 bg-slate-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto" style="margin-bottom: 3.5rem;">

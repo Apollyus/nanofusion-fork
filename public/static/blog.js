@@ -88,7 +88,7 @@ const openBlogDetail = (post) => {
             <button onclick="document.getElementById('blog-modal-overlay').style.display='none'" style="position:absolute; top:20px; right:20px; background:#f1f5f9; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:20px; z-index:20; font-weight:bold; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.15); transition:all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">&times;</button>
             <div style="padding:2.5rem;">
                 <div style="position:relative; height:380px; margin-bottom:2rem; border-radius:1.5rem; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.1);">
-                    <img src="${window.nnf_optimizeImage(post.image, 1080)}" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="${window.nnf_optimizeImage(post.image, 1080)}" alt="${post.title || 'Blog NANOfusion'}" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div>
                     <div style="color:#f59e0b; font-weight:800; text-transform:uppercase; font-size:12px; margin-bottom:12px; letter-spacing:0.1em;">Článek • ${post.date}</div>
@@ -183,29 +183,38 @@ const injectBlog = async () => {
 
                     <!-- Premium Navigation Arrows -->
                     <button id="b-arrow-left" 
-                        class="hidden md:flex"
-                        style="position: absolute; left: -25px; top: 50%; transform: translateY(-50%); z-index: 10; width: 60px; height: 60px; border-radius: 30px; background: #f59e0b !important; border: none; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3); transition: all 0.3s ease;"
+                        class="hidden md:flex blog-arrow left"
+                        style="position: absolute !important; left: -25px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; border-radius: 50% !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3) !important; transition: all 0.3s ease !important; padding: 0 !important;"
                         onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';"
                         onmouseout="this.style.scale='1'; this.style.backgroundColor='#f59e0b';"
                     > 
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important;"><path d="M15 18l-6-6 6-6"></path></svg> 
+                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important; display: block !important; margin: auto !important;"><path d="M15 18l-6-6 6-6"></path></svg> 
                     </button>
                     
                     <button id="b-arrow-right" 
-                        class="hidden md:flex"
-                        style="position: absolute; right: -25px; top: 50%; transform: translateY(-50%); z-index: 10; width: 60px; height: 60px; border-radius: 30px; background: #f59e0b !important; border: none; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3); transition: all 0.3s ease;"
+                        class="hidden md:flex blog-arrow right"
+                        style="position: absolute !important; right: -25px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; border-radius: 50% !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3) !important; transition: all 0.3s ease !important; padding: 0 !important;"
                         onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';"
                         onmouseout="this.style.scale='1'; this.style.backgroundColor='#f59e0b';"
                     > 
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important;"><path d="M9 18l6-6-6-6"></path></svg> 
+                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important; display: block !important; margin: auto !important;"><path d="M9 18l6-6-6-6"></path></svg> 
                     </button>
                 </div>
             </div>
             
             <style>
                 #blog-scroller::-webkit-scrollbar { display: none; }
+                .blog-arrow { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.3s ease !important; }
+                @media (min-width: 769px) {
+                    .group:hover .blog-arrow { opacity: 1 !important; pointer-events: auto !important; }
+                }
+                @media (max-width: 1200px) and (min-width: 769px) {
+                    #b-arrow-left { left: 10px !important; }
+                    #b-arrow-right { right: 10px !important; }
+                }
                 @media (max-width: 768px) {
                     .blog-card-modern { flex: 0 0 90% !important; min-width: unset !important; }
+                    .blog-arrow, #b-arrow-left, #b-arrow-right { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
                 }
             </style>
         `;

@@ -450,14 +450,38 @@ async function syncContent() {
                 graffiti: 'https://media.base44.com/images/public/69c6b151f7a89f94f9b87555/da1886573_generated_f1a4dfcc.png',
                 industrial: 'https://media.base44.com/images/public/69c6b151f7a89f94f9b87555/78f96e4dd_generated_f900fa0b.png'
             };
-            const serviceSlug = s.slug || s.id;
+            const czechSlugMap = {
+                'facade': 'cisteni-fasad',
+                'roof': 'cisteni-strech',
+                'pavement': 'cisteni-dlazby',
+                'pv': 'cisteni-fotovoltaiky',
+                'graffiti': 'odstraneni-graffiti',
+                'industrial': 'prumyslove-cisteni',
+                'facade-paint': 'natery-fasad',
+                'roof-paint': 'natery-strech',
+                'impregnation': 'nano-impregnace',
+                'antislip': 'protiskluzove-natery',
+                'ceramfloor': 'ochrana-podlah-ceramfloor',
+                'antibac': 'antibakterialni-ochrana'
+            };
+            const rawSlug = s.slug || s.id;
+            const czechSlug = czechSlugMap[rawSlug] || rawSlug;
+
             const validImage = (s.hero_image_url && typeof s.hero_image_url === 'string' && s.hero_image_url.trim().length > 0)
                 ? s.hero_image_url
-                : (defaultServiceImages[serviceSlug] || 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800');
+                : (defaultServiceImages[rawSlug] || 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800');
 
             const video = s.video_url || s.hero_video_url || s.video;
             const title = s.name || s.title;
             const desc = s.description || s.detail;
+
+            const titleParts = (title || '').trim().split(' ');
+            let titleFormatted = title;
+            if (titleParts.length > 1) {
+                titleFormatted = `<span style="color: #0f172a;">${titleParts[0]}</span> <span style="color: #f59e0b;">${titleParts.slice(1).join(' ')}</span>`;
+            } else {
+                titleFormatted = `<span style="color: #f59e0b;">${title}</span>`;
+            }
 
             const ytMatch = video ? video.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/) : null;
             const ytId = ytMatch ? ytMatch[1] : null;
@@ -470,7 +494,7 @@ async function syncContent() {
             }
 
             return `
-                        <div onclick="window.location.href='/sluzby/${s.slug}'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
+                        <div onclick="window.location.href='/sluzby/${czechSlug}'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
                                 ${mediaHtml}
                             </div>
@@ -478,7 +502,7 @@ async function syncContent() {
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">${tag}</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">${title}</h3>
+                                <h3 class="text-xl font-bold mb-2">${titleFormatted}</h3>
                                 <div class="text-muted-foreground text-sm line-clamp-2">${desc}</div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
@@ -496,11 +520,11 @@ async function syncContent() {
 
         // --- PORTFOLIO ---
         const portfolioHtml = `
-        <section id="realizace" class="py-32 bg-slate-50 relative overflow-hidden">
+        <section id="realizace" class="py-32 bg-slate-50 relative">
             <div class="container mx-auto px-6">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                     <div>
-                        <h2 class="text-4xl md:text-5xl font-bold mb-4 font-heading" style="color: #f59e0b;">Naše Realizace v detailu</h2>
+                        <h2 class="text-4xl md:text-5xl font-bold mb-4 font-heading" style="color: #f59e0b;">Naše realizace v detailu</h2>
                         <p class="text-slate-500 text-lg max-w-xl">Sledujte, jak vracíme povrchům jejich původní vzhled a krásu</p>
                     </div>
                 </div>
@@ -635,7 +659,23 @@ async function syncContent() {
 
         // --- FAQ ---
         const faqsResData = faqsRes.data || [];
+        const faqJsonLd = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqsResData.map(f => ({
+                "@type": "Question",
+                "name": (f.question || '').replace(/<[^>]*>/g, '').trim(),
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": (f.answer || '').replace(/<[^>]*>/g, '').trim()
+                }
+            }))
+        };
+
         const faqsHtml = `
+        <script type="application/ld+json">
+        ${JSON.stringify(faqJsonLd, null, 2)}
+        </script>
         <section id="faq" class="py-24 bg-slate-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto" style="margin-bottom: 3.5rem;">
@@ -665,8 +705,10 @@ async function syncContent() {
         const filesToUpdate = [
             'index.html',
             'o-nas.html',
+            'o-nas/index.html',
             'faq/index.html',
             'public/o-nas.html',
+            'public/o-nas/index.html',
             'public/faq/index.html',
             'admin-panel/public/o-nas.html',
             'admin-panel/public/faq/index.html'
@@ -730,10 +772,27 @@ async function syncContent() {
         }
         const templateHtml = fs.readFileSync(templatePath, 'utf8');
 
+        const globalCzechSlugMap = {
+            'facade': 'cisteni-fasad',
+            'roof': 'cisteni-strech',
+            'pavement': 'cisteni-dlazby',
+            'pv': 'cisteni-fotovoltaiky',
+            'graffiti': 'odstraneni-graffiti',
+            'industrial': 'prumyslove-cisteni',
+            'facade-paint': 'natery-fasad',
+            'roof-paint': 'natery-strech',
+            'impregnation': 'nano-impregnace',
+            'antislip': 'protiskluzove-natery',
+            'ceramfloor': 'ochrana-podlah-ceramfloor',
+            'antibac': 'antibakterialni-ochrana'
+        };
+
         // Loop through all active services from Supabase
         for (const s of dbServices) {
-            const slug = s.slug;
-            const catalog = localCatalog[slug] || {
+            const rawSlug = s.slug || s.id;
+            const czechSlug = globalCzechSlugMap[rawSlug] || rawSlug;
+            const slug = czechSlug;
+            const catalog = localCatalog[rawSlug] || localCatalog[czechSlug] || {
                 title: s.name,
                 badge: 'Služba',
                 subtitle: s.description || '',
@@ -805,10 +864,10 @@ async function syncContent() {
             }
 
             const processHtml = processStepsList.map(p => `
-            <div style="background: white; border: 2px solid #f59e0b; border-radius: 1.5rem; padding: 2.25rem; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 10px 25px rgba(245,158,11,0.08);">
-                <div style="width: 3.25rem; height: 3.25rem; border-radius: 50%; background: #f59e0b; color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; margin-bottom: 1.25rem; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);">${p.step || '01'}</div>
-                <h3 style="font-size: 1.15rem; margin-bottom: 0.6rem; color: #f59e0b; font-weight: 800;">${p.title}</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">${p.desc || p.description || ''}</p>
+            <div style="background: white; border: 1.5px solid #f59e0b; border-radius: 1rem; padding: 1.35rem 1.15rem; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 14px rgba(245,158,11,0.06);">
+                <div style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #f59e0b; color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.95rem; margin-bottom: 0.85rem; box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);">${p.step || '01'}</div>
+                <h3 style="font-size: 1rem; margin-bottom: 0.4rem; color: #f59e0b; font-weight: 800;">${p.title}</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">${p.desc || p.description || ''}</p>
             </div>`).join('');
 
             // Before & After image slider compilation
@@ -828,24 +887,32 @@ async function syncContent() {
             // Render slider only if different before/after exist and are not identical
             if (beforeImg && afterImg && beforeImg !== afterImg) {
                 beforeAfterHtml = `
-                <!-- BEFORE & AFTER -->
-                <section style="padding: 7.5rem 2.5rem; background: #f8fafc;">
-                    <div style="max-width: 640px; margin: 0 auto;">
-                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 1.25rem; color: var(--bg-dark);">Před a po</h2>
-                        <p style="text-align: center; color: var(--text-muted); margin-bottom: 3.5rem; font-size: 1.15rem; line-height: 1.7;">Táhněte posuvníkem a porovnejte sami</p>
-                        <div style="position: relative; border-radius: 1.5rem; overflow: hidden; aspect-ratio: 4/3; user-select: none; box-shadow: 0 20px 40px rgba(0,0,0,0.08); border: 3px solid #f59e0b;">
+                <!-- BEFORE & AFTER (Compact Web Style) -->
+                <section style="padding: 2.5rem 1.5rem; background: #f8fafc;">
+                    <div style="max-width: 600px; margin: 0 auto;">
+                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.4rem; font-size: 1.75rem; font-weight: 900; color: #f59e0b;">
+                          Před a Po
+                        </h2>
+                        <p style="text-align: center; color: #64748b; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">Táhněte posuvníkem a porovnejte rozdíl sami</p>
+                        <div style="position: relative; border-radius: 1.25rem; overflow: hidden; aspect-ratio: 16/10; user-select: none; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 2px solid #f59e0b;">
                             <img src="${afterImg}" alt="Po" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
                             <div id="${s.slug}-clip" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; clip-path: inset(0 50% 0 0);">
                                 <img src="${beforeImg}" alt="Před" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
                             </div>
-                            <div id="${s.slug}-handle" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); pointer-events: none; z-index: 5;">
-                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2.75rem; height: 2.75rem; background: #f59e0b; border: 2.5px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4); color: white; font-weight: 900; font-size: 0.95rem;">⟷</div>
+                            <div id="${s.slug}-handle" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.7); pointer-events: none; z-index: 5;">
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2.75rem; height: 2.75rem; background: #f59e0b; border: 2.5px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.6); color: white; font-weight: 900; font-size: 0.95rem; animation: pulse-slider 2s infinite ease-in-out;">⟷</div>
                             </div>
-                            <div style="position: absolute; top: 1.25rem; left: 1.25rem; background: #f59e0b; color: white; padding: 0.5rem 1.1rem; border-radius: 99px; font-weight: 900; font-size: 0.85rem; z-index: 6; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">PŘED</div>
-                            <div style="position: absolute; top: 1.25rem; right: 1.25rem; background: #f59e0b; color: white; padding: 0.5rem 1.1rem; border-radius: 99px; font-weight: 900; font-size: 0.85rem; z-index: 6; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">PO</div>
+                            <div style="position: absolute; top: 0.85rem; left: 0.85rem; background: #f59e0b; color: white; padding: 0.35rem 0.85rem; border-radius: 99px; font-weight: 900; font-size: 0.75rem; z-index: 6; pointer-events: none; box-shadow: 0 3px 10px rgba(0,0,0,0.15);">PŘED</div>
+                            <div style="position: absolute; top: 0.85rem; right: 0.85rem; background: #f59e0b; color: white; padding: 0.35rem 0.85rem; border-radius: 99px; font-weight: 900; font-size: 0.75rem; z-index: 6; pointer-events: none; box-shadow: 0 3px 10px rgba(0,0,0,0.15);">PO</div>
                             <input class="ba-range" data-slug="${s.slug}" type="range" min="0" max="100" value="50" style="position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; z-index: 10;">
                         </div>
                     </div>
+                    <style>
+                        @keyframes pulse-slider {
+                            0%, 100% { transform: translate(-50%,-50%) scale(1); box-shadow: 0 4px 16px rgba(245, 158, 11, 0.6); }
+                            50% { transform: translate(-50%,-50%) scale(1.12); box-shadow: 0 0 24px rgba(245, 158, 11, 0.95); }
+                        }
+                    </style>
                 </section>`;
             }
 
@@ -854,15 +921,15 @@ async function syncContent() {
             const galleryPhotos = catalog.gallery || [];
             if (galleryPhotos.length > 0) {
                 galleryHtml = `
-                <!-- GALLERY -->
-                <section class="gallery-section" style="padding: 4.5rem 2.5rem; background: #f8fafc;">
-                    <div style="max-width: 1200px; margin: 0 auto;">
-                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.75rem; color: var(--bg-dark);">Z realizací</h2>
-                        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.15rem;">Ukázky z naší práce</p>
-                        <div class="service-gallery-grid">
+                <!-- GALLERY (Compact Web Style) -->
+                <section class="gallery-section" style="padding: 2.5rem 1.5rem; background: #ffffff;">
+                    <div style="max-width: 1050px; margin: 0 auto;">
+                        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.4rem; font-size: 1.75rem; font-weight: 900; color: #f59e0b;">Z realizací</h2>
+                        <p style="text-align: center; color: #64748b; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">Reálné ukázky našich dokončených prací</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
                             ${galleryPhotos.map((url, i) => `
-                            <div class="service-gallery-card" onclick="window.nnf_openLightbox('${url}')">
-                                <img src="${url}" alt="Realizace ${i + 1}">
+                            <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('${url}')">
+                                <img src="${url}" alt="Realizace ${i + 1}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
                             </div>`).join('')}
                         </div>
                     </div>
@@ -969,15 +1036,51 @@ async function syncContent() {
                     </div>
                 </div>`;
             }
+            // Build formatted white-orange title HTML
+            const titleParts = title.trim().split(' ');
+            let titleHtml = title;
+            if (titleParts.length > 1) {
+                titleHtml = `<span style="color: #ffffff;">${titleParts[0]}</span> <span style="color: #f59e0b;">${titleParts.slice(1).join(' ')}</span>`;
+            } else {
+                titleHtml = `<span style="color: #f59e0b;">${title}</span>`;
+            }
+
+            // Service Video Section Compilation (YouTube or Direct HTML5 MP4)
+            let videoHtml = '';
+            const videoUrl = s.video_url || s.hero_video_url || s.video;
+            if (videoUrl && typeof videoUrl === 'string' && videoUrl.trim().length > 0) {
+                const ytMatch = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+                const ytId = ytMatch ? ytMatch[1] : null;
+
+                let playerMarkup = '';
+                if (ytId) {
+                    playerMarkup = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=0&rel=0&modestbranding=1" class="absolute inset-0 w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:100%;top:0;left:0;position:absolute;"></iframe>`;
+                } else {
+                    playerMarkup = `<video src="${videoUrl}" controls playsinline preload="metadata" style="width:100%; height:100%; object-fit:cover;" class="w-full h-full rounded-2xl"></video>`;
+                }
+
+                videoHtml = `
+    <section class="service-video-section" id="video" style="padding: 3rem 1.5rem; background: #0f172a; color: white;">
+      <div style="max-width: 1000px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 1.75rem; font-weight: 900; color: white; margin-bottom: 0.5rem;"><span style="color: #ffffff;">Video z</span> <span style="color: #f59e0b;">realizace</span></h2>
+        <p style="color: #94a3b8; font-size: 1rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">Podívejte se na ukázku z našich reálných prací a postup čištění</p>
+        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1.25rem; box-shadow: 0 12px 35px rgba(0,0,0,0.3); border: 2px solid #f59e0b; background: black;">
+          ${playerMarkup}
+        </div>
+      </div>
+    </section>`;
+            }
 
             // Fill placeholders in template
             let compiledPage = templateHtml
+                .replace(/\{\{title_html\}\}/g, titleHtml)
                 .replace(/\{\{title\}\}/g, title)
                 .replace(/\{\{badge\}\}/g, badge)
                 .replace(/\{\{subtitle\}\}/g, catalog.subtitle)
                 .replace(/\{\{description\}\}/g, description)
                 .replace(/\{\{what_included\}\}/g, whatIncluded)
                 .replace(/\{\{benefits_html\}\}/g, benefitsHtml)
+                .replace(/\{\{video_html\}\}/g, videoHtml)
                 .replace(/\{\{process_html\}\}/g, processHtml)
                 .replace(/\{\{process_note\}\}/g, catalog.process_note || 'Běžnou realizaci stihneme za 1 den.')
                 .replace(/\{\{before_after_html\}\}/g, beforeAfterHtml)
@@ -985,38 +1088,54 @@ async function syncContent() {
                 .replace(/\{\{quote\}\}/g, quote)
                 .replace(/\{\{quote_author\}\}/g, quoteAuthor)
                 .replace(/\{\{faq_html\}\}/g, faqHtml)
-                .replace(/\{\{slug\}\}/g, slug)
-                .replace(/\{\{price_key\}\}/g, slug)
+                .replace(/\{\{slug\}\}/g, czechSlug)
+                .replace(/\{\{price_key\}\}/g, rawSlug)
                 .replace(/\{\{hero_image\}\}/g, s.hero_image_url || s.image || catalog.beforeImg || '')
                 .replace(/\{\{meta_description\}\}/g, metaDescription);
 
-            // Write static file in sluzby/[slug]/index.html (project root - so Vite dev server resolves it)
-            const rootDestDir = path.join('sluzby', slug);
-            if (!fs.existsSync(rootDestDir)) {
-                fs.mkdirSync(rootDestDir, { recursive: true });
-            }
-            fs.writeFileSync(path.join(rootDestDir, 'index.html'), compiledPage);
-
-            // Write static file in public/sluzby/[slug]/index.html
-            const publicDestDir = path.join('public', 'sluzby', slug);
-            if (!fs.existsSync(publicDestDir)) {
-                fs.mkdirSync(publicDestDir, { recursive: true });
-            }
-            fs.writeFileSync(path.join(publicDestDir, 'index.html'), compiledPage);
-
-            // Synchronize copies to admin panel folders
-            const syncDestinations = [
-                path.join('admin-panel', 'public', 'sluzby', slug),
+            // Write static file in sluzby/[czechSlug]/index.html
+            const writePaths = [
+                path.join('sluzby', czechSlug),
+                path.join('public', 'sluzby', czechSlug),
+                path.join('admin-panel', 'public', 'sluzby', czechSlug)
             ];
 
-            for (const dest of syncDestinations) {
-                if (!fs.existsSync(dest)) {
-                    fs.mkdirSync(dest, { recursive: true });
+            for (const dirPath of writePaths) {
+                if (!fs.existsSync(dirPath)) {
+                    fs.mkdirSync(dirPath, { recursive: true });
                 }
-                fs.writeFileSync(path.join(dest, 'index.html'), compiledPage);
+                fs.writeFileSync(path.join(dirPath, 'index.html'), compiledPage);
             }
 
-            console.log(`✅ Generated subpage: /sluzby/${slug}`);
+            // Write legacy redirect fallback for old English slugs (e.g. /sluzby/facade -> /sluzby/cisteni-fasad)
+            if (rawSlug !== czechSlug) {
+                const redirectHtml = `<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0;url=/sluzby/${czechSlug}">
+  <link rel="canonical" href="https://nanofusion.cz/sluzby/${czechSlug}">
+  <script>window.location.replace('/sluzby/${czechSlug}');</script>
+  <title>Přesměrování na /sluzby/${czechSlug}</title>
+</head>
+<body><p>Přesměrovávám na <a href="/sluzby/${czechSlug}">/sluzby/${czechSlug}</a>...</p></body>
+</html>`;
+
+                const legacyPaths = [
+                    path.join('sluzby', rawSlug),
+                    path.join('public', 'sluzby', rawSlug),
+                    path.join('admin-panel', 'public', 'sluzby', rawSlug)
+                ];
+
+                for (const legDir of legacyPaths) {
+                    if (!fs.existsSync(legDir)) {
+                        fs.mkdirSync(legDir, { recursive: true });
+                    }
+                    fs.writeFileSync(path.join(legDir, 'index.html'), redirectHtml);
+                }
+            }
+
+            console.log(`✅ Generated subpage: /sluzby/${czechSlug} (SEO Czech URL)`);
         }
 
         // Sync poptavka page
@@ -1031,6 +1150,50 @@ async function syncContent() {
             fs.writeFileSync(path.join(poptavkaAdmin, 'index.html'), poptavkaContent);
             console.log('✅ poptavka/index.html synchronized.');
         }
+
+        // Generate sitemap.xml
+        const todayStr = new Date().toISOString().split('T')[0];
+        const sitemapUrls = [
+            'https://nanofusion.cz/',
+            'https://nanofusion.cz/o-nas',
+            'https://nanofusion.cz/faq',
+            'https://nanofusion.cz/poptavka'
+        ];
+        
+        const czechSlugMap = {
+            'facade': 'cisteni-fasad',
+            'roof': 'cisteni-strech',
+            'pavement': 'cisteni-dlazby',
+            'pv': 'cisteni-fotovoltaiky',
+            'graffiti': 'odstraneni-graffiti',
+            'industrial': 'prumyslove-cisteni',
+            'facade-paint': 'natery-fasad',
+            'roof-paint': 'natery-strech',
+            'impregnation': 'nano-impregnace',
+            'antislip': 'protiskluzove-natery',
+            'ceramfloor': 'ochrana-podlah-ceramfloor',
+            'antibac': 'antibakterialni-ochrana'
+        };
+        
+        for (const s of dbServices) {
+            const rawSlug = s.slug || s.id;
+            const czechSlug = czechSlugMap[rawSlug] || rawSlug;
+            sitemapUrls.push(`https://nanofusion.cz/sluzby/${czechSlug}`);
+        }
+
+        const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapUrls.map(url => `  <url>
+    <loc>${url}</loc>
+    <lastmod>${todayStr}</lastmod>
+    <changefreq>${url === 'https://nanofusion.cz/' ? 'daily' : 'weekly'}</changefreq>
+    <priority>${url === 'https://nanofusion.cz/' ? '1.0' : '0.8'}</priority>
+  </url>`).join('\n')}
+</urlset>`;
+
+        fs.writeFileSync(path.join('public', 'sitemap.xml'), sitemapXml);
+        if (fs.existsSync('dist')) fs.writeFileSync(path.join('dist', 'sitemap.xml'), sitemapXml);
+        console.log(`✅ sitemap.xml generated with ${sitemapUrls.length} URLs.`);
 
         console.log('✨ NANOfusion Sync Complete!');
     } catch (err) {

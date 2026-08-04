@@ -186,11 +186,20 @@
   display: none !important;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+  footer {
+    padding-bottom: 5.5rem !important;
+  }
+  .ai-chat-launcher {
+    bottom: 1.25rem !important;
+    right: 1.25rem !important;
+    width: 54px !important;
+    height: 54px !important;
+  }
   .ai-chat-window {
-    width: calc(100% - 2rem);
-    right: 1rem;
-    bottom: 5rem;
-    height: 500px;
+    width: calc(100% - 2rem) !important;
+    right: 1rem !important;
+    bottom: 5rem !important;
+    height: 500px !important;
   }
 }

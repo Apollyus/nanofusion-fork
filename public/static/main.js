@@ -1,22 +1,159 @@
-/**
- * NANOfusion Main logic module - Optimized CTO Edition
- * Handles Reveal System, Branding patches, and UI enhancements.
- */
-
-// Disable automatic scroll restoration so page refresh always starts clean at top (0,0)
-if ('scrollRestoration' in history) {
-  history.scrollRestoration = 'manual';
+// Global Responsive & Touch Device Optimizations (Frosted Glassmorphism Header)
+const injectGlobalResponsiveStyles = () => {
+  if (document.getElementById('nnf-responsive-styles')) return;
+  const styleEl = document.createElement('style');
+  styleEl.id = 'nnf-responsive-styles';
+  styleEl.textContent = `
+    html {
+      overflow-x: clip !important;
+    }
+    body {
+      overflow-x: clip !important;
+      max-width: 100vw !important;
+    }
+    header {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 1000 !important;
+      background: rgba(255, 255, 255, 0.88) !important;
+      backdrop-filter: blur(16px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+      transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+    header.header-scrolled {
+      background: rgba(255, 255, 255, 0.78) !important;
+      backdrop-filter: blur(22px) saturate(200%) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(200%) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+    /* Ensure first hero section has proper top margin for fixed header */
+    @media (min-width: 769px) {
+      #root > div > section:first-of-type,
+      main > section:first-of-type,
+      section.hero-section {
+        padding-top: clamp(11rem, 15vw, 13.5rem) !important;
+      }
+    }
+    @media (max-width: 768px) {
+      #root > div > section:first-of-type,
+      main > section:first-of-type,
+      section.hero-section {
+        padding-top: 13.5rem !important;
+      }
+    }
+    input, button, select, textarea {
+      font-family: inherit;
+    }
+    /* Touch & Mobile device typography & input zoom prevention */
+    @media (max-width: 768px) {
+      body {
+        -webkit-tap-highlight-color: transparent;
+      }
+      input, select, textarea {
+        font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
+      }
+      a, button, input[type="button"], input[type="submit"] {
+        min-height: 44px;
+      }
+    }
+    @media (max-width: 640px) {
+      .top-info-bar-inner {
+        padding: 0.4rem 1rem !important;
+        font-size: 0.78rem !important;
+      }
+      .service-hero-title {
+        font-size: clamp(1.75rem, 6.5vw, 2.5rem) !important;
+      }
+      .service-section-title {
+        font-size: clamp(1.4rem, 5vw, 1.85rem) !important;
+      }
+      .cta-buttons {
+        flex-direction: column !important;
+        width: 100% !important;
+      }
+      .cta-buttons a, .cta-buttons button {
+        width: 100% !important;
+      }
+    }
+  `;
+  document.head.appendChild(styleEl);
+};
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', injectGlobalResponsiveStyles);
+} else {
+  injectGlobalResponsiveStyles();
 }
 
-if (!window.location.hash || window.location.hash === '#faq' || window.location.hash === '#realizace') {
+// Navbar Frosted Glass Scroll Effect
+const handleNavbarBlurScroll = () => {
+  const header = document.querySelector('header');
+  if (header) {
+    if (window.scrollY > 20) {
+      header.classList.add('header-scrolled');
+    } else {
+      header.classList.remove('header-scrolled');
+    }
+  }
+};
+window.addEventListener('scroll', handleNavbarBlurScroll, { passive: true });
+document.addEventListener('DOMContentLoaded', handleNavbarBlurScroll);
+
+// Master Hash Navigation Handler (Příchozí prokliky z podstránek jako /#kalkulacka, /#sluzby, /#realizace, /#reference)
+const handleIncomingHash = () => {
+  const hash = (window.location.hash || '').toLowerCase();
+  if (!hash) return;
+
+  if (hash === '#kalkulacka' || hash === '#kalkulace' || hash === '#poptavka') {
+    if (window.scrollToKalkulacka) {
+      window.scrollToKalkulacka();
+    }
+  } else {
+    const targetId = hash.replace('#', '');
+    let targetEl = document.getElementById(targetId);
+
+    // Support section aliases (e.g. realizace vs reference vs realizace-sec)
+    if (!targetEl) {
+      if (targetId === 'realizace' || targetId === 'reference' || targetId === 'recenze') {
+        targetEl = document.getElementById('reference') || document.getElementById('realizace') || document.getElementById('realizace-sec') || document.getElementById('recenze');
+      } else if (targetId === 'sluzby') {
+        targetEl = document.getElementById('sluzby') || document.getElementById('sluzby-sec');
+      } else if (targetId === 'o-nas' || targetId === 'o-nas-sec') {
+        targetEl = document.getElementById('o-nas-sec') || document.getElementById('o-nas');
+      }
+    }
+
+    if (targetEl && typeof targetEl.getBoundingClientRect === 'function') {
+      const topOffset = Math.round(targetEl.getBoundingClientRect().top + window.pageYOffset - 90);
+      window.scrollTo({ top: topOffset, behavior: 'smooth' });
+    }
+  }
+};
+
+const isReload = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]?.type === 'reload') || (performance.navigation && performance.navigation.type === 1);
+
+if (isReload) {
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
   if (window.location.hash) {
-    history.replaceState(null, '', window.location.pathname + window.location.search);
+    history.replaceState(null, '', window.location.pathname);
   }
   window.scrollTo(0, 0);
-  document.addEventListener('DOMContentLoaded', () => window.scrollTo(0, 0));
-  window.addEventListener('load', () => window.scrollTo(0, 0));
-  setTimeout(() => window.scrollTo(0, 0), 10);
-  setTimeout(() => window.scrollTo(0, 0), 100);
+} else if (window.location.hash) {
+  // Plynulý dojezd na sekci po načtení hlavní strany z podstránky
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(handleIncomingHash, 150);
+  });
+} else {
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
 }
 
 const revealObserver = new IntersectionObserver((entries) => {
@@ -67,7 +204,7 @@ const sendYTCommand = (iframe, func, args = []) => {
         args: args
       }), '*');
     }
-  } catch (e) {}
+  } catch (e) { }
 };
 
 // Global interaction trigger to unlock video autoplay on 100% of browsers
@@ -78,7 +215,7 @@ const unlockAllVideos = () => {
   });
   document.querySelectorAll('video').forEach(vid => {
     vid.muted = true;
-    vid.play().catch(() => {});
+    vid.play().catch(() => { });
   });
 };
 
@@ -140,9 +277,9 @@ const syncServicesMedia = async () => {
     cards.forEach(card => {
       const linkAttr = card.getAttribute('onclick') || card.getAttribute('href') || '';
       const cardTitle = card.querySelector('h3')?.textContent.trim().toLowerCase();
-      
-      const match = services.find(s => 
-        (s.slug && linkAttr.includes(s.slug)) || 
+
+      const match = services.find(s =>
+        (s.slug && linkAttr.includes(s.slug)) ||
         (s.name && cardTitle && (cardTitle.includes(s.name.toLowerCase()) || s.name.toLowerCase().includes(cardTitle)))
       );
 
@@ -184,7 +321,7 @@ const syncServicesMedia = async () => {
             vid.setAttribute('webkit-playsinline', 'true');
             vid.className = 'w-full h-full object-cover absolute inset-0';
             mediaBox.appendChild(vid);
-            vid.play().catch(() => {});
+            vid.play().catch(() => { });
           }
           card.dataset.videoSynced = 'true';
         }
@@ -266,7 +403,7 @@ const observeAll = () => {
     const parentContainer = heroHeadingEl.parentElement;
     if (parentContainer && !parentContainer.querySelector('.hero-badges-row')) {
       const existingBadge = parentContainer.querySelector('.inline-flex.rounded-full, [class*="rounded-full"]');
-      
+
       const badgeRow = document.createElement('div');
       badgeRow.className = 'hero-badges-row';
       badgeRow.style.cssText = 'display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 1.5rem; z-index: 2; position: relative;';
@@ -297,47 +434,109 @@ const observeAll = () => {
   }
 
   // 2.3. Patch Hero Primary CTA Button ("Spočítejte si cenu" -> #kalkulacka)
-  window.scrollToKalkulacka = async (e) => {
+  window.scrollToKalkulacka = (e) => {
     if (e) {
       if (e.preventDefault) e.preventDefault();
       if (e.stopPropagation) e.stopPropagation();
     }
 
-    if (!document.getElementById('kalkulacka') && window.nnf_injectCalculator) {
-      try { await window.nnf_injectCalculator(); } catch (err) {}
-    }
+    const performScroll = () => {
+      let targetEl = document.getElementById('kalkulacka') || document.querySelector('.calc-section') || document.querySelector('#calc-steps');
+      if (!targetEl && window.nnf_injectCalculator) {
+        try { targetEl = window.nnf_injectCalculator(); } catch (err) { }
+        targetEl = document.getElementById('kalkulacka') || document.querySelector('.calc-section') || document.querySelector('#calc-steps');
+      }
 
-    const kalk = document.getElementById('kalkulacka');
-    if (kalk) {
-      kalk.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.location.href = '/#kalkulacka';
+      if (targetEl && typeof targetEl.getBoundingClientRect === 'function') {
+        const topOffset = Math.round(targetEl.getBoundingClientRect().top + window.pageYOffset - 90);
+        window.scrollTo({ top: topOffset, behavior: 'smooth' });
+
+        setTimeout(() => {
+          const firstInput = targetEl.querySelector('input, select, button');
+          if (firstInput) try { firstInput.focus(); } catch (err) { }
+        }, 400);
+      } else {
+        window.location.href = '/#kalkulacka';
+      }
+    };
+
+    performScroll();
+    setTimeout(performScroll, 100);
+    setTimeout(performScroll, 300);
+    setTimeout(performScroll, 600);
+  };
+  // Eagerly inject Configurator on homepage load above #kontakt
+  const ensureCalculatorInjected = () => {
+    if (window.location.pathname !== '/' && window.location.pathname !== '/index.html' && window.location.pathname !== '') return;
+    if (!document.getElementById('kalkulacka') && window.nnf_injectCalculator) {
+      try { window.nnf_injectCalculator(); } catch (err) { }
     }
   };
+  ensureCalculatorInjected();
+  setTimeout(ensureCalculatorInjected, 100);
+  setTimeout(ensureCalculatorInjected, 500);
+  setTimeout(ensureCalculatorInjected, 1500);
+
   const scrollToKalkulacka = window.scrollToKalkulacka;
 
   const patchHeroButtons = () => {
     document.querySelectorAll('a, button').forEach(el => {
       const heroSec = el.closest('section:first-of-type') || el.closest('.hero, #hero, [data-hero]');
       const isHeroContext = !!(heroSec && !heroSec.closest('#blog') && !heroSec.closest('#realizace') && !heroSec.closest('#sluzby'));
-      
+
       if (isHeroContext) {
         const text = el.textContent.trim().toLowerCase();
-        if (text.includes('nezávazná') || text.includes('cenov') || text.includes('kalkul') || text.includes('spočítat') || text.includes('spočítejte') || text.includes('získat')) {
+
+        // A. "Prozkoumat služby" -> #sluzby
+        if (text.includes('prozkoumat') || (text.includes('služb') && !text.includes('spočítejte'))) {
+          el.setAttribute('href', '#sluzby');
+          if (el.parentNode && el.parentNode.tagName === 'A') el.parentNode.setAttribute('href', '#sluzby');
+          el.dataset.heroBtnType = 'sluzby';
+          el.style.cursor = 'pointer';
+          el.onclick = (e) => {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            const sluzbyEl = document.getElementById('sluzby');
+            if (sluzbyEl) sluzbyEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            else window.location.href = '/#sluzby';
+          };
+        }
+        // B. "Spočítejte si cenu" -> #kalkulacka
+        else if (text.includes('nezávazná') || text.includes('cenov') || text.includes('kalkul') || text.includes('spočítat') || text.includes('spočítejte') || text.includes('získat') || text.includes('poptávk')) {
+          if (!el.dataset.heroTextPatched) {
+            const svg = el.querySelector('svg');
+            const svgHtml = svg ? svg.outerHTML : `<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`;
+            el.innerHTML = `Spočítejte si cenu ${svgHtml}`;
+            el.dataset.heroTextPatched = 'true';
+          }
           el.setAttribute('href', '#kalkulacka');
+          if (el.parentNode && el.parentNode.tagName === 'A') el.parentNode.setAttribute('href', '#kalkulacka');
           el.style.cursor = 'pointer';
           el.style.pointerEvents = 'auto';
-          const svg = el.querySelector('svg');
-          el.innerHTML = 'Spočítejte si to ' + (svg ? svg.outerHTML : '<span style="margin-left: 0.5rem;">→</span>');
           el.dataset.heroCtaPatched = 'true';
-          el.onclick = scrollToKalkulacka;
+          el.dataset.heroBtnType = 'kalkulacka';
+          el.onclick = (e) => {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            window.scrollToKalkulacka(e);
+          };
         }
       }
     });
 
     document.querySelectorAll('a[href="#kalkulacka"], a[href="/poptavka"]').forEach(a => {
       a.style.cursor = 'pointer';
-      a.onclick = scrollToKalkulacka;
+      a.onclick = (e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        window.scrollToKalkulacka(e);
+      };
+    });
+
+    document.querySelectorAll('a[href="#sluzby"]').forEach(a => {
+      a.style.cursor = 'pointer';
+      a.onclick = (e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        const sluzbyEl = document.getElementById('sluzby');
+        if (sluzbyEl) sluzbyEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
     });
   };
 
@@ -381,7 +580,7 @@ const observeAll = () => {
     if (realizaceHeading) {
       realizaceHeading.style.setProperty('color', '#f59e0b', 'important');
     }
-    const ctaBtn = Array.from(realizaceSection.querySelectorAll('button, a')).find(b => 
+    const ctaBtn = Array.from(realizaceSection.querySelectorAll('button, a')).find(b =>
       b.textContent.toLowerCase().includes('takové výsledky') || b.textContent.toLowerCase().includes('spočítejte')
     );
     if (ctaBtn) {
@@ -399,9 +598,29 @@ const observeAll = () => {
     procesSection.style.setProperty('padding-bottom', '2.5rem', 'important');
   }
 
-  // 3. Remove header phone number
-  const navPhone = document.querySelector('header a[href="tel:+420774509409"]');
-  if (navPhone) navPhone.remove();
+  // Ensure top black bar is nested inside header so fixed positioning includes both bars
+  const headerEl = document.querySelector('header');
+  if (headerEl) {
+    const prevBar = headerEl.previousElementSibling;
+    if (prevBar && prevBar.classList.contains('bg-neutral-800')) {
+      headerEl.insertBefore(prevBar, headerEl.firstChild);
+    }
+  }
+
+  // 3. Ensure top black bar displays phone number +420 774 509 409 (exact same style as email)
+  const topContacts = document.querySelector('.top-info-bar-contacts, header .max-w-7xl > div');
+  if (topContacts && !topContacts.querySelector('a[href*="774509409"]')) {
+    const phoneEl = document.createElement('a');
+    phoneEl.href = 'tel:+420774509409';
+    phoneEl.style.cssText = 'color: inherit; font-weight: 400; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.2s;';
+    phoneEl.onmouseover = function () { this.style.color = '#f59e0b'; };
+    phoneEl.onmouseout = function () { this.style.color = 'inherit'; };
+    phoneEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> +420 774 509 409';
+    topContacts.insertBefore(phoneEl, topContacts.firstChild);
+  }
+
+  // Remove duplicated phone number from white header navbar next to "Nezávazná poptávka" button
+  document.querySelectorAll('header div.gap-3 > a[href*="774509409"], header nav + div > a[href*="774509409"]').forEach(el => el.remove());
 
   // 4. Update Logos (SRC only, sizes are in CSS)
   const logos = document.querySelectorAll('header img:not(.chat-logo):not(.ai-chat-launcher img), nav img:not(.chat-logo), footer img');
@@ -409,7 +628,7 @@ const observeAll = () => {
     if (!img.dataset.patched && (img.src.includes('logo.jpg') || img.src.includes('logo-nav.jpg') || img.src.includes('logo_dark.jpg'))) {
       img.src = '/static/nanofusion-long.png';
       img.dataset.patched = 'true';
-      
+
       // Cleanup legacy inline styles from parent if they exist
       const parent = img.parentElement;
       if (parent && parent.classList.contains('bg-white') && parent.classList.contains('p-2')) {
@@ -419,8 +638,8 @@ const observeAll = () => {
     }
   });
 
-  // 5. Navigation Links Injection & Cleanup
-  document.querySelectorAll('header nav a, header div a, .nav-mobile-drawer a').forEach(a => {
+  // 5. Navigation Links Injection & Cleanup (Ensures Konfigurátor, Blog, Galerie in Mobile & Desktop Navbar)
+  document.querySelectorAll('header nav a, header div a, .nav-mobile-drawer a, div[class*="mobile-menu"] a').forEach(a => {
     const text = a.textContent.trim().toLowerCase();
     const href = (a.getAttribute('href') || '').toLowerCase();
     if (text === 'jak to funguje' || text === 'faq' || text === 'časté dotazy' || href === '#postup' || href === '#faq' || href === '/faq') {
@@ -428,84 +647,239 @@ const observeAll = () => {
     }
   });
 
-  const navLinks = Array.from(document.querySelectorAll('header nav a, header div a'));
-  const referenceLink = navLinks.find(a => a.textContent.trim() === 'Reference');
+  const isRoot = window.location.pathname === '/' || window.location.pathname === '/index.html';
+  const prefix = isRoot ? '' : '/';
 
-  if (referenceLink && !referenceLink.dataset.navPatched) {
-    const isRoot = window.location.pathname === '/' || window.location.pathname === '/index.html';
-    
-    // Standardize hash links
-    navLinks.forEach(a => {
-      const href = a.getAttribute('href');
-      if (href && href.startsWith('#') && !isRoot) {
-        const targetId = href.substring(1);
-        if (!document.getElementById(targetId)) {
-          a.href = '/' + href;
-        }
+  const patchNavContainers = () => {
+    const containers = document.querySelectorAll('header nav, .nav-mobile-drawer, header div.md\\:flex, div[class*="mobile-menu"], header div[class*="space-y"]');
+    containers.forEach(container => {
+      const links = Array.from(container.querySelectorAll('a'));
+      if (links.length === 0) return;
+
+      const linkTexts = links.map(a => (a.textContent || '').trim().toLowerCase());
+      const sluzbyLink = links.find(a => (a.textContent || '').trim().toLowerCase() === 'služby');
+      const refLink = links.find(a => (a.textContent || '').trim().toLowerCase() === 'reference');
+
+      const anchor = sluzbyLink || refLink || links[0];
+      if (!anchor) return;
+
+      // 1. Konfigurátor
+      if (!links.some(a => (a.textContent || '').trim().toLowerCase().includes('konfigurátor') || (a.getAttribute('href') || '').includes('kalkulacka'))) {
+        const configLink = anchor.cloneNode(true);
+        configLink.textContent = 'Konfigurátor';
+        configLink.href = prefix + '#kalkulacka';
+        anchor.parentNode.insertBefore(configLink, anchor.nextSibling);
+      }
+
+      // 2. Blog
+      if (!links.some(a => (a.textContent || '').trim().toLowerCase() === 'blog' || (a.getAttribute('href') || '').includes('blog'))) {
+        const blogLink = anchor.cloneNode(true);
+        blogLink.textContent = 'Blog';
+        blogLink.href = prefix + '#blog';
+        const currentRef = Array.from(container.querySelectorAll('a')).find(a => (a.textContent || '').trim().toLowerCase() === 'reference') || anchor;
+        currentRef.parentNode.insertBefore(blogLink, currentRef.nextSibling);
+      }
+
+      // 3. Galerie
+      if (!links.some(a => (a.textContent || '').trim().toLowerCase() === 'galerie' || (a.getAttribute('href') || '').includes('galerie'))) {
+        const galleryLink = anchor.cloneNode(true);
+        galleryLink.textContent = 'Galerie';
+        galleryLink.href = prefix + '#galerie';
+        const currentBlog = Array.from(container.querySelectorAll('a')).find(a => (a.textContent || '').trim().toLowerCase() === 'blog') || anchor;
+        currentBlog.parentNode.insertBefore(galleryLink, currentBlog.nextSibling);
       }
     });
+  };
 
-    const navContainers = Array.from(new Set(navLinks.map(a => a.parentNode).filter(p => p)));
-    navContainers.forEach(container => {
-      if (container.dataset.navPatched) return;
-      const refInContainer = Array.from(container.querySelectorAll('a')).find(a => a.textContent.trim() === 'Reference');
-      if (refInContainer) {
-        if (!container.querySelector('a[href="#kalkulacka"]')) {
-          const configLink = refInContainer.cloneNode(true);
-          configLink.textContent = 'Konfigurátor';
-          configLink.href = '#kalkulacka';
-          refInContainer.parentNode.insertBefore(configLink, refInContainer);
-        }
-        if (!container.querySelector('a[href="#galerie"]')) {
-          const galleryLink = refInContainer.cloneNode(true);
-          galleryLink.textContent = 'Galerie';
-          galleryLink.href = '#galerie';
-          refInContainer.parentNode.insertBefore(galleryLink, refInContainer.nextSibling);
-        }
-        if (!container.querySelector('a[href="#blog"]')) {
-          const blogLink = refInContainer.cloneNode(true);
-          blogLink.textContent = 'Blog';
-          blogLink.href = '#blog';
-          refInContainer.parentNode.insertBefore(blogLink, refInContainer.nextSibling);
-        }
-        container.dataset.navPatched = 'true';
-      }
-    });
-    referenceLink.dataset.navPatched = 'true';
-  }
+  patchNavContainers();
+  // Re-run on click of hamburger toggles and clear leftover inline display:none styles
+  document.addEventListener('click', (e) => {
+    const toggleBtn = e.target.closest('.nav-mobile-toggle, header button.lg\\:hidden, #nav-toggle, header button');
+    if (toggleBtn) {
+      document.querySelectorAll('header div.lg\\:hidden, .nav-mobile-drawer, .mobile-menu, header div.space-y-1').forEach(el => {
+        el.style.removeProperty('display');
+        el.style.display = '';
+      });
+      setTimeout(patchNavContainers, 50);
+      setTimeout(patchNavContainers, 200);
+    }
+  });
+
+  // Helper: Auto-close mobile menu drawer safely on link / section selection (Non-recursive & ultra-fast)
+  let isClosingMenu = false;
+  const closeMobileMenu = () => {
+    if (isClosingMenu) return;
+    isClosingMenu = true;
+
+    try {
+      // 1. Hide open mobile menu containers cleanly
+      const menuContainers = document.querySelectorAll('header div.lg\\:hidden.border-t, header div.space-y-1, .mobile-menu, .nav-mobile-drawer');
+      menuContainers.forEach(el => {
+        el.style.display = 'none';
+        el.classList.remove('open', 'active', 'show', 'drawer-open');
+      });
+
+      // 2. Dispatch Keyboard Escape event for modal/sheet closing (non-clicking)
+      const escEvent = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        code: 'Escape',
+        keyCode: 27,
+        bubbles: true,
+        cancelable: true
+      });
+      document.dispatchEvent(escEvent);
+
+      document.body.style.overflow = '';
+      document.body.style.pointerEvents = '';
+    } catch (err) {
+      console.warn('Mobile menu close:', err);
+    } finally {
+      setTimeout(() => {
+        isClosingMenu = false;
+      }, 300);
+    }
+  };
+
+  window.nnf_closeMobileMenu = closeMobileMenu;
 
   // 6. Active link state & smooth scroll for in-page anchors & CTA buttons
   document.addEventListener('click', (e) => {
-    // Exclude blog/portfolio modals
-    if (e.target.closest('#blog, .blog-card-modern, #blog-modal-overlay')) return;
+    const btn = e.target.closest('a, button, [role="button"]');
+    if (!btn) return;
 
-    const heroBtn = e.target.closest('section:first-of-type a, section:first-of-type button, .hero a, .hero button, [data-hero] a, [data-hero] button, a[href*="#kalkulacka"], a[href="/poptavka"], .nav-cta-desktop, .drawer-cta, [data-hero-cta-patched]');
-    if (heroBtn && !heroBtn.closest('#blog, #realizace, #sluzby')) {
+    const text = (btn.textContent || '').trim().toLowerCase();
+    const href = (btn.getAttribute('href') || '').toLowerCase();
+    const isNavOrFooter = !!btn.closest('header, nav, footer, .nav-mobile-drawer, .top-info-bar-inner, [role="dialog"], header div.lg\\:hidden');
+    const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '';
+
+    // Auto-close mobile drawer if clicking a link/button inside mobile menu/header
+    const isMobileNavContainer = !!btn.closest('header div.lg\\:hidden, nav, [role="dialog"], [data-state="open"], .nav-mobile-drawer');
+    const isHamburgerToggle = (btn.classList.contains('lg:hidden') || btn.classList.contains('nav-mobile-toggle')) && !btn.closest('header div.lg\\:hidden a');
+
+    if (isMobileNavContainer && !isHamburgerToggle && (btn.tagName === 'A' || href.length > 0 || btn.closest('header div.lg\\:hidden, [role="dialog"], nav'))) {
+      closeMobileMenu();
+    }
+
+    // Do NOT intercept inner clicks on blog cards/modals unless it's a nav/footer link
+    if (!isNavOrFooter && btn.closest('#blog-modal-overlay, .blog-card-modern, .gallery-modal')) return;
+
+    // 0. "O nás" link -> na službách přesměruje na hlavní stranu /#o-nas, na hlavní straně otevře modal O nás
+    if (href.includes('o-nas') || text.includes('o nás')) {
       e.preventDefault();
-      e.stopPropagation();
+      if (isHomePage) {
+        if (typeof window.openAboutUsModal === 'function') {
+          window.openAboutUsModal();
+        } else if (typeof window.nnf_openAboutUs === 'function') {
+          window.nnf_openAboutUs();
+        } else {
+          import('./about-us.js').then(m => {
+            if (m && m.openAboutUsModal) {
+              m.openAboutUsModal();
+            } else if (window.openAboutUsModal) {
+              window.openAboutUsModal();
+            }
+          }).catch(() => {});
+        }
+      } else {
+        window.location.href = '/#o-nas';
+      }
+      return;
+    }
+
+    // 0.1 Pokud jsme na podstránce (např. /sluzby/cisteni-strech), odkazy v navigaci a patce MUSÍ přesměrovat na hlavní stranu!
+    if (!isHomePage && isNavOrFooter) {
+      if (href.includes('sluzby') || text === 'služby') {
+        e.preventDefault();
+        window.location.href = '/#sluzby';
+        return;
+      }
+      if (href.includes('kalkulacka') || text.includes('konfigurát') || (text.includes('spočítejte') && !btn.classList.contains('cta-buttons'))) {
+        e.preventDefault();
+        window.location.href = '/#kalkulacka';
+        return;
+      }
+      if (href.includes('realizace') || href.includes('reference') || text === 'reference' || text === 'realizace') {
+        e.preventDefault();
+        window.location.href = '/#reference';
+        return;
+      }
+      if (href.includes('blog') || text === 'blog') {
+        e.preventDefault();
+        window.location.href = '/#blog';
+        return;
+      }
+      if (href.includes('galerie') || text === 'galerie') {
+        e.preventDefault();
+        window.location.href = '/#galerie';
+        return;
+      }
+      if (href.includes('kontakt') || text === 'kontakt') {
+        e.preventDefault();
+        window.location.href = '/#kontakt';
+        return;
+      }
+    }
+
+    // 1. "Reference" / "Realizace" link -> MUST scroll smoothly to #reference / #realizace on 1st click
+    if (href.includes('realizace') || href.includes('reference') || text === 'reference' || text === 'realizace') {
+      e.preventDefault();
+      const performRefScroll = () => {
+        const refEl = document.getElementById('reference') || document.getElementById('realizace') || document.getElementById('realizace-sec') || document.getElementById('recenze');
+        if (refEl && typeof refEl.getBoundingClientRect === 'function') {
+          const topOffset = Math.round(refEl.getBoundingClientRect().top + window.pageYOffset - 90);
+          window.scrollTo({ top: topOffset, behavior: 'smooth' });
+        } else {
+          window.location.href = '/#reference';
+        }
+      };
+      performRefScroll();
+      setTimeout(performRefScroll, 100);
+      setTimeout(performRefScroll, 300);
+      setTimeout(performRefScroll, 600);
+      return;
+    }
+
+    // A. "Prozkoumat služby" button -> MUST scroll to #sluzby
+    if (text.includes('prozkoumat') || href === '#sluzby' || btn.dataset.heroBtnType === 'sluzby') {
+      const sluzbyEl = document.getElementById('sluzby') || document.getElementById('sluzby-sec');
+      if (sluzbyEl) {
+        e.preventDefault();
+        const topOffset = Math.round(sluzbyEl.getBoundingClientRect().top + window.pageYOffset - 90);
+        window.scrollTo({ top: topOffset, behavior: 'smooth' });
+        return;
+      }
+    }
+
+    // B. "Spočítejte si cenu" / "Spočítejte si to" / Konfigurátor / Poptávka / Zadat poptávku -> MUST scroll to #kalkulacka
+    if (href.includes('#kalkulacka') || href === '/poptavka' || text.includes('spočítejte') || text.includes('spočítat') || text.includes('kalkul') || text.includes('poptávk') || text.includes('nezávazná') || btn.dataset.heroCtaPatched === 'true' || btn.dataset.heroBtnType === 'kalkulacka' || btn.classList.contains('nav-cta-desktop') || btn.classList.contains('drawer-cta')) {
+      e.preventDefault();
       window.scrollToKalkulacka(e);
       return;
     }
 
-    const link = e.target.closest('a[href*="#"]');
-    if (!link) return;
-    const href = link.getAttribute('href') || '';
-
-    if (href === '/poptavka' || href.includes('#kalkulacka')) {
-      e.preventDefault();
-      e.stopPropagation();
-      window.scrollToKalkulacka(e);
-      return;
-    }
-
+    // C. Other hash links
     const hashIdx = href.indexOf('#');
-    if (hashIdx === -1) return;
-    const hash = href.substring(hashIdx + 1);
-    if (!hash) return;
-    const targetEl = document.getElementById(hash);
-    if (targetEl) {
-      e.preventDefault();
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (hashIdx !== -1) {
+      const hash = href.substring(hashIdx + 1);
+      if (hash) {
+        let targetEl = document.getElementById(hash);
+        if (!targetEl) {
+          if (hash === 'realizace' || hash === 'reference' || hash === 'recenze') {
+            targetEl = document.getElementById('reference') || document.getElementById('realizace') || document.getElementById('realizace-sec') || document.getElementById('recenze');
+          } else if (hash === 'sluzby') {
+            targetEl = document.getElementById('sluzby') || document.getElementById('sluzby-sec');
+          } else if (hash === 'o-nas' || hash === 'o-nas-sec') {
+            targetEl = document.getElementById('o-nas-sec') || document.getElementById('o-nas');
+          }
+        }
+
+        if (targetEl && typeof targetEl.getBoundingClientRect === 'function') {
+          e.preventDefault();
+          const topOffset = Math.round(targetEl.getBoundingClientRect().top + window.pageYOffset - 90);
+          window.scrollTo({ top: topOffset, behavior: 'smooth' });
+          return;
+        }
+      }
     }
   }, true);
 
@@ -522,14 +896,15 @@ const observeAll = () => {
   const footer = document.querySelector('footer');
   if (footer && !footer.dataset.patched) {
     footer.classList.remove('bg-neutral-900', 'bg-slate-900');
-    
-    // Update IČO
+
+    // Update IČO & Footer Links
     const footerTexts = footer.querySelectorAll('p.text-xs.text-neutral-500');
     footerTexts.forEach(p => {
       if (p.textContent.includes('IČ:')) {
-        p.innerHTML = `© 2026 NANOfusion s.r.o. | IČ: 29375363 | 
-          <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" class="footer-eshop-link">E-shop</a> | 
-          <a href="https://nanofusion-j3bs.vercel.app/admin/login" class="footer-admin-link">Zaměstnanci</a>`;
+        p.innerHTML = `IČ: 29375363 | 
+          <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" class="footer-eshop-link" style="color: #f59e0b; font-weight: 700; text-decoration: underline;">E-shop</a> | 
+          <a href="https://nanofusion-j3bs.vercel.app/admin/login" class="footer-admin-link">Zaměstnanci</a> | 
+          <a href="https://www.aerisq.tech" target="_blank" rel="noopener noreferrer" class="footer-created-link" style="color: #94a3b8; text-decoration: none; font-weight: 600;">Created by 💚</a>`;
       }
     });
 
@@ -540,13 +915,13 @@ const observeAll = () => {
         p.dataset.brUpdated = 'true';
       }
     });
-    
+
     // Transform Social Links
-    const existingSocial = Array.from(footer.querySelectorAll('a')).find(a => 
+    const existingSocial = Array.from(footer.querySelectorAll('a')).find(a =>
       a.href.includes('facebook.com') || a.href.includes('instagram.com') || a.href.includes('linkedin.com')
     );
     const socialContainer = existingSocial ? existingSocial.parentElement : null;
-    
+
     // Inject TikTok if missing
     if (socialContainer && !socialContainer.querySelector('a[href*="tiktok"]')) {
       const tiktokLink = document.createElement('a');
@@ -607,7 +982,7 @@ const observeAll = () => {
     if (contactHeading) {
       contactHeading.style.color = '#f59e0b';
       contactHeading.style.fontWeight = '800';
-      
+
       const contactCol = contactHeading.parentElement;
       if (contactCol && !contactCol.querySelector('.footer-map-container')) {
         const mapContainer = document.createElement('div');
@@ -620,10 +995,10 @@ const observeAll = () => {
         mapContainer.style.position = 'relative';
         mapContainer.innerHTML = `
           <iframe 
-            src="https://www.google.com/maps?q=Cezavy%20627,664%2056%20Blučina&output=embed" 
+            src="https://www.google.com/maps?q=NANOfusion%20s.r.o.,%20Blučina&output=embed" 
             width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
           </iframe>
-          <div style="position: absolute; inset: 0; background: transparent;" onclick="window.open('https://www.google.com/maps?q=Cezavy%20627,664%2056%20Blučina', '_blank')"></div>
+          <div style="position: absolute; inset: 0; background: transparent; cursor: pointer;" onclick="window.open('https://www.google.com/maps?q=NANOfusion+s.r.o.,+Blučina', '_blank')"></div>
         `;
         contactCol.appendChild(mapContainer);
       }
@@ -721,11 +1096,11 @@ const syncGalleryData = async () => {
       .select('*, realization_photos(*)')
       .eq('is_published', true)
       .order('created_at', { ascending: false });
-    
+
     if (error) throw error;
     galleryItems = data || [];
     console.log(`NANOfusion: Sync completed. Loaded ${galleryItems.length} realizations.`);
-    
+
     // Debug: Check if photos are present
     galleryItems.forEach(item => {
       const photoCount = item.realization_photos ? item.realization_photos.length : 0;
@@ -805,11 +1180,11 @@ window.nnf_switchModalMedia = (url, isVideo = false, youtubeId = null) => {
 
   // Update current index based on select
   if (window.nnf_currentGalleryMedia) {
-    window.nnf_currentGalleryIndex = window.nnf_currentGalleryMedia.findIndex(m => 
+    window.nnf_currentGalleryIndex = window.nnf_currentGalleryMedia.findIndex(m =>
       (isVideo && m.isVideo && m.youtubeId === youtubeId) || (!isVideo && !m.isVideo && m.url === url)
     );
   }
-  
+
   // Scroll to top of modal if needed
   if (viewport) {
     const modalBody = viewport.closest('div[style*="overflow-y:auto"]');
@@ -883,12 +1258,12 @@ window.nnf_openGallery = (id) => {
 
           <!-- Media content container -->
           <div id="modal-media-content" style="height:500px; width: 100%; display: block; overflow: hidden; position: relative;">
-            ${item.youtube_id 
-              ? `<div style="aspect-ratio: 16/9; width: 100%; height: 100%;">
+            ${item.youtube_id
+      ? `<div style="aspect-ratio: 16/9; width: 100%; height: 100%;">
                   <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${item.youtube_id}?autoplay=1" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen style="border:0;"></iframe>
                  </div>`
-              : `<img src="${mainImg}" style="width:100%; height:100%; object-fit:cover;">`
-            }
+      : `<img src="${mainImg}" style="width:100%; height:100%; object-fit:cover;">`
+    }
           </div>
         </div>
         
@@ -943,7 +1318,7 @@ window.nnf_openGallery = (id) => {
     </style>
   `;
   overlay.style.display = 'flex';
-  overlay.onclick = (e) => { if(e.target === overlay) overlay.style.display = 'none'; };
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.style.display = 'none'; };
 };
 
 const injectGallery = () => {
@@ -958,37 +1333,50 @@ const injectGallery = () => {
     gallerySection.innerHTML = `
       <div class="container mx-auto px-4">
           <div class="text-center mb-16">
-              <h2 class="text-3xl md:text-5xl font-bold text-slate-900 mb-6 font-heading" style="margin-top: 3rem;">Špičková péče o váš majetek v detailech</h2>
+              <h2 class="text-3xl md:text-5xl font-bold mb-6 font-heading" style="color: #f59e0b; margin-top: 3rem;">Špičková péče o váš majetek v detailech</h2>
               <div class="w-20 h-1 bg-amber-500 mx-auto rounded-full"></div>
           </div>
       </div>
 
-        <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
+        <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;" class="group">
           <button id="gallery-prev" 
-            class="hidden md:flex"
-            style="position: absolute; left: -25px; top: 50%; transform: translateY(-50%); z-index: 10; width: 60px; height: 60px; border-radius: 30px; background: #f59e0b !important; border: none; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3); transition: all 0.3s ease; padding: 0 !important;"
+            class="hidden md:flex gallery-arrow left"
+            style="position: absolute !important; left: -25px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; border-radius: 50% !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3) !important; transition: all 0.3s ease !important; padding: 0 !important;"
             onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';"
             onmouseout="this.style.scale='1'; this.style.backgroundColor='#f59e0b';"
           > 
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important;"><path d="M15 18l-6-6 6-6"></path></svg> 
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important; display: block !important; margin: auto !important;"><path d="M15 18l-6-6 6-6"></path></svg> 
           </button>
           
           <button id="gallery-next" 
-            class="hidden md:flex"
-            style="position: absolute; right: -25px; top: 50%; transform: translateY(-50%); z-index: 10; width: 60px; height: 60px; border-radius: 30px; background: #f59e0b !important; border: none; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3); transition: all 0.3s ease; padding: 0 !important;"
+            class="hidden md:flex gallery-arrow right"
+            style="position: absolute !important; right: -25px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; border-radius: 50% !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3) !important; transition: all 0.3s ease !important; padding: 0 !important;"
             onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';"
             onmouseout="this.style.scale='1'; this.style.backgroundColor='#f59e0b';"
           > 
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important;"><path d="M9 18l6-6-6-6"></path></svg> 
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important; display: block !important; margin: auto !important;"><path d="M9 18l6-6-6-6"></path></svg> 
           </button>
 
         <div id="gallery-scroller-inner" style="display: flex; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; padding: 1rem 0 3rem; -ms-overflow-style: none; scrollbar-width: none; min-height: 400px;">
-          <style>#gallery-scroller-inner::-webkit-scrollbar { display: none; }</style>
+          <style>
+            #gallery-scroller-inner::-webkit-scrollbar { display: none; }
+            .gallery-arrow { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.3s ease !important; }
+            @media (min-width: 769px) {
+                .group:hover .gallery-arrow { opacity: 1 !important; pointer-events: auto !important; }
+            }
+            @media (max-width: 1200px) and (min-width: 769px) {
+                #gallery-prev { left: 10px !important; }
+                #gallery-next { right: 10px !important; }
+            }
+            @media (max-width: 768px) {
+                .gallery-arrow, #gallery-prev, #gallery-next { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+            }
+          </style>
           <!-- Načítání dat... -->
         </div>
       </div>
     `;
-    
+
     if (window.nnf_loadGalleryFromDB) {
       window.nnf_loadGalleryFromDB();
     } else {
@@ -1002,16 +1390,16 @@ const injectGallery = () => {
 
     const performJump = (dir) => {
       const jumpAmount = scroller.clientWidth > 1000 ? 474 : 350;
-      scroller.scrollBy({left: dir * jumpAmount, behavior: 'smooth'});
+      scroller.scrollBy({ left: dir * jumpAmount, behavior: 'smooth' });
     };
 
     setInterval(() => {
       if (!isPaused) {
-          if (scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 100) {
-             scroller.scrollTo({left: 0, behavior: 'smooth'});
-          } else {
-             performJump(1);
-          }
+        if (scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 100) {
+          scroller.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          performJump(1);
+        }
       }
     }, 5000);
 
@@ -1054,7 +1442,7 @@ const clearPreloader = () => {
     preloader.classList.add('fade-out');
     document.body.style.opacity = '1';
     document.body.style.overflow = 'auto';
-    setTimeout(() => { if(preloader.parentNode) preloader.remove(); }, 600);
+    setTimeout(() => { if (preloader.parentNode) preloader.remove(); }, 600);
     console.log('NANOfusion: Preloader plynule odstraněn.');
   } else {
     document.body.style.opacity = '1';
@@ -1065,7 +1453,7 @@ const clearPreloader = () => {
 const initApp = () => {
   observeAll();
   domObserver.observe(document.body, { childList: true, subtree: true });
-  
+
   // Safety timeout: 1.5s max for homepage, instant for subpages (static content, no preloader)
   const maxWait = isHomepage ? 1500 : 0;
   setTimeout(() => {

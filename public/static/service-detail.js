@@ -94,10 +94,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   const meta = window.__nnf_service_meta || {};
   const priceKey = meta.price_key || meta.id;
 
-  // --- Calculator Logic ---
+  // --- 2-Step Calculator Logic ---
   const areaInput = document.getElementById('m-area');
-  const nameInput = document.getElementById('m-name');
+  const firstNameInput = document.getElementById('m-firstname') || document.getElementById('m-name');
+  const lastNameInput = document.getElementById('m-lastname');
+  const locationInput = document.getElementById('m-location');
   const phoneInput = document.getElementById('m-phone');
+  const emailInput = document.getElementById('m-email');
+
+  const step1Container = document.getElementById('m-step1-container');
+  const step2Container = document.getElementById('m-step2-container');
+  const stepBadge = document.getElementById('m-step-badge');
+
+  const btnNext = document.getElementById('m-next-btn');
+  const btnBack = document.getElementById('m-back-btn');
   const btnReveal = document.getElementById('m-reveal');
 
   const updatePrice = () => {
@@ -120,36 +130,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     updatePrice(); // Init display
   }
 
-  const locationInput = document.getElementById('m-location');
-
-  if (btnReveal) {
-    btnReveal.onclick = async () => {
-      const name = nameInput ? nameInput.value.trim() : '';
-      const phone = phoneInput ? phoneInput.value.trim() : '';
+  // --- Step 1 -> Step 2 Transition ---
+  if (btnNext) {
+    btnNext.onclick = () => {
+      const firstName = firstNameInput ? firstNameInput.value.trim() : '';
+      const lastName = lastNameInput ? lastNameInput.value.trim() : '';
       const location = locationInput ? locationInput.value.trim() : '';
-      const area = areaInput ? parseFloat(areaInput.value) || 0 : 0;
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim() : '';
 
-      // --- Strict Form Validation ---
-      if (!name || name.length < 2) {
+      if (!firstName || firstName.length < 2) {
         alert('Prosím zadejte Vaše jméno.');
-        if (nameInput) nameInput.focus();
+        if (firstNameInput) firstNameInput.focus();
         return;
       }
-      const nameLetters = name.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
-      if (nameLetters.length < 2 || /^\d+$/.test(name)) {
+      const fnLetters = firstName.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
+      if (fnLetters.length < 2 || /^\d+$/.test(firstName)) {
         alert('Prosím zadejte platné jméno.');
-        if (nameInput) nameInput.focus();
+        if (firstNameInput) firstNameInput.focus();
+        return;
+      }
+
+      if (!lastName || lastName.length < 2) {
+        alert('Prosím zadejte Vaše příjmení.');
+        if (lastNameInput) lastNameInput.focus();
+        return;
+      }
+      const lnLetters = lastName.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
+      if (lnLetters.length < 2 || /^\d+$/.test(lastName)) {
+        alert('Prosím zadejte platné příjmení.');
+        if (lastNameInput) lastNameInput.focus();
         return;
       }
 
       if (!location || location.length < 2) {
-        alert('Prosím zadejte město nebo lokaci objektu.');
-        if (locationInput) locationInput.focus();
-        return;
-      }
-      const locLetters = location.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
-      if (locLetters.length < 2 || /^\d+$/.test(location)) {
-        alert('Prosím zadejte platný název obce / města.');
+        alert('Prosím zadejte přesnou lokaci.');
         if (locationInput) locationInput.focus();
         return;
       }
@@ -161,10 +176,43 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       const cleanPhone = phone.replace(/[\s\-\(\)\+]/g, '');
       if (!/^\d{9,15}$/.test(cleanPhone) || /^(\d)\1+$/.test(cleanPhone) || cleanPhone === '123456789' || cleanPhone === '987654321') {
-        alert('Prosím zadejte platné a reálné telefonní číslo (např. 774 509 409 nebo +420774509409).');
+        alert('Prosím zadejte platné a reálné telefonní číslo (např. +420 777 123 456).');
         if (phoneInput) phoneInput.focus();
         return;
       }
+
+      if (!email || !email.includes('@') || !email.includes('.')) {
+        alert('Prosím zadejte platnou e-mailovou adresu.');
+        if (emailInput) emailInput.focus();
+        return;
+      }
+
+      // Smooth transition to Step 2
+      if (step1Container) step1Container.style.display = 'none';
+      if (step2Container) step2Container.style.display = 'block';
+      if (stepBadge) stepBadge.innerText = 'Část 2 ze 2: Metry a foto';
+    };
+  }
+
+  // --- Step 2 -> Step 1 Back Button ---
+  if (btnBack) {
+    btnBack.onclick = () => {
+      if (step2Container) step2Container.style.display = 'none';
+      if (step1Container) step1Container.style.display = 'block';
+      if (stepBadge) stepBadge.innerText = 'Část 1 ze 2: Kontakty';
+    };
+  }
+
+  // --- Step 2 Final Submission ---
+  if (btnReveal) {
+    btnReveal.onclick = async () => {
+      const firstName = firstNameInput ? firstNameInput.value.trim() : '';
+      const lastName = lastNameInput ? lastNameInput.value.trim() : '';
+      const fullName = `${firstName} ${lastName}`.trim();
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim() : '';
+      const location = locationInput ? locationInput.value.trim() : '';
+      const area = areaInput ? parseFloat(areaInput.value) || 0 : 0;
 
       // Calculations for db log
       const baseVal = localPrices[priceKey] || 150;
@@ -181,11 +229,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const photoUrl = await getPhotoPayloadUrl(photoInput, supabase);
 
       const inquiryPayload = {
-        name: name,
+        name: fullName || 'Zákazník',
         phone: phone,
+        email: email,
         service: meta.title || 'Služba Detail',
-        message: `Lokace: ${location}, Plocha: ${area} m², Odhad ceny: ${min} - ${max} Kč${photoUrl ? '\nFotografie: ' + photoUrl : ''}`,
-        source: 'Subpage / Kalkulačka',
+        message: `Lokace: ${location}, E-mail: ${email}, Plocha: ${area} m², Odhad ceny: ${min} - ${max} Kč${photoUrl ? '\nFotografie: ' + photoUrl : ''}`,
+        source: 'Subpage 2-Step Calculator',
         status: 'new'
       };
 
@@ -221,21 +270,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  // --- Before & After Slider Logic ---
+  // --- Before & After Slider Logic & Attention-grabbing Intro Animation ---
   document.querySelectorAll('.ba-range').forEach((input) => {
     const slug = input.dataset.slug;
     const clip = document.getElementById(slug + '-clip');
     const handle = document.getElementById(slug + '-handle');
 
-    const updateSlider = () => {
-      const val = input.value;
+    const updateSlider = (valOverride) => {
+      const val = valOverride !== undefined ? valOverride : input.value;
       if (clip) clip.style.clipPath = `inset(0 ${100 - val}% 0 0)`;
       if (handle) handle.style.left = val + '%';
     };
 
-    input.addEventListener('input', updateSlider);
-    input.addEventListener('change', updateSlider);
+    input.addEventListener('input', () => updateSlider());
+    input.addEventListener('change', () => updateSlider());
     updateSlider(); // Initial alignment
+
+    // Attention-grabbing intro sweep animation when user scrolls into view
+    let hasAnimated = false;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          hasAnimated = true;
+          let startTime = null;
+          const duration = 1800; // 1.8s intro sweep animation
+
+          const animateSweep = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const progress = (timestamp - startTime) / duration;
+
+            if (progress < 1) {
+              // Smooth sine wave sweep: 50% -> 25% -> 75% -> 50%
+              const currentVal = 50 + Math.sin(progress * Math.PI * 2) * 25;
+              input.value = currentVal;
+              updateSlider(currentVal);
+              requestAnimationFrame(animateSweep);
+            } else {
+              input.value = 50;
+              updateSlider(50);
+            }
+          };
+          requestAnimationFrame(animateSweep);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const parentBox = input.closest('section') || input.parentElement;
+    if (parentBox) observer.observe(parentBox);
   });
 
   // --- Collapsible Accordion (FAQs) ---

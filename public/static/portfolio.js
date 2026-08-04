@@ -132,7 +132,7 @@ const injectPortfolio = async () => {
                 ${p.photos.map((ph, idx) => `
                     <div style="position:relative;aspect-ratio:4/3;border-radius:0.75rem;overflow:hidden;cursor:pointer;border:2px solid ${idx === 0 ? '#F59E0B' : 'transparent'};transition:all 0.2s;" 
                          onclick="window.nnf_switchPortfolioPhoto(${idx})">
-                        <img src="${window.nnf_optimizeImage(ph.url, 256)}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+                        <img src="${window.nnf_optimizeImage(ph.url, 256)}" alt="${p.title || 'Fotografie realizace NANOfusion'}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
                     </div>`).join('')}
                </div>`
             : '';
@@ -256,7 +256,10 @@ const injectPortfolio = async () => {
         const generateCards = (list) => list.map(p => {
             const img = window.nnf_optimizeImage(p.photos?.[0]?.url || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800', 640);
             return `
-            <a href="#realizace/${p.id}" class="portfolio-card-modern" style="text-decoration: none; display: block;">
+            <div class="portfolio-card-modern" 
+                style="text-decoration: none; display: block; cursor: pointer;"
+                onclick="window.location.hash='realizace/${p.id}'"
+            >
                 <div class="portfolio-img-wrap">
                     <img src="${img}" alt="${p.title}" loading="lazy">
                     <div class="portfolio-overlay">
@@ -268,18 +271,18 @@ const injectPortfolio = async () => {
                     <h3 class="portfolio-h3">${p.title}</h3>
                     ${p.location ? `<p style="font-size:0.85rem;color:#64748b;margin-top:0.4rem;display:flex;items-center;gap:0.4rem;">📍 ${p.location}</p>` : ''}
                 </div>
-            </a>`;
+            </div>`;
         }).join('');
 
         portfolioSection.innerHTML = `
             <div class="container mx-auto px-4 mb-16">
                 <div class="text-center">
-                    <h2 class="text-4xl md:text-6xl font-bold mb-6" style="color: #f59e0b;">Naše Realizace v detailu</h2>
+                    <h2 class="text-4xl md:text-6xl font-bold mb-6" style="color: #f59e0b;">Naše realizace v detailu</h2>
                     <p class="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">Sledujte, jak vracíme povrchům jejich původní vzhled a krásu</p>
                 </div>
             </div>
             
-            <div class="relative max-w-[1600px] mx-auto group">
+            <div class="relative max-w-[1400px] mx-auto group">
                 <div id="portfolio-scroller" class="portfolio-container-new">
                     <div id="portfolio-track" class="portfolio-track-new">
                         ${generateCards(projectsData)}
@@ -287,26 +290,28 @@ const injectPortfolio = async () => {
                     </div>
                 </div>
 
-                <!-- Premium Navigation Arrows -->
-                <button id="p-arrow-left" class="portfolio-arrow left" 
+                <!-- Premium Navigation Arrows (Identical round shape & offset as Nano-Magazín) -->
+                <button id="p-arrow-left" class="hidden md:flex portfolio-arrow left" 
+                    style="position: absolute !important; left: 15px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; min-width: 60px !important; min-height: 60px !important; border-radius: 50% !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4) !important; transition: all 0.3s ease !important; padding: 0 !important;"
                     onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';" 
                     onmouseout="this.style.scale='1'; this.style.backgroundColor='#f59e0b';" 
-                    style="position: absolute !important; left: 20px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; border-radius: 30px !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3) !important; transition: all 0.3s ease !important; padding: 0 !important;">
-                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important;"><path d="M15 18l-6-6 6-6"></path></svg>
+                >
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important; display: block !important; margin: auto !important;"><path d="M15 18l-6-6 6-6"></path></svg>
                 </button>
-                <button id="p-arrow-right" class="portfolio-arrow right" 
+                <button id="p-arrow-right" class="hidden md:flex portfolio-arrow right" 
+                    style="position: absolute !important; right: 15px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; min-width: 60px !important; min-height: 60px !important; border-radius: 50% !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4) !important; transition: all 0.3s ease !important; padding: 0 !important;"
                     onmouseover="this.style.scale='1.1'; this.style.backgroundColor='#d97706';" 
                     onmouseout="this.style.scale='1'; this.style.backgroundColor='#f59e0b';" 
-                    style="position: absolute !important; right: 20px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 100 !important; width: 60px !important; height: 60px !important; border-radius: 30px !important; background: #f59e0b !important; border: none !important; cursor: pointer !important; align-items: center !important; justify-content: center !important; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3) !important; transition: all 0.3s ease !important; padding: 0 !important;">
-                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important;"><path d="M9 18l6-6-6-6"></path></svg>
+                >
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white !important" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white !important; display: block !important; margin: auto !important;"><path d="M9 18l6-6-6-6"></path></svg>
                 </button>
             </div>
 
             <div style="display:flex;justify-content:center;padding:5rem 0;">
-                <button onclick="if(window.scrollToKalkulacka){window.scrollToKalkulacka();}else{const el=document.getElementById('kalkulacka');if(el){el.scrollIntoView({behavior:'smooth'});}else{window.location.href='/#kalkulacka';}}"
+                <button onclick="if(window.scrollToKalkulacka){window.scrollToKalkulacka(event);}else{window.location.href='/#kalkulacka';}"
                     class="inline-flex items-center px-12 py-6 bg-amber-500 text-white font-black rounded-2xl hover:bg-amber-600 transition-all shadow-2xl active:scale-95 uppercase tracking-widest text-sm hover:translate-y-[-2px]">
-                    Spočítejte si cenu
-                    <svg class="ml-3 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    Spočítejte si to
+                    <svg class="ml-3 w-6 h-6 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </button>
             </div>
 
@@ -327,6 +332,7 @@ const injectPortfolio = async () => {
                     display: flex;
                     gap: 2.5rem;
                     padding: 0 5%;
+                    min-width: max-content;
                 }
 
                 .portfolio-card-modern {
@@ -413,9 +419,11 @@ const injectPortfolio = async () => {
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
-                    width: 60px;
-                    height: 60px;
-                    border-radius: 30px;
+                    width: 60px !important;
+                    height: 60px !important;
+                    min-width: 60px !important;
+                    min-height: 60px !important;
+                    border-radius: 50% !important;
                     background: #f59e0b !important;
                     color: white;
                     border: none;
@@ -423,64 +431,71 @@ const injectPortfolio = async () => {
                     align-items: center;
                     justify-content: center;
                     cursor: pointer;
-                    z-index: 20;
-                    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+                    z-index: 100;
+                    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
                     transition: all 0.3s ease;
-                    opacity: 0;
+                    opacity: 0 !important;
+                    pointer-events: none !important;
                 }
 
-                .group:hover .portfolio-arrow { opacity: 1; }
-                .portfolio-arrow.left { left: -25px; }
-                .portfolio-arrow.right { right: -25px; }
+                #p-arrow-left, .portfolio-arrow.left { left: 15px !important; }
+                #p-arrow-right, .portfolio-arrow.right { right: 15px !important; }
+
+                @media (min-width: 1500px) {
+                    #p-arrow-left, .portfolio-arrow.left { left: -25px !important; }
+                    #p-arrow-right, .portfolio-arrow.right { right: -25px !important; }
+                }
+
+                @media (min-width: 769px) {
+                    .group:hover .portfolio-arrow { opacity: 1 !important; pointer-events: auto !important; }
+                }
 
                 @media (max-width: 768px) {
-                    .portfolio-card-modern { flex: 0 0 320px; border-radius: 1.5rem; }
-                    .portfolio-img-wrap { height: 240px; }
+                    .portfolio-card-modern { flex: 0 0 84vw !important; max-width: 340px !important; border-radius: 1.5rem; }
+                    .portfolio-img-wrap { height: 220px; }
                     #modal-main-img { height: 280px !important; }
                     .portfolio-h3 { font-size: 1.1rem; }
-                    .portfolio-arrow { display: none !important; }
-                    .portfolio-container-new { mask-image: none; -webkit-mask-image: none; }
+                    .portfolio-arrow, #p-arrow-left, #p-arrow-right { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+                    .portfolio-container-new { mask-image: none !important; -webkit-mask-image: none !important; padding: 1rem 0 !important; }
+                    .portfolio-track-new { gap: 1.25rem !important; padding: 0 8vw !important; }
                 }
             </style>
         `;
 
-        // Scroller Logic
-        const scroller = document.getElementById('portfolio-scroller');
-        const arrowLeft = document.getElementById('p-arrow-left');
-        const arrowRight = document.getElementById('p-arrow-right');
-        
-        if (scroller && arrowLeft && arrowRight) {
-            let autoplayInterval;
-            
-            const startAutoplay = () => {
-                autoplayInterval = setInterval(() => {
-                    if (scroller.scrollLeft >= (scroller.scrollWidth / 2)) {
-                        scroller.scrollLeft = 0;
-                    } else {
-                        scroller.scrollLeft += 1;
-                    }
-                }, 30);
-            };
+        // Auto-Scroller Setup (Matches reviews.js & blog.js 1:1)
+        setTimeout(() => {
+            const scroller = document.getElementById('portfolio-scroller');
+            const arrowLeft = document.getElementById('p-arrow-left');
+            const arrowRight = document.getElementById('p-arrow-right');
 
-            const stopAutoplay = () => clearInterval(autoplayInterval);
+            if (scroller) {
+                let autoplayInterval;
+                const startAutoplay = () => {
+                    autoplayInterval = setInterval(() => {
+                        if (scroller.scrollLeft >= (scroller.scrollWidth / 2)) {
+                            scroller.scrollLeft = 0;
+                        } else {
+                            scroller.scrollLeft += 1;
+                        }
+                    }, 30);
+                };
+                const stopAutoplay = () => clearInterval(autoplayInterval);
 
-            arrowLeft.addEventListener('click', (e) => {
-                e.stopPropagation();
-                scroller.scrollLeft -= 480;
-            });
+                if (arrowLeft) {
+                    arrowLeft.onclick = (e) => { e.stopPropagation(); scroller.scrollLeft -= 450; };
+                    arrowLeft.onmouseenter = stopAutoplay;
+                }
+                if (arrowRight) {
+                    arrowRight.onclick = (e) => { e.stopPropagation(); scroller.scrollLeft += 450; };
+                    arrowRight.onmouseenter = stopAutoplay;
+                }
 
-            arrowRight.addEventListener('click', (e) => {
-                e.stopPropagation();
-                scroller.scrollLeft += 480;
-            });
+                scroller.onmouseenter = stopAutoplay;
+                scroller.onmouseleave = startAutoplay;
 
-            scroller.addEventListener('mouseenter', stopAutoplay);
-            scroller.addEventListener('mouseleave', startAutoplay);
-            arrowLeft.addEventListener('mouseenter', stopAutoplay);
-            arrowRight.addEventListener('mouseenter', stopAutoplay);
-
-            startAutoplay();
-        }
+                startAutoplay();
+            }
+        }, 100);
         
         // Initial route check
         handleRouting();

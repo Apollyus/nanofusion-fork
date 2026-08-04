@@ -10,11 +10,19 @@ export default defineConfig({
   },
   plugins: [
     {
-      name: 'serve-sluzby-subpages-dev',
+      name: 'serve-subpages-dev',
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
           const cleanUrl = req.url.split('?')[0].split('#')[0];
-          
+
+          if (cleanUrl === '/o-nas' || cleanUrl === '/o-nas/') {
+            req.url = '/o-nas/index.html';
+          } else if (cleanUrl === '/faq' || cleanUrl === '/faq/') {
+            req.url = '/faq/index.html';
+          } else if (cleanUrl === '/poptavka' || cleanUrl === '/poptavka/') {
+            req.url = '/poptavka/index.html';
+          }
+
           // Match /sluzby/[slug] or /sluzby/[slug]/
           const match = cleanUrl.match(/^\/sluzby\/([^/]+)/);
           

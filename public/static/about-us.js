@@ -102,10 +102,6 @@ export const preloadAboutUsData = async () => {
 // MODAL RENDERER & INTERACTIVE LOGIC
 // ============================================================
 export const openAboutUsModal = async () => {
-  // Update URL to /o-nas for SEO / GEO routing consistency
-  if (typeof window !== 'undefined' && !window.location.pathname.includes('o-nas')) {
-    window.history.pushState({ modal: 'about' }, '', '/o-nas');
-  }
 
   // 1. Zobrazíme transparentní skleněné pozadí (web zůstane v pozadí plně vidět)
   let overlay = document.getElementById('about-us-modal-overlay');
@@ -423,8 +419,9 @@ export const patchNavigation = () => {
   if (referenceLink) {
     const navContainers = Array.from(new Set(navLinks.map(a => a.parentNode).filter(p => p)));
     navContainers.forEach(container => {
-      // Pokud už odkaz existuje, přeskočíme ho
-      if (container.querySelector('a.about-us-injected-link')) return;
+      // Pokud už odkaz O nás v kontejneru existuje, nebudeme vkládat druhý
+      const hasAbout = Array.from(container.querySelectorAll('a')).some(a => (a.textContent || '').trim().toLowerCase() === 'o nás' || (a.getAttribute('href') || '').includes('o-nas'));
+      if (hasAbout) return;
 
       const refInContainer = Array.from(container.querySelectorAll('a')).find(a => a.textContent.trim() === 'Reference');
       if (refInContainer) {
@@ -470,36 +467,32 @@ const aboutObserver = new MutationObserver(() => {
 });
 aboutObserver.observe(document.body, { childList: true, subtree: true });
 
-// Globální odchytávání kliknutí na staré / o-nas linky
+// Globální odchytávání kliknutí na /o-nas linky -> otevírá modální okno O nás
 document.addEventListener('click', (e) => {
   const link = e.target.closest('a');
   if (link) {
-    const href = link.getAttribute('href') || '';
-    const text = link.textContent.trim();
-    if (href.includes('o-nas.html') || text === 'O nás' || link.classList.contains('about-us-injected-link')) {
+    const href = (link.getAttribute('href') || '').toLowerCase();
+    const text = (link.textContent || '').trim().toLowerCase();
+    if (href.includes('o-nas') || text === 'o nás' || link.classList.contains('about-us-injected-link')) {
       e.preventDefault();
-      e.stopPropagation();
       openAboutUsModal();
     }
   }
 }, true);
 
+window.openAboutUsModal = openAboutUsModal;
+window.nnf_openAboutUs = openAboutUsModal;
+
 // --- SEO/GEO Direct Routing to Modal ---
 const checkDirectLink = () => {
   const path = window.location.pathname;
-  if (path.includes('o-nas') || path.includes('o-nas.html')) {
-    // 1. Skryjeme statický obsah stránky pod Reactem
-    const staticMain = document.querySelector('main');
-    if (staticMain) {
-      staticMain.style.display = 'none';
-    }
-    
-    // 2. Otevřeme modal automaticky
-    setTimeout(openAboutUsModal, 300);
+  const hash = window.location.hash;
+  if (path.includes('o-nas') || path.includes('o-nas.html') || hash === '#o-nas' || hash === '#about') {
+    setTimeout(openAboutUsModal, 200);
   }
 };
 
-// Rozšíříme zavírací funkci, aby při přímém vstupu vrátila URL na /
+// Rozšíříme zavírací funkci
 const originalClose = window.nnf_closeAboutUs;
 window.nnf_closeAboutUs = () => {
   if (typeof originalClose === 'function') {
@@ -511,9 +504,6 @@ window.nnf_closeAboutUs = () => {
       overlay.style.opacity = '0';
       setTimeout(() => { overlay.style.display = 'none'; document.body.style.overflow = ''; }, 300);
     }
-  }
-  if (window.location.pathname.includes('o-nas')) {
-    window.history.replaceState(null, '', '/');
   }
 };
 
