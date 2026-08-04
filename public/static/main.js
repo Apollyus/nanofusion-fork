@@ -31,19 +31,23 @@ const injectGlobalResponsiveStyles = () => {
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
       border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
     }
-    /* Ensure first hero section has proper top margin for fixed header */
+    /* Ensure hero sections have proper top margin for fixed header */
     @media (min-width: 769px) {
-      #root > div > section:first-of-type,
-      main > section:first-of-type,
       section.hero-section {
-        padding-top: clamp(11rem, 15vw, 13.5rem) !important;
+        padding-top: clamp(13rem, 15vw, 14.5rem) !important;
+      }
+      #root > div > section:first-of-type,
+      main > section:first-of-type {
+        padding-top: clamp(9.5rem, 11vw, 11rem) !important;
       }
     }
     @media (max-width: 768px) {
-      #root > div > section:first-of-type,
-      main > section:first-of-type,
       section.hero-section {
-        padding-top: 13.5rem !important;
+        padding-top: 18.5rem !important;
+      }
+      #root > div > section:first-of-type,
+      main > section:first-of-type {
+        padding-top: 12.5rem !important;
       }
     }
     input, button, select, textarea {
@@ -700,6 +704,14 @@ const observeAll = () => {
         el.style.removeProperty('display');
         el.style.display = '';
       });
+      const headerEl = toggleBtn.closest('header') || document.querySelector('header');
+      const drawerEl = document.getElementById('nav-drawer') || document.querySelector('.nav-mobile-drawer');
+      if (headerEl && (toggleBtn.classList.contains('nav-mobile-toggle') || toggleBtn.id === 'nav-toggle')) {
+        setTimeout(() => {
+          const isOpen = toggleBtn.classList.contains('open') || (drawerEl && drawerEl.classList.contains('open'));
+          headerEl.classList.toggle('menu-open', isOpen);
+        }, 10);
+      }
       setTimeout(patchNavContainers, 50);
       setTimeout(patchNavContainers, 200);
     }
@@ -717,6 +729,9 @@ const observeAll = () => {
       menuContainers.forEach(el => {
         el.style.display = 'none';
         el.classList.remove('open', 'active', 'show', 'drawer-open');
+      });
+      document.querySelectorAll('header, .nav-mobile-toggle, #nav-toggle').forEach(el => {
+        el.classList.remove('menu-open', 'open');
       });
 
       // 2. Dispatch Keyboard Escape event for modal/sheet closing (non-clicking)
@@ -786,11 +801,19 @@ const observeAll = () => {
       return;
     }
 
-    // 0.1 Pokud jsme na podstránce (např. /sluzby/cisteni-strech), odkazy v navigaci a patce MUSÍ přesměrovat na hlavní stranu!
+    // 0.1 Pokud jsme na podstránce (např. /sluzby/cisteni-strech), odkazy v navigaci a patce přesměrují na sekce na hlavní straně.
+    // POZOR: Odkazy na konkrétní podstránky služeb (např. /sluzby/cisteni-strech) MUSÍ normálně proklikávat!
     if (!isHomePage && isNavOrFooter) {
-      if (href.includes('sluzby') || text === 'služby') {
+      const cleanHref = href.replace(/\/$/, '');
+      const isSpecificServiceLink = /^\/?sluzby\/[a-z0-9-]+$/i.test(cleanHref) && !cleanHref.endsWith('/sluzby') && !cleanHref.endsWith('/#sluzby');
+
+      if (!isSpecificServiceLink && (href === '/#sluzby' || href === '#sluzby' || href === '/sluzby' || href === '/sluzby/' || text === 'služby')) {
         e.preventDefault();
         window.location.href = '/#sluzby';
+        return;
+      }
+      if (isSpecificServiceLink) {
+        // Allow normal browser navigation to the specific service subpage
         return;
       }
       if (href.includes('kalkulacka') || text.includes('konfigurát') || (text.includes('spočítejte') && !btn.classList.contains('cta-buttons'))) {

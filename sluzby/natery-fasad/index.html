@@ -103,6 +103,7 @@
     .service-main-description p {
       margin-bottom: 1rem;
     }
+
     .service-main-description p:last-child {
       margin-bottom: 0;
     }
@@ -118,6 +119,7 @@
       padding: 8px;
       z-index: 1100;
     }
+
     .nav-mobile-toggle span {
       display: block;
       width: 26px;
@@ -126,12 +128,26 @@
       border-radius: 2px;
       transition: all 0.3s ease;
     }
-    .nav-mobile-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .nav-mobile-toggle.open span:nth-child(2) { opacity: 0; }
-    .nav-mobile-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-    .nav-desktop { display: flex; }
-    .nav-cta-desktop { display: flex; }
+    .nav-mobile-toggle.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-mobile-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-mobile-toggle.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .nav-desktop {
+      display: flex;
+    }
+
+    .nav-cta-desktop {
+      display: flex;
+    }
 
     .nav-mobile-drawer {
       display: none;
@@ -149,9 +165,11 @@
       transform: translateX(100%);
       transition: transform 0.35s ease;
     }
+
     .nav-mobile-drawer.open {
       transform: translateX(0);
     }
+
     .nav-mobile-drawer a {
       display: block;
       padding: 1rem 0;
@@ -162,7 +180,11 @@
       border-bottom: 1px solid #f1f5f9;
       transition: color 0.2s;
     }
-    .nav-mobile-drawer a:hover { color: #f59e0b; }
+
+    .nav-mobile-drawer a:hover {
+      color: #f59e0b;
+    }
+
     .nav-mobile-drawer .drawer-cta {
       margin-top: 1.5rem;
       display: block;
@@ -176,16 +198,29 @@
     }
 
     /* ── RESPONSIVE BREAKPOINTS & DEVICE OPTIMIZATIONS ── */
-    html, body {
+    html,
+    body {
       overflow-x: clip;
       max-width: 100%;
     }
 
     @media (max-width: 1024px) {
-      .nav-desktop { display: none !important; }
-      .nav-cta-desktop { display: none !important; }
-      .nav-mobile-toggle { display: flex !important; }
-      .nav-mobile-drawer { display: flex; }
+      .nav-desktop {
+        display: none !important;
+      }
+
+      .nav-cta-desktop {
+        display: none !important;
+      }
+
+      .nav-mobile-toggle {
+        display: flex !important;
+      }
+
+      .nav-mobile-drawer {
+        display: flex;
+      }
+
       .hero-grid {
         grid-template-columns: 1fr !important;
         gap: 3rem !important;
@@ -193,6 +228,7 @@
     }
 
     @media (max-width: 768px) {
+
       /* Top info bar */
       .top-info-bar-inner {
         flex-direction: column;
@@ -200,6 +236,7 @@
         text-align: center;
         padding: 0.5rem 1rem !important;
       }
+
       .top-info-bar-contacts {
         gap: 1rem !important;
         flex-wrap: wrap;
@@ -208,49 +245,143 @@
       }
 
       /* Main nav */
-      .nav-logo-img { height: 42px !important; }
-      .nav-main-bar { padding: 0.6rem 1rem !important; }
+      .nav-logo-img {
+        height: 42px !important;
+      }
+
+      .nav-main-bar {
+        padding: 0.6rem 1rem !important;
+      }
 
       /* Hero section */
-      .hero-section { padding: 13.5rem 1.25rem 3rem !important; }
-      .hero-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
-      .service-hero-title { font-size: clamp(2rem, 7vw, 3.25rem) !important; line-height: 1.2 !important; }
-      .hero-subtitle { font-size: clamp(1rem, 3.5vw, 1.25rem) !important; line-height: 1.6 !important; margin-bottom: 1.75rem !important; }
-      .hero-badges { gap: 0.75rem 1.5rem !important; }
+      .hero-section {
+        padding: 18.5rem 1.25rem 3rem !important;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+      }
+
+      .service-hero-title {
+        font-size: clamp(2rem, 7vw, 3.25rem) !important;
+        line-height: 1.2 !important;
+      }
+
+      .hero-subtitle {
+        font-size: clamp(1rem, 3.5vw, 1.25rem) !important;
+        line-height: 1.6 !important;
+        margin-bottom: 1.75rem !important;
+      }
+
+      .hero-badges {
+        gap: 0.75rem 1.5rem !important;
+      }
 
       /* Calculator card */
-      .hero-calc-card { padding: 1.5rem 1.25rem !important; border-radius: 1.25rem !important; }
+      .hero-calc-card {
+        padding: 1.5rem 1.25rem !important;
+        border-radius: 1.25rem !important;
+      }
 
       /* What's included */
-      .whats-included-section { padding: 3rem 1rem !important; }
-      .whats-included-box { padding: 1.5rem 1.25rem !important; border-radius: 1.25rem !important; }
-      .benefits-grid { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
+      .whats-included-section {
+        padding: 3rem 1rem !important;
+      }
+
+      .whats-included-box {
+        padding: 1.5rem 1.25rem !important;
+        border-radius: 1.25rem !important;
+      }
+
+      .benefits-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem !important;
+      }
 
       /* Process & sections */
-      .process-section, .quote-section, .faq-section, .cta-section { padding: 3rem 1rem !important; }
-      .service-section-title { font-size: clamp(1.75rem, 5.5vw, 2.5rem) !important; }
+      .process-section,
+      .quote-section,
+      .faq-section,
+      .cta-section {
+        padding: 3rem 1rem !important;
+      }
+
+      .service-section-title {
+        font-size: clamp(1.75rem, 5.5vw, 2.5rem) !important;
+      }
 
       /* Pull quote */
-      .quote-text { font-size: 1.15rem !important; }
+      .quote-text {
+        font-size: 1.15rem !important;
+      }
 
       /* CTA */
-      .cta-buttons { flex-direction: column !important; align-items: stretch !important; gap: 0.75rem !important; }
-      .cta-buttons a, .cta-buttons button { width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
+      .cta-buttons {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
+      }
+
+      .cta-buttons a,
+      .cta-buttons button {
+        width: 100% !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+      }
 
       /* Footer */
-      .footer-root { padding: 3rem 1rem 2rem !important; }
-      .footer-grid { grid-template-columns: 1fr !important; gap: 2.25rem !important; }
-      .footer-legal { flex-direction: column !important; text-align: center !important; gap: 0.75rem !important; }
+      .footer-root {
+        padding: 3rem 1rem 2rem !important;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2.25rem !important;
+      }
+
+      .footer-legal {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 0.75rem !important;
+      }
     }
 
     @media (max-width: 520px) {
-      .step1-name-grid { grid-template-columns: 1fr !important; gap: 0.85rem !important; }
-      .hero-calc-card { padding: 1.25rem 1rem !important; }
-      .ba-container { border-width: 2.5px !important; border-radius: 1rem !important; }
-      .ba-handle-btn { width: 2.65rem !important; height: 2.65rem !important; font-size: 0.95rem !important; }
-      .ba-badge-pred, .ba-badge-po { padding: 0.35rem 0.75rem !important; font-size: 0.75rem !important; top: 0.75rem !important; }
-      .ba-badge-pred { left: 0.75rem !important; }
-      .ba-badge-po { right: 0.75rem !important; }
+      .step1-name-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.85rem !important;
+      }
+
+      .hero-calc-card {
+        padding: 1.25rem 1rem !important;
+      }
+
+      .ba-container {
+        border-width: 2.5px !important;
+        border-radius: 1rem !important;
+      }
+
+      .ba-handle-btn {
+        width: 2.65rem !important;
+        height: 2.65rem !important;
+        font-size: 0.95rem !important;
+      }
+
+      .ba-badge-pred,
+      .ba-badge-po {
+        padding: 0.35rem 0.75rem !important;
+        font-size: 0.75rem !important;
+        top: 0.75rem !important;
+      }
+
+      .ba-badge-pred {
+        left: 0.75rem !important;
+      }
+
+      .ba-badge-po {
+        right: 0.75rem !important;
+      }
     }
   </style>
 </head>
@@ -299,7 +430,8 @@
       <div
         style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
         <a href="/" style="display: flex; align-items: center; text-decoration: none;">
-          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 58px; width: auto;" data-patched="true">
+          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion"
+            style="height: 58px; width: auto;" data-patched="true">
         </a>
         <nav class="nav-desktop" style="display: flex; gap: 1rem; align-items: center;" data-nav-patched="true">
           <a href="/#sluzby"
@@ -325,7 +457,8 @@
             data-nav-patched="true">Kontakt</a>
         </nav>
         <a class="nav-cta-desktop" href="/#kalkulacka"
-          style="background: #f59e0b; color: white; padding: 0.75rem 1.8rem; border-radius: 99px; text-decoration: none; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25); transition: all 0.2s;">Spočítejte si cenu</a>
+          style="background: #f59e0b; color: white; padding: 0.75rem 1.8rem; border-radius: 99px; text-decoration: none; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25); transition: all 0.2s;">Spočítejte
+          si cenu</a>
         <!-- Hamburger toggle -->
         <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
           <span></span><span></span><span></span>
@@ -355,8 +488,11 @@
         style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr; gap: 4rem; align-items: center;">
         <div>
 
-          <h1 class="service-hero-title" style="margin-bottom: 1.75rem; font-size: 3.5rem; font-weight: 900; line-height: 1.15; color: #ffffff;"><span style="color: #ffffff;">Nátěry</span> <span style="color: #f59e0b;">fasád</span></h1>
-          <p class="hero-subtitle" style="font-size: 1.35rem; color: #cbd5e1; max-width: 700px; line-height: 1.7; margin-bottom: 2.5rem;">
+          <h1 class="service-hero-title"
+            style="margin-bottom: 1.75rem; font-size: 3.5rem; font-weight: 900; line-height: 1.15; color: #ffffff;">
+            <span style="color: #ffffff;">Nátěry</span> <span style="color: #f59e0b;">fasád</span></h1>
+          <p class="hero-subtitle"
+            style="font-size: 1.35rem; color: #cbd5e1; max-width: 700px; line-height: 1.7; margin-bottom: 2.5rem;">
             Prémiové nátěry fasád barvami Caparol se zárukou stálosti pigmentu až 14 let.</p>
           <div class="hero-badges" style="display: flex; flex-wrap: wrap; gap: 2.5rem;">
             <div
@@ -375,82 +511,113 @@
         <div class="hero-calc-card" id="kalkulacka"
           style="background: #ffffff; border-radius: 1.5rem; padding: 2.25rem; box-shadow: 0 20px 50px rgba(245, 158, 11, 0.18); color: #0f172a; border: 2.5px solid #f59e0b; position: relative;">
           <div id="m-form">
-            
+
             <!-- STEP INDICATOR -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-              <span id="m-step-badge" style="background: rgba(245, 158, 11, 0.12); color: #d97706; font-weight: 800; font-size: 0.75rem; padding: 0.35rem 0.9rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;">Část 1 ze 2: Kontakty</span>
+              <span id="m-step-badge"
+                style="background: rgba(245, 158, 11, 0.12); color: #d97706; font-weight: 800; font-size: 0.75rem; padding: 0.35rem 0.9rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;">Část
+                1 ze 2: Kontakty</span>
               <span style="font-size: 0.8rem; font-weight: 700; color: #94a3b8;">Kalkulace zdarma</span>
             </div>
 
             <!-- STEP 1: Kontaktní údaje -->
             <div id="m-step1-container" style="display: block;">
-              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Získejte přesný odhad ceny</div>
-              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte kontaktní údaje pro zaslání kalkulace:</div>
+              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Získejte přesný
+                odhad ceny</div>
+              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte kontaktní údaje pro
+                zaslání kalkulace:</div>
 
-              <div class="step1-name-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem;">
+              <div class="step1-name-grid"
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem;">
                 <div>
-                  <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Jméno *</label>
+                  <label
+                    style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Jméno
+                    *</label>
                   <input id="m-firstname" type="text" placeholder="Jan" required
-                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
+                    onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
                 </div>
                 <div>
-                  <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Příjmení *</label>
+                  <label
+                    style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Příjmení
+                    *</label>
                   <input id="m-lastname" type="text" placeholder="Novák" required
-                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
+                    onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
                 </div>
               </div>
 
               <div style="margin-bottom: 0.85rem;">
-                <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Přesná lokace *</label>
+                <label
+                  style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Přesná
+                  lokace *</label>
                 <input id="m-location" type="text" placeholder="Např. Praha 4, U Lesa 12" required
-                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
+                  onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
               </div>
 
               <div style="margin-bottom: 0.85rem;">
-                <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Telefon *</label>
+                <label
+                  style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Telefon
+                  *</label>
                 <input id="m-phone" type="tel" placeholder="+420 777 123 456" required
-                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
+                  onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
               </div>
 
               <div style="margin-bottom: 1.25rem;">
-                <label style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">E-mail *</label>
+                <label
+                  style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">E-mail
+                  *</label>
                 <input id="m-email" type="email" placeholder="jan.novak@email.cz" required
-                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
+                  onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
               </div>
 
               <button id="m-next-btn" type="button"
-                style="display: block; text-align: center; width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Pokračovat →</button>
+                style="display: block; text-align: center; width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Pokračovat
+                →</button>
             </div>
 
             <!-- STEP 2: Metry a fotografie -->
             <div id="m-step2-container" style="display: none;">
-              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Specifikace zakázky</div>
-              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte výměru plochy a nahrajte foto (nepovinné):</div>
+              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Specifikace
+                zakázky</div>
+              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte výměru plochy a nahrajte
+                foto (nepovinné):</div>
 
               <div style="margin-bottom: 1.25rem;">
-                <label style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Plocha v m² *</label>
+                <label
+                  style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Plocha
+                  v m² *</label>
                 <div style="position: relative;">
                   <input id="m-area" type="number" value="100" min="10" max="10000"
                     style="width: 100%; padding: 0.9rem; border: 1.5px solid #fed7aa; border-radius: 0.65rem; font-size: 1.2rem; font-weight: 800; background: #fffbe6; color: #0f172a; outline: none;">
-                  <span style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 800; color: #d97706;">m²</span>
+                  <span
+                    style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 800; color: #d97706;">m²</span>
                 </div>
               </div>
 
               <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Fotografie objektu (nepovinné)</label>
+                <label
+                  style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Fotografie
+                  objektu (nepovinné)</label>
                 <input id="m-photo" type="file" accept="image/*"
                   style="width: 100%; padding: 0.85rem; border: 1.5px dashed #f59e0b; border-radius: 0.65rem; font-size: 0.875rem; background: #fffbe6; color: #0f172a; cursor: pointer;">
               </div>
 
               <div style="display: flex; gap: 0.75rem;">
                 <button id="m-back-btn" type="button"
-                  style="flex: 0 0 80px; background: #f1f5f9; color: #475569; padding: 1.05rem 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.65rem; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">← Zpět</button>
+                  style="flex: 0 0 80px; background: #f1f5f9; color: #475569; padding: 1.05rem 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.65rem; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">←
+                  Zpět</button>
                 <button id="m-reveal" type="button"
-                  style="flex: 1; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Zobrazit cenu</button>
+                  style="flex: 1; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Zobrazit
+                  cenu</button>
               </div>
             </div>
 
-            <div style="text-align: center; color: #64748b; font-size: 0.8rem; margin-top: 1rem;">Nezávazné a zdarma · odpovídáme do 24 h</div>
+            <div style="text-align: center; color: #64748b; font-size: 0.8rem; margin-top: 1rem;">Nezávazné a zdarma ·
+              odpovídáme do 24 h</div>
           </div>
 
           <div id="m-result" style="display: none; text-align: center; padding: 2rem 1rem;">
@@ -472,8 +639,8 @@
           style="color: #475569; font-size: 1.15rem; margin-bottom: 1.75rem; max-width: 800px; line-height: 1.7;">
           Ve spolupráci s firmou Caparol nabízíme nátěry fasád té nejvyšší kvality.</div>
 
-        <div
-          class="whats-included-box" style="background: #fffbf0; border: 2px solid #f59e0b; border-radius: 1.25rem; padding: 2rem; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.06);">
+        <div class="whats-included-box"
+          style="background: #fffbf0; border: 2px solid #f59e0b; border-radius: 1.25rem; padding: 2rem; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.06);">
           <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
             <h3 style="font-size: 0.95rem; text-transform: uppercase; color: #d97706; font-weight: 900;">Co to obsahuje?
             </h3>
@@ -482,7 +649,8 @@
             style="color: var(--text-main); font-size: 1rem; line-height: 1.7; margin-bottom: 1.75rem; max-width: 800px;">
             Profesionální nátěry fasád prémiovou barvou Caparol. Čistá fasáda bez plísní, řas a ztráty pigmentu.
           </div>
-          <div class="benefits-grid grid grid-cols-1 md:grid-cols-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem 2rem;">
+          <div class="benefits-grid grid grid-cols-1 md:grid-cols-2"
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem 2rem;">
             
                 <div style="display: flex; gap: 1rem;">
                     <span style="color: #f59e0b; font-weight: 900; flex-shrink: 0; font-size: 1.2rem;">✓</span>
@@ -546,7 +714,8 @@
     <!-- PROCESS (Compact) -->
     <section class="process-section" id="postup" style="padding: 2.25rem 1.5rem; background: white;">
       <div style="max-width: 1050px; margin: 0 auto;">
-        <h2 class="service-section-title" style="text-align: center; margin-bottom: 0.4rem; color: #f59e0b; font-size: 1.6rem; font-weight: 900;">Jak
+        <h2 class="service-section-title"
+          style="text-align: center; margin-bottom: 0.4rem; color: #f59e0b; font-size: 1.6rem; font-weight: 900;">Jak
           čištění probíhá</h2>
         <p style="text-align: center; color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">Žádné
           překvapení — postup krok za krokem</p>
@@ -637,7 +806,8 @@
     <!-- FAQ (Matches live accordion design) -->
     <section class="faq-section" id="faq" style="padding: 2.75rem 1.5rem; background: #f8fafc;">
       <div style="max-width: 850px; margin: 0 auto;">
-        <h2 class="service-section-title" style="text-align: center; margin-bottom: 1.75rem; color: #f59e0b; font-size: 1.75rem; font-weight: 900;">
+        <h2 class="service-section-title"
+          style="text-align: center; margin-bottom: 1.75rem; color: #f59e0b; font-size: 1.75rem; font-weight: 900;">
           Na co se nás nejčastěji ptáte</h2>
         <div style="display: flex; flex-direction: column; gap: 0.85rem;">
           
@@ -668,22 +838,23 @@
     </section>
 
     <!-- CTA (Compact & Elegant) -->
-    <section class="cta-section" style="padding: 2.25rem 1.5rem; background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2332 100%);">
+    <section class="cta-section"
+      style="padding: 2.25rem 1.5rem; background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2332 100%);">
       <div style="max-width: 850px; margin: 0 auto; text-align: center; color: white;">
         <h2 style="color: #f59e0b; margin-bottom: 0.5rem; font-size: 1.6rem; font-weight: 900;">Chcete vědět více?</h2>
         <p
           style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 1.25rem; line-height: 1.5; max-width: 600px; margin-left: auto; margin-right: auto;">
           Kontaktujte nás pro nezávaznou konzultaci a kalkulaci vašeho projektu po celé ČR zdarma.</p>
-        <div class="cta-buttons" style="display: flex; gap: 0.85rem; justify-content: center; align-items: center; flex-wrap: wrap;">
-          <button
-            onclick="window.scrollToKalkulacka(event)"
+        <div class="cta-buttons"
+          style="display: flex; gap: 0.85rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+          <button onclick="window.scrollToKalkulacka(event)"
             style="background: var(--primary); color: white; padding: 0.8rem 1.8rem; border-radius: 0.55rem; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; box-shadow: 0 4px 14px rgba(245,158,11,0.3); transition: all 0.2s;"
-            onmouseover="this.style.background='#d97706';"
-            onmouseout="this.style.background='var(--primary)';"
-          >Zadat poptávku</button>
+            onmouseover="this.style.background='#d97706';" onmouseout="this.style.background='var(--primary)';">Zadat
+            poptávku</button>
           <a href="tel:+420774509409"
             style="background: transparent; color: white; padding: 0.65rem 1.6rem; border-radius: 0.55rem; border: 1.5px solid rgba(255,255,255,0.3); font-weight: 800; text-decoration: none; font-size: 0.825rem; transition: border 0.2s;"
-            onmouseover="this.style.borderColor='#f59e0b';" onmouseout="this.style.borderColor='rgba(255,255,255,0.3)';">
+            onmouseover="this.style.borderColor='#f59e0b';"
+            onmouseout="this.style.borderColor='rgba(255,255,255,0.3)';">
             +420 774 509 409</a>
         </div>
       </div>
@@ -694,13 +865,15 @@
   <!-- Premium Static Footer (Compact & Balanced Layout) -->
   <footer id="kontakt" class="footer-root"
     style="background: #111111; color: #94a3b8; padding: 3rem 1.5rem 2rem; border-top: 1px solid #1e293b; font-size: 0.875rem;">
-    <div class="footer-grid grid grid-cols-1 md:grid-cols-3" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 2.5rem;">
+    <div class="footer-grid grid grid-cols-1 md:grid-cols-3"
+      style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 2.5rem;">
 
       <!-- Left Column: Branding, Tagline & Social Icons -->
       <div>
         <img src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 48px; width: auto; margin-bottom: 1rem;"
           data-patched="true">
-        <p style="line-height: 1.6; color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.875rem;">Profesionální čištění, impregnace a
+        <p style="line-height: 1.6; color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.875rem;">Profesionální čištění,
+          impregnace a
           nátěry.<br>Již 14 let pečujeme o váš majetek po celé ČR.</p>
 
         <!-- Social Circle Icons -->
@@ -804,9 +977,12 @@
       <div>© 2026 NANOfusion s.r.o. Všechna práva vyhrazena.</div>
       <div>
         IČ: 29375363 |
-        <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" style="color: #f59e0b; font-weight: 700; text-decoration: underline;">E-shop</a> |
-        <a href="https://nanofusion-j3bs.vercel.app/admin/login" style="color: inherit; text-decoration: none;">Zaměstnanci</a> |
-        <a href="https://www.aerisq.tech" target="_blank" rel="noopener noreferrer" style="color: #94a3b8; text-decoration: none; font-weight: 600;">Created by 💚</a>
+        <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer"
+          style="color: #f59e0b; font-weight: 700; text-decoration: underline;">E-shop</a> |
+        <a href="https://nanofusion-j3bs.vercel.app/admin/login"
+          style="color: inherit; text-decoration: none;">Zaměstnanci</a> |
+        <a href="https://www.aerisq.tech" target="_blank" rel="noopener noreferrer"
+          style="color: #94a3b8; text-decoration: none; font-weight: 600;">Created by 💚</a>
       </div>
     </div>
   </footer>
@@ -828,19 +1004,22 @@
 
   <!-- Mobile Hamburger Menu Script -->
   <script>
-    (function() {
+    (function () {
       const toggle = document.getElementById('nav-toggle');
       const drawer = document.getElementById('nav-drawer');
+      const header = toggle ? toggle.closest('header') : document.querySelector('header');
       if (!toggle || !drawer) return;
-      toggle.addEventListener('click', function() {
+      toggle.addEventListener('click', function () {
         const open = drawer.classList.toggle('open');
         toggle.classList.toggle('open', open);
+        if (header) header.classList.toggle('menu-open', open);
         document.body.style.overflow = open ? 'hidden' : '';
       });
-      drawer.querySelectorAll('a').forEach(function(a) {
-        a.addEventListener('click', function() {
+      drawer.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () {
           drawer.classList.remove('open');
           toggle.classList.remove('open');
+          if (header) header.classList.remove('menu-open');
           document.body.style.overflow = '';
         });
       });
