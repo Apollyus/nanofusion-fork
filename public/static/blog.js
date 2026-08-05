@@ -84,10 +84,10 @@ const openBlogDetail = (post) => {
     }
 
     overlay.innerHTML = `
-        <div style="background:white; width:100%; max-width:840px; max-height:90vh; border-radius:32px; overflow-y:auto; position:relative; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
-            <button onclick="document.getElementById('blog-modal-overlay').style.display='none'" style="position:absolute; top:20px; right:20px; background:#f1f5f9; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:20px; z-index:20; font-weight:bold; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.15); transition:all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">&times;</button>
-            <div style="padding:2.5rem;">
-                <div style="position:relative; height:380px; margin-bottom:2rem; border-radius:1.5rem; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.1);">
+        <div style="background:#ffffff; width:100%; max-width:840px; max-height:88vh; border-radius:32px; overflow-y:auto; position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.4); margin:auto; box-sizing:border-box;">
+            <button onclick="document.getElementById('blog-modal-overlay').style.display='none'; document.body.style.overflow='';" style="position:absolute; top:24px; right:24px; left:auto !important; background:#f1f5f9; border:none; width:44px; height:44px; border-radius:50%; cursor:pointer; font-size:24px; z-index:100; font-weight:bold; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(0,0,0,0.15); transition:all 0.2s; color:#0f172a; outline:none;" onmouseover="this.style.background='#e2e8f0'; this.style.transform='scale(1.05)';" onmouseout="this.style.background='#f1f5f9'; this.style.transform='scale(1)';" aria-label="Zavřít článek">&times;</button>
+            <div style="padding: 3.75rem 2.5rem 2.5rem 2.5rem;">
+                <div style="position:relative; height:380px; margin-top:0.5rem; margin-bottom:2rem; border-radius:1.5rem; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.1);">
                     <img src="${window.nnf_optimizeImage(post.image, 1080)}" alt="${post.title || 'Blog NANOfusion'}" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div>
@@ -104,6 +104,13 @@ const openBlogDetail = (post) => {
         </div>
     `;
     overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    overlay.onclick = (e) => {
+        if (e.target === overlay) {
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    };
 };
 
 const injectBlog = async () => {

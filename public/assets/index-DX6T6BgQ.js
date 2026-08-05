@@ -20544,13 +20544,15 @@ function YO() {
                     S.jsx(Uo, {
                       className:
                         "bg-primary hover:bg-primary/90 text-white font-semibold px-6 rounded-full hidden sm:flex",
-                      onClick: () => {
-                        var i;
-                        return (i = document.getElementById("kontakt")) == null
-                          ? void 0
-                          : i.scrollIntoView({ behavior: "smooth" });
+                      onClick: (ev) => {
+                        if (ev) ev.preventDefault();
+                        if (window.scrollToKalkulacka) { window.scrollToKalkulacka(ev); }
+                        else {
+                          var i = document.getElementById("kalkulacka") || document.getElementById("m-form") || document.getElementById("kontakt");
+                          if (i) i.scrollIntoView({ behavior: "smooth" });
+                        }
                       },
-                      children: "Nezávazná poptávka",
+                      children: "Spočítat cenu",
                     }),
                     S.jsx("button", {
                       className:
@@ -20584,13 +20586,16 @@ function YO() {
                   S.jsx(Uo, {
                     className:
                       "w-full bg-primary hover:bg-primary/90 text-white font-semibold rounded-full mt-3",
-                    onClick: () => {
-                      var i;
-                      (s(!1),
-                        (i = document.getElementById("kontakt")) == null ||
-                          i.scrollIntoView({ behavior: "smooth" }));
+                    onClick: (ev) => {
+                      if (ev) ev.preventDefault();
+                      s(!1);
+                      if (window.scrollToKalkulacka) { window.scrollToKalkulacka(ev); }
+                      else {
+                        var i = document.getElementById("kalkulacka") || document.getElementById("m-form") || document.getElementById("kontakt");
+                        if (i) i.scrollIntoView({ behavior: "smooth" });
+                      }
                     },
-                    children: "Nezávazná poptávka",
+                    children: "Spočítat cenu",
                   }),
                 ],
               }),

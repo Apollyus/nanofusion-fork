@@ -131,9 +131,30 @@ header.menu-open {
   box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3) !important;
 }
 
-.nav-mobile-toggle {
-  z-index: 1000000 !important;
-  position: relative !important;
+@media (min-width: 1025px) {
+  .nav-mobile-toggle,
+  #nav-toggle,
+  .nav-mobile-drawer,
+  header button.lg\:hidden,
+  header div.lg\:hidden {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .nav-mobile-toggle,
+  #nav-toggle {
+    display: flex !important;
+    z-index: 1000000 !important;
+    position: relative !important;
+  }
 }
 
 header img:not(.chat-logo):not(.ai-chat-launcher img), 

@@ -95,8 +95,9 @@ const injectCalculator = () => {
 
     const calculatorHtml = `
       <section class="calc-section animate-fade-in" id="kalkulacka" style="scroll-margin-top: 100px; background: #ffffff; border-radius: 2rem; border: 1px solid #edf2f7; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 4rem;">
-        <div class="calc-container" id="calc-steps" style="max-width: 700px; margin: 0 auto; padding: 2rem 1rem;">
-          <h2 class="calc-title" style="margin-bottom: 2rem; text-align: center;">Konfigurátor</h2>
+        <div class="calc-container" id="calc-steps" style="max-width: 580px; margin: 0 auto; padding: 1.5rem 1rem;">
+          <h2 class="calc-title" style="margin-bottom: 0.5rem; text-align: center; color: #f59e0b;">Konfigurátor</h2>
+          <p style="text-align: center; color: #64748b; font-size: 0.85rem; line-height: 1.5; margin-bottom: 1.5rem; max-width: 620px; margin-left: auto; margin-right: auto;">Tento konfigurátor slouží ke zjištění orientační ceny. Ceny jsou uvedeny bez DPH, které činí 12 % nebo 21 % dle typu subjektu. Po vyplnění formuláře vás bude kontaktovat náš technik a na základě informací vám vytvoří finální cenovou nabídku, která vás k ničemu nezavazuje a je zcela ZDARMA.</p>
           
           <div style="display: flex; gap: 8px; margin-bottom: 3rem; justify-content: center;">
             <div class="calc-progress-bar" id="progress-1" style="flex: 1; height: 6px; background: #F59E0B; border-radius: 10px;"></div>
@@ -150,9 +151,15 @@ const injectCalculator = () => {
                 <input class="calc-input" id="calc-phone" name="phone" placeholder="Telefonní číslo *" style="width: 100%; border-radius: 0.75rem;" type="tel">
                 <input class="calc-input" id="calc-email" name="email" placeholder="E-mail *" style="width: 100%; border-radius: 0.75rem;" type="email">
                 <div style="margin-top: 0.5rem; text-align: left;">
-                  <label style="display: block; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: #64748b; margin-bottom: 0.4rem;">Fotografie objektu (povinné – min. 2 fotografie) *</label>
+                  <label style="display: block; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: #64748b; margin-bottom: 0.4rem;">Fotografie objektu (nepovinné)</label>
                   <input class="calc-input" id="calc-photo" name="photo" type="file" accept="image/*" multiple style="width: 100%; padding: 0.6rem; border: 1px dashed #cbd5e1; border-radius: 0.75rem; background: #ffffff; font-size: 0.85rem; cursor: pointer;">
                   <div id="calc-photo-info" style="margin-top: 0.4rem; font-size: 0.85rem; font-weight: 700; color: #64748b;"></div>
+                </div>
+                <div style="margin-top: 0.75rem; text-align: left;">
+                  <label style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.8rem; color: #475569; cursor: pointer; line-height: 1.4;">
+                    <input type="checkbox" id="calc-gdpr" required style="margin-top: 0.15rem; cursor: pointer; width: 16px; height: 16px; flex-shrink: 0;">
+                    <span>Souhlasím se zpracováním osobních údajů v souladu s <a href="/gdpr" class="nnf-gdpr-link" style="color: #f59e0b; font-weight: 700; text-decoration: underline;">GDPR</a> pro účely vytvoření cenové nabídky. *</span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -197,13 +204,9 @@ const injectCalculator = () => {
       photoInput.addEventListener('change', () => {
         const count = photoInput.files ? photoInput.files.length : 0;
         if (count === 0) {
-          photoInfo.textContent = '❌ Žádná fotografie nevybrána (požadovány min. 2).';
-          photoInfo.style.color = '#ef4444';
-        } else if (count === 1) {
-          photoInfo.textContent = '⚠️ Vybrána 1 fotografie (ještě 1 chybí - zadejte min. 2).';
-          photoInfo.style.color = '#f59e0b';
+          photoInfo.textContent = '';
         } else {
-          photoInfo.textContent = `✅ Vybrány ${count} fotografie.`;
+          photoInfo.textContent = `✅ Vybráno ${count} fotografií.`;
           photoInfo.style.color = '#10b981';
         }
       });
@@ -306,9 +309,9 @@ const injectCalculator = () => {
         return;
       }
 
-      const files = photoInputEl?.files ? Array.from(photoInputEl.files) : [];
-      if (files.length < 2) {
-        alert('Prosím nahrajte alespoň 2 fotografie objektu (fotografie jsou povinné).');
+      const gdprInput = document.getElementById('calc-gdpr');
+      if (gdprInput && !gdprInput.checked) {
+        alert('Prosím potvrďte souhlas se zpracováním osobních údajů (GDPR).');
         return;
       }
 

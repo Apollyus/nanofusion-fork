@@ -39,7 +39,7 @@
       "destination": "/static/$1"
     },
     {
-      "source": "/((?!admin|api|assets|static|faq|o-nas|sluzby).*)",
+      "source": "/((?!admin|api|assets|static|faq|o-nas|poptavka|obchodni-podminky|gdpr|sluzby).*)",
       "destination": "/index.html"
     }
   ],

@@ -143,10 +143,19 @@
 
     .nav-desktop {
       display: flex;
+      position: relative;
+      z-index: 1;
+      flex-shrink: 1;
     }
 
     .nav-cta-desktop {
-      display: flex;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 99;
+      flex-shrink: 0;
+      cursor: pointer;
     }
 
     .nav-mobile-drawer {
@@ -255,7 +264,7 @@
 
       /* Hero section */
       .hero-section {
-        padding: 18.5rem 1.25rem 3rem !important;
+        padding: 14.5rem 1.25rem 3rem !important;
       }
 
       .hero-grid {
@@ -395,9 +404,9 @@
 
     <!-- Top Info Bar (Black background, white text) -->
     <div
-      style="background: #1c1c1e; color: #e5e5ea; font-size: 0.85rem; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.05);">
+      style="background: #1c1c1e; color: #e5e5ea; font-size: 0.8rem; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.05);">
       <div class="top-info-bar-inner"
-        style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 2.5rem;">
+        style="max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 1.5rem;">
         <div>Jezdíme po celé ČR · Po–Pá 8:00–17:00</div>
         <div class="top-info-bar-contacts" style="display: flex; gap: 1.5rem; align-items: center;">
           <a href="tel:+420774509409"
@@ -426,39 +435,35 @@
     </div>
 
     <!-- Main Navigation Bar (White background, dark text) -->
-    <div class="nav-main-bar" style="background: transparent; padding: 0.85rem 2.5rem;">
+    <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 1.5rem;">
       <div
-        style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+        style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
         <a href="/" style="display: flex; align-items: center; text-decoration: none;">
           <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion"
-            style="height: 58px; width: auto;" data-patched="true">
+            style="height: 42px; width: auto;" data-patched="true">
         </a>
-        <nav class="nav-desktop" style="display: flex; gap: 1rem; align-items: center;" data-nav-patched="true">
+        <nav class="nav-desktop" style="display: flex; gap: 0.35rem; align-items: center;" data-nav-patched="true">
           <a href="/#sluzby"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Služby</a>
-          <a href="/#kalkulacka"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Konfigurátor</a>
           <a href="/#realizace"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Reference</a>
           <a href="/#blog"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Blog</a>
           <a href="/#galerie"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Galerie</a>
           <a href="/#o-nas"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">O nás</a>
           <a href="/#kontakt"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 0.9rem; border-radius: 0.5rem; transition: all 0.2s;"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
             data-nav-patched="true">Kontakt</a>
         </nav>
         <a class="nav-cta-desktop" href="/#kalkulacka"
-          style="background: #f59e0b; color: white; padding: 0.75rem 1.8rem; border-radius: 99px; text-decoration: none; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25); transition: all 0.2s;">Spočítejte
-          si cenu</a>
+          style="background: #f59e0b; color: white; padding: 0.55rem 1.35rem; border-radius: 99px; text-decoration: none; font-weight: 700; font-size: 0.875rem; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25); transition: all 0.2s; position: relative; z-index: 99; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">Spočítat cenu</a>
         <!-- Hamburger toggle -->
         <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
           <span></span><span></span><span></span>
@@ -468,13 +473,12 @@
     <!-- Mobile Drawer -->
     <div class="nav-mobile-drawer" id="nav-drawer">
       <a href="/#sluzby">Služby</a>
-      <a href="/#kalkulacka">Konfigurátor</a>
       <a href="/#realizace">Reference</a>
       <a href="/#blog">Blog</a>
       <a href="/#galerie">Galerie</a>
       <a href="/#o-nas">O nás</a>
       <a href="/#kontakt">Kontakt</a>
-      <a href="/#kalkulacka" class="drawer-cta">Spočítejte si cenu</a>
+      <a href="/#kalkulacka" class="drawer-cta">Spočítat cenu</a>
     </div>
   </header>
 
@@ -496,127 +500,129 @@
             Komplexní čištění průmyslových hal, výrobních provozů a skladů za plného chodu.</p>
           <div class="hero-badges" style="display: flex; flex-wrap: wrap; gap: 2.5rem;">
             <div
-              style="display: flex; align-items: center; gap: 0.6rem; color: #cbd5e1; font-size: 0.95rem; font-weight: 600;">
+              style="display: flex; align-items: center; gap: 0.6rem; color: #f59e0b; font-size: 0.95rem; font-weight: 700;">
               14 let zkušeností</div>
             <div
-              style="display: flex; align-items: center; gap: 0.6rem; color: #cbd5e1; font-size: 0.95rem; font-weight: 600;">
+              style="display: flex; align-items: center; gap: 0.6rem; color: #f59e0b; font-size: 0.95rem; font-weight: 700;">
               950+ dokončených projektů</div>
             <div
-              style="display: flex; align-items: center; gap: 0.6rem; color: #cbd5e1; font-size: 0.95rem; font-weight: 600;">
+              style="display: flex; align-items: center; gap: 0.6rem; color: #f59e0b; font-size: 0.95rem; font-weight: 700;">
               100% bezplatná konzultace</div>
+          </div>
+          <div class="hero-contact-bubbles" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem;">
+            <a href="tel:+420774509409" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 9999px; padding: 0.6rem 1.25rem; color: #ffffff; font-size: 0.95rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(245, 158, 11, 0.25)'; this.style.borderColor='#f59e0b';" onmouseout="this.style.background='rgba(255, 255, 255, 0.12)'; this.style.borderColor='rgba(255, 255, 255, 0.2)';">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              <span>+420 774 509 409</span>
+            </a>
+            <a href="mailto:info@nanofusion.cz" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 9999px; padding: 0.6rem 1.25rem; color: #ffffff; font-size: 0.95rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(245, 158, 11, 0.25)'; this.style.borderColor='#f59e0b';" onmouseout="this.style.background='rgba(255, 255, 255, 0.12)'; this.style.borderColor='rgba(255, 255, 255, 0.2)';">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <span>info@nanofusion.cz</span>
+            </a>
           </div>
         </div>
 
         <!-- QUICK CALC CARD (2-STEP FLOW) -->
         <div class="hero-calc-card" id="kalkulacka"
-          style="background: #ffffff; border-radius: 1.5rem; padding: 2.25rem; box-shadow: 0 20px 50px rgba(245, 158, 11, 0.18); color: #0f172a; border: 2.5px solid #f59e0b; position: relative;">
+          style="background: #ffffff; border-radius: 1.35rem; padding: 1.15rem 1.35rem; box-shadow: 0 20px 50px rgba(245, 158, 11, 0.18); color: #0f172a; border: 2.5px solid #f59e0b; position: relative;">
           <div id="m-form">
 
             <!-- STEP INDICATOR -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
               <span id="m-step-badge"
-                style="background: rgba(245, 158, 11, 0.12); color: #d97706; font-weight: 800; font-size: 0.75rem; padding: 0.35rem 0.9rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;">Část
+                style="background: rgba(245, 158, 11, 0.12); color: #d97706; font-weight: 800; font-size: 0.725rem; padding: 0.3rem 0.8rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;">Část
                 1 ze 2: Kontakty</span>
-              <span style="font-size: 0.8rem; font-weight: 700; color: #94a3b8;">Kalkulace zdarma</span>
+              <span style="font-size: 0.725rem; font-weight: 800; color: #d97706; background: rgba(245, 158, 11, 0.12); padding: 0.3rem 0.8rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;">Kalkulace zdarma</span>
             </div>
 
             <!-- STEP 1: Kontaktní údaje -->
             <div id="m-step1-container" style="display: block;">
-              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Získejte přesný
-                odhad ceny</div>
-              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte kontaktní údaje pro
-                zaslání kalkulace:</div>
+              <div style="font-weight: 900; font-size: 1.15rem; margin-bottom: 0.35rem; color: #f59e0b;">Konfigurátor</div>
+              <div style="color: #64748b; font-size: 0.8rem; margin-bottom: 0.85rem; line-height: 1.45;">Tento konfigurátor slouží ke zjištění orientační ceny. Ceny jsou uvedeny bez DPH, které činí 12 % nebo 21 % dle typu subjektu. Po vyplnění formuláře vás bude kontaktovat náš technik a na základě informací vám vytvoří finální cenovou nabídku, která vás k ničemu nezavazuje a je zcela ZDARMA.</div>
 
-              <div class="step1-name-grid"
-                style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem;">
-                <div>
-                  <label
-                    style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Jméno
-                    *</label>
-                  <input id="m-firstname" type="text" placeholder="Jan" required
-                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
-                    onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
-                </div>
-                <div>
-                  <label
-                    style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Příjmení
-                    *</label>
-                  <input id="m-lastname" type="text" placeholder="Novák" required
-                    style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
-                    onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
-                </div>
+              <div style="margin-bottom: 0.65rem;">
+                <label
+                  style="display: block; font-weight: 800; margin-bottom: 0.3rem; font-size: 0.725rem; text-transform: uppercase; color: #475569;">Jméno a Příjmení *</label>
+                <input id="m-firstname" type="text" placeholder="Jan Novák" required
+                  style="width: 100%; padding: 0.65rem 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.6rem; font-size: 0.9rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
+                  onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
               </div>
 
-              <div style="margin-bottom: 0.85rem;">
+              <div style="margin-bottom: 0.65rem;">
                 <label
-                  style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Přesná
+                  style="display: block; font-weight: 800; margin-bottom: 0.3rem; font-size: 0.725rem; text-transform: uppercase; color: #475569;">Přesná
                   lokace *</label>
                 <input id="m-location" type="text" placeholder="Např. Praha 4, U Lesa 12" required
-                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
+                  style="width: 100%; padding: 0.65rem 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.6rem; font-size: 0.9rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
+                  onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+              </div>
+
+              <div style="margin-bottom: 0.65rem;">
+                <label
+                  style="display: block; font-weight: 800; margin-bottom: 0.3rem; font-size: 0.725rem; text-transform: uppercase; color: #475569;">Telefon
+                  *</label>
+                <input id="m-phone" type="tel" placeholder="+420 777 123 456" required
+                  style="width: 100%; padding: 0.65rem 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.6rem; font-size: 0.9rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
                   onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
               </div>
 
               <div style="margin-bottom: 0.85rem;">
                 <label
-                  style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Telefon
+                  style="display: block; font-weight: 800; margin-bottom: 0.3rem; font-size: 0.725rem; text-transform: uppercase; color: #475569;">E-mail
                   *</label>
-                <input id="m-phone" type="tel" placeholder="+420 777 123 456" required
-                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
+                <input id="m-email" type="email" placeholder="jan.novak@email.cz" required
+                  style="width: 100%; padding: 0.65rem 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.6rem; font-size: 0.9rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
                   onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
               </div>
 
-              <div style="margin-bottom: 1.25rem;">
-                <label
-                  style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">E-mail
-                  *</label>
-                <input id="m-email" type="email" placeholder="jan.novak@email.cz" required
-                  style="width: 100%; padding: 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 0.65rem; font-size: 0.95rem; background: #ffffff; color: #0f172a; outline: none; transition: border 0.2s;"
-                  onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#cbd5e1'">
+              <div style="margin-bottom: 0.85rem;">
+                <label style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.725rem; color: #475569; cursor: pointer; line-height: 1.4;">
+                  <input id="m-gdpr" type="checkbox" required style="margin-top: 0.15rem; cursor: pointer; width: 15px; height: 15px; flex-shrink: 0;">
+                  <span>Souhlasím se zpracováním osobních údajů v souladu s <a href="/gdpr" class="nnf-gdpr-link" style="color: #f59e0b; font-weight: 700; text-decoration: underline;">GDPR</a> pro účely vytvoření cenové nabídky. *</span>
+                </label>
               </div>
 
               <button id="m-next-btn" type="button"
-                style="display: block; text-align: center; width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Pokračovat
+                style="display: block; text-align: center; width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 0.8rem; border: none; border-radius: 0.6rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Pokračovat
                 →</button>
             </div>
 
             <!-- STEP 2: Metry a fotografie -->
             <div id="m-step2-container" style="display: none;">
-              <div style="font-weight: 900; font-size: 1.2rem; margin-bottom: 0.4rem; color: #0f172a;">Specifikace
+              <div style="font-weight: 900; font-size: 1.15rem; margin-bottom: 0.25rem; color: #0f172a;">Specifikace
                 zakázky</div>
-              <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.25rem;">Zadejte výměru plochy a nahrajte
-                foto (nepovinné):</div>
+              <div style="color: #64748b; font-size: 0.825rem; margin-bottom: 0.85rem;">Zadejte výměru plochy a přiložte fotografii, abychom si udělali lepší představu o stavu povrchu (pokud fotku nemáte, nic se neděje).</div>
 
-              <div style="margin-bottom: 1.25rem;">
+              <div style="margin-bottom: 0.85rem;">
                 <label
-                  style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Plocha
+                  style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Plocha
                   v m² *</label>
                 <div style="position: relative;">
                   <input id="m-area" type="number" value="100" min="10" max="10000"
-                    style="width: 100%; padding: 0.9rem; border: 1.5px solid #fed7aa; border-radius: 0.65rem; font-size: 1.2rem; font-weight: 800; background: #fffbe6; color: #0f172a; outline: none;">
+                    style="width: 100%; padding: 0.75rem; border: 1.5px solid #fed7aa; border-radius: 0.6rem; font-size: 1.1rem; font-weight: 800; background: #fffbe6; color: #0f172a; outline: none;">
                   <span
                     style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 800; color: #d97706;">m²</span>
                 </div>
               </div>
 
-              <div style="margin-bottom: 1.5rem;">
+              <div style="margin-bottom: 1rem;">
                 <label
-                  style="display: block; font-weight: 800; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #475569;">Fotografie
+                  style="display: block; font-weight: 800; margin-bottom: 0.4rem; font-size: 0.75rem; text-transform: uppercase; color: #475569;">Fotografie
                   objektu (nepovinné)</label>
                 <input id="m-photo" type="file" accept="image/*"
-                  style="width: 100%; padding: 0.85rem; border: 1.5px dashed #f59e0b; border-radius: 0.65rem; font-size: 0.875rem; background: #fffbe6; color: #0f172a; cursor: pointer;">
+                  style="width: 100%; padding: 0.65rem 0.85rem; border: 1.5px dashed #f59e0b; border-radius: 0.6rem; font-size: 0.85rem; background: #fffbe6; color: #0f172a; cursor: pointer;">
               </div>
 
-              <div style="display: flex; gap: 0.75rem;">
+              <div style="display: flex; gap: 0.65rem;">
                 <button id="m-back-btn" type="button"
-                  style="flex: 0 0 80px; background: #f1f5f9; color: #475569; padding: 1.05rem 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.65rem; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">←
+                  style="flex: 0 0 75px; background: #f1f5f9; color: #475569; padding: 0.8rem 0.4rem; border: 1px solid #cbd5e1; border-radius: 0.6rem; font-weight: 700; cursor: pointer; font-size: 0.825rem; transition: all 0.2s;">←
                   Zpět</button>
                 <button id="m-reveal" type="button"
-                  style="flex: 1; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.05rem; border: none; border-radius: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Zobrazit
+                  style="flex: 1; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 0.8rem; border: none; border-radius: 0.6rem; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: all 0.2s;">Zobrazit
                   cenu</button>
               </div>
             </div>
 
-            <div style="text-align: center; color: #64748b; font-size: 0.8rem; margin-top: 1rem;">Nezávazné a zdarma ·
+            <div style="text-align: center; color: #64748b; font-size: 0.775rem; margin-top: 0.65rem;">Nezávazné a zdarma ·
               odpovídáme do 24 h</div>
           </div>
 
@@ -843,11 +849,9 @@
 
       <!-- Left Column: Branding, Tagline & Social Icons -->
       <div>
-        <img src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 48px; width: auto; margin-bottom: 1rem;"
+        <img src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 48px; width: auto; margin-bottom: 0.75rem;"
           data-patched="true">
-        <p style="line-height: 1.6; color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.875rem;">Profesionální čištění,
-          impregnace a
-          nátěry.<br>Již 14 let pečujeme o váš majetek po celé ČR.</p>
+        <p style="line-height: 1.6; color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.875rem;">Profesionální čištění, impregnace a nátěry.<br>Již 14 let pečujeme o váš majetek po celé ČR.</p>
 
         <!-- Social Circle Icons -->
         <div style="display: flex; gap: 0.6rem;">
@@ -948,8 +952,10 @@
     <div class="footer-legal"
       style="max-width: 1200px; margin: 2.5rem auto 0; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; font-size: 0.775rem; color: #64748b;">
       <div>© 2026 NANOfusion s.r.o. Všechna práva vyhrazena.</div>
-      <div>
-        IČ: 29375363 |
+      <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+        <span>IČ: 29375363</span> |
+        <a href="/obchodni-podminky" style="color: #94a3b8; text-decoration: underline;">Obchodní podmínky</a> |
+        <a href="/gdpr" style="color: #94a3b8; text-decoration: underline;">Ochrana osobních údajů (GDPR)</a> |
         <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer"
           style="color: #f59e0b; font-weight: 700; text-decoration: underline;">E-shop</a> |
         <a href="https://nanofusion-j3bs.vercel.app/admin/login"

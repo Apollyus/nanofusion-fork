@@ -1151,13 +1151,34 @@ async function syncContent() {
             console.log('✅ poptavka/index.html synchronized.');
         }
 
+        // Sync legal pages (obchodni-podminky & gdpr)
+        for (const pageName of ['obchodni-podminky', 'gdpr']) {
+            const pageSrc = path.join('public', pageName, 'index.html');
+            if (fs.existsSync(pageSrc)) {
+                const pageContent = fs.readFileSync(pageSrc, 'utf8');
+                
+                const rootDir = path.join(pageName);
+                if (!fs.existsSync(rootDir)) fs.mkdirSync(rootDir, { recursive: true });
+                fs.writeFileSync(path.join(rootDir, 'index.html'), pageContent);
+                fs.writeFileSync(`${pageName}.html`, pageContent);
+
+                const adminDir = path.join('admin-panel', 'public', pageName);
+                if (!fs.existsSync(adminDir)) fs.mkdirSync(adminDir, { recursive: true });
+                fs.writeFileSync(path.join(adminDir, 'index.html'), pageContent);
+                
+                console.log(`✅ ${pageName}/index.html synchronized.`);
+            }
+        }
+
         // Generate sitemap.xml
         const todayStr = new Date().toISOString().split('T')[0];
         const sitemapUrls = [
             'https://nanofusion.cz/',
             'https://nanofusion.cz/o-nas',
             'https://nanofusion.cz/faq',
-            'https://nanofusion.cz/poptavka'
+            'https://nanofusion.cz/poptavka',
+            'https://nanofusion.cz/obchodni-podminky',
+            'https://nanofusion.cz/gdpr'
         ];
         
         const czechSlugMap = {

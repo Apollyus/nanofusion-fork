@@ -150,6 +150,18 @@ export function InquiryForm() {
           />
         </div>
 
+        <div className="space-y-1.5 pt-2">
+          <label className="flex items-start gap-2.5 text-xs font-semibold text-slate-600 cursor-pointer select-none">
+            <input 
+              type="checkbox"
+              required
+              {...register('gdpr' as any, { required: true })}
+              className="mt-0.5 rounded border-slate-300 text-amber-500 focus:ring-amber-500 w-4 h-4 cursor-pointer flex-shrink-0"
+            />
+            <span>Souhlasím se zpracováním osobních údajů v souladu s GDPR pro účely vytvoření cenové nabídky. *</span>
+          </label>
+        </div>
+
         <button 
           type="submit"
           disabled={isSubmitting}

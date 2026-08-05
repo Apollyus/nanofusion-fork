@@ -1,3 +1,5 @@
+import './legal-modal.js';
+
 // Global Responsive & Touch Device Optimizations (Frosted Glassmorphism Header)
 const injectGlobalResponsiveStyles = () => {
   if (document.getElementById('nnf-responsive-styles')) return;
@@ -16,7 +18,7 @@ const injectGlobalResponsiveStyles = () => {
       top: 0 !important;
       left: 0 !important;
       right: 0 !important;
-      z-index: 1000 !important;
+      z-index: 100000 !important;
       background: rgba(255, 255, 255, 0.88) !important;
       backdrop-filter: blur(16px) saturate(180%) !important;
       -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
@@ -31,27 +33,108 @@ const injectGlobalResponsiveStyles = () => {
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
       border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
     }
-    /* Ensure hero sections have proper top margin for fixed header */
+    /* Enlarge hero video section height slightly */
     @media (min-width: 769px) {
       section.hero-section {
-        padding-top: clamp(13rem, 15vw, 14.5rem) !important;
+        padding-top: clamp(11rem, 13vw, 13.5rem) !important;
       }
       #root > div > section:first-of-type,
       main > section:first-of-type {
-        padding-top: clamp(9.5rem, 11vw, 11rem) !important;
+        padding-top: clamp(9.5rem, 10.5vw, 10.5rem) !important;
+        padding-bottom: 2.75rem !important;
+      }
+      #root > div > section:first-of-type > div.relative,
+      main > section:first-of-type > div.relative {
+        padding-top: 3rem !important;
+        padding-bottom: 2.5rem !important;
+      }
+      #root > div > section:nth-of-type(2),
+      main > section:nth-of-type(2) {
+        padding-top: 2rem !important;
       }
     }
     @media (max-width: 768px) {
-      section.hero-section {
-        padding-top: 18.5rem !important;
-      }
+      section.hero-section,
+      .hero-section,
       #root > div > section:first-of-type,
       main > section:first-of-type {
-        padding-top: 12.5rem !important;
+        padding-top: 14.5rem !important;
+        padding-bottom: 2.5rem !important;
+      }
+      #root > div > section:nth-of-type(2),
+      main > section:nth-of-type(2) {
+        padding-top: 2rem !important;
       }
     }
     input, button, select, textarea {
       font-family: inherit;
+    }
+    @media (min-width: 1025px) {
+      .nav-mobile-toggle,
+      #nav-toggle,
+      .nav-mobile-drawer,
+      header button.lg\:hidden,
+      header div.lg\:hidden {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        opacity: 0 !important;
+      }
+    }
+    /* STRV-grade 100% full-surface button clickability & z-index isolation */
+    .nav-cta-desktop, .drawer-cta {
+      position: relative !important;
+      z-index: 100001 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+      cursor: pointer !important;
+      user-select: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      box-sizing: border-box !important;
+      pointer-events: auto !important;
+    }
+    a.bg-amber-500, a.bg-primary, button.bg-primary, a[href*="kalkulacka"], [data-hero-btn-type], [class*="hero"] button, [class*="hero"] a {
+      position: relative !important;
+      z-index: 10 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+      cursor: pointer !important;
+      user-select: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      box-sizing: border-box !important;
+      pointer-events: auto !important;
+    }
+    .nav-desktop, header nav {
+      position: relative !important;
+      z-index: 1 !important;
+      flex-shrink: 1 !important;
+    }
+    .nav-cta-desktop *, .drawer-cta *, a.bg-amber-500 *, a.bg-primary *, button.bg-primary *, a[href*="kalkulacka"] *, [data-hero-btn-type] *, [class*="hero"] button *, [class*="hero"] a * {
+      pointer-events: none !important;
+    }
+    /* Ensure FAQ/Reviews/Accordion Bubbles are strictly LEFT-ALIGNED */
+    .faq-toggle, .faq-item button, [class*="faq"] button, [class*="accordion"] button {
+      text-align: left !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      display: flex !important;
+      width: 100% !important;
+    }
+    .faq-toggle span, .faq-item button span, [class*="faq"] button span {
+      text-align: left !important;
+    }
+    /* Hero Badges Orange Color Styling */
+    .hero-badges > div, .hero-badges-row > div {
+      color: #f59e0b !important;
+      font-weight: 700 !important;
     }
     /* Touch & Mobile device typography & input zoom prevention */
     @media (max-width: 768px) {
@@ -382,16 +465,22 @@ const observeAll = () => {
   const heroHeading = document.querySelector('h1.font-heading');
   if (heroHeading && (heroHeading.textContent.includes('co jste vybudovali') || heroHeading.textContent.includes('Čistíme')) && !heroHeading.dataset.updated) {
     syncHeroText(heroHeading);
-    heroHeading.style.fontSize = 'min(7vw, 64px)';
-    heroHeading.style.lineHeight = '1.1';
+    heroHeading.style.fontSize = 'min(6vw, 56px)';
+    heroHeading.style.lineHeight = '1.12';
     heroHeading.style.fontWeight = '900';
     heroHeading.style.letterSpacing = '-0.02em';
 
     const parentContainer = heroHeading.closest('.max-w-2xl') || heroHeading.parentElement;
     if (parentContainer) {
-      parentContainer.style.maxWidth = '1000px';
+      parentContainer.style.maxWidth = '920px';
       parentContainer.classList.remove('max-w-2xl');
       parentContainer.classList.add('max-w-4xl');
+      const p = parentContainer.querySelector('p');
+      if (p) {
+        p.style.fontSize = 'clamp(1.05rem, 1.3vw, 1.2rem)';
+        p.style.marginTop = '1rem';
+        p.style.lineHeight = '1.55';
+      }
     }
     heroHeading.dataset.updated = 'true';
   }
@@ -444,11 +533,20 @@ const observeAll = () => {
       if (e.stopPropagation) e.stopPropagation();
     }
 
+    // Safely close case study modal if open
+    const caseModal = document.getElementById('case-study-modal');
+    if (caseModal) caseModal.style.display = 'none';
+    document.body.style.overflow = '';
+    document.body.style.pointerEvents = '';
+    if (window.location.hash.includes('#realizace')) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
     const performScroll = () => {
-      let targetEl = document.getElementById('kalkulacka') || document.querySelector('.calc-section') || document.querySelector('#calc-steps');
+      let targetEl = document.getElementById('kalkulacka') || document.querySelector('.hero-calc-card') || document.querySelector('.calc-section') || document.querySelector('#calc-steps') || document.querySelector('#m-form');
       if (!targetEl && window.nnf_injectCalculator) {
         try { targetEl = window.nnf_injectCalculator(); } catch (err) { }
-        targetEl = document.getElementById('kalkulacka') || document.querySelector('.calc-section') || document.querySelector('#calc-steps');
+        targetEl = document.getElementById('kalkulacka') || document.querySelector('.hero-calc-card') || document.querySelector('.calc-section') || document.querySelector('#calc-steps') || document.querySelector('#m-form');
       }
 
       if (targetEl && typeof targetEl.getBoundingClientRect === 'function') {
@@ -492,24 +590,18 @@ const observeAll = () => {
         const text = el.textContent.trim().toLowerCase();
 
         // A. "Prozkoumat služby" -> #sluzby
-        if (text.includes('prozkoumat') || (text.includes('služb') && !text.includes('spočítejte'))) {
+        if (text.includes('prozkoumat') || (text.includes('služb') && !text.includes('spočítejte') && !text.includes('spočítat'))) {
           el.setAttribute('href', '#sluzby');
           if (el.parentNode && el.parentNode.tagName === 'A') el.parentNode.setAttribute('href', '#sluzby');
           el.dataset.heroBtnType = 'sluzby';
           el.style.cursor = 'pointer';
-          el.onclick = (e) => {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            const sluzbyEl = document.getElementById('sluzby');
-            if (sluzbyEl) sluzbyEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            else window.location.href = '/#sluzby';
-          };
         }
-        // B. "Spočítejte si cenu" -> #kalkulacka
+        // B. "Spočítat cenu" -> #kalkulacka
         else if (text.includes('nezávazná') || text.includes('cenov') || text.includes('kalkul') || text.includes('spočítat') || text.includes('spočítejte') || text.includes('získat') || text.includes('poptávk')) {
           if (!el.dataset.heroTextPatched) {
             const svg = el.querySelector('svg');
             const svgHtml = svg ? svg.outerHTML : `<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`;
-            el.innerHTML = `Spočítejte si cenu ${svgHtml}`;
+            el.innerHTML = `Spočítat cenu ${svgHtml}`;
             el.dataset.heroTextPatched = 'true';
           }
           el.setAttribute('href', '#kalkulacka');
@@ -518,29 +610,16 @@ const observeAll = () => {
           el.style.pointerEvents = 'auto';
           el.dataset.heroCtaPatched = 'true';
           el.dataset.heroBtnType = 'kalkulacka';
-          el.onclick = (e) => {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            window.scrollToKalkulacka(e);
-          };
         }
       }
     });
 
     document.querySelectorAll('a[href="#kalkulacka"], a[href="/poptavka"]').forEach(a => {
       a.style.cursor = 'pointer';
-      a.onclick = (e) => {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
-        window.scrollToKalkulacka(e);
-      };
     });
 
     document.querySelectorAll('a[href="#sluzby"]').forEach(a => {
       a.style.cursor = 'pointer';
-      a.onclick = (e) => {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
-        const sluzbyEl = document.getElementById('sluzby');
-        if (sluzbyEl) sluzbyEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      };
     });
   };
 
@@ -642,12 +721,71 @@ const observeAll = () => {
     }
   });
 
-  // 5. Navigation Links Injection & Cleanup (Ensures Konfigurátor, Blog, Galerie in Mobile & Desktop Navbar)
+  // 5. Navigation Links & CTA Buttons Cleanup
+  // Strictly filter out removed items ("Jak to funguje", "FAQ", "Konfigurátor") from all navbar containers
   document.querySelectorAll('header nav a, header div a, .nav-mobile-drawer a, div[class*="mobile-menu"] a').forEach(a => {
-    const text = a.textContent.trim().toLowerCase();
+    const text = (a.textContent || '').trim().toLowerCase();
     const href = (a.getAttribute('href') || '').toLowerCase();
-    if (text === 'jak to funguje' || text === 'faq' || text === 'časté dotazy' || href === '#postup' || href === '#faq' || href === '/faq') {
+    if (
+      text === 'jak to funguje' || 
+      text === 'faq' || 
+      text === 'časté dotazy' || 
+      text === 'konfigurátor' || 
+      href === '#postup' || 
+      href === '#proces' || 
+      href === '#faq' || 
+      href === '/faq' || 
+      (href.includes('kalkulacka') && !a.classList.contains('nav-cta-desktop') && !a.classList.contains('drawer-cta') && !a.className.includes('amber'))
+    ) {
       a.remove();
+    }
+  });
+
+  // Header / Navbar CTA button -> "Spočítat cenu" & scroll to Kalkulačka
+  document.querySelectorAll('header .nav-cta-desktop, .nav-mobile-drawer .drawer-cta, header a[href*="kalkulacka"], header button.bg-amber-500, header a.bg-amber-500, header button.bg-primary, header a.bg-primary, header button, header a').forEach(a => {
+    const text = (a.textContent || '').trim().toLowerCase();
+    if (a.classList.contains('nav-cta-desktop') || a.classList.contains('drawer-cta') || a.classList.contains('bg-primary') || text.includes('nezávazn') || text.includes('poptávk') || text.includes('spočítejte') || text.includes('spočítat')) {
+      if (text.includes('služby') || text.includes('reference') || text.includes('blog') || text.includes('galerie') || text.includes('o nás') || text.includes('kontakt')) return;
+      const svg = a.querySelector('svg');
+      if (svg) {
+        a.innerHTML = `Spočítat cenu ${svg.outerHTML}`;
+      } else {
+        a.textContent = 'Spočítat cenu';
+      }
+      a.onclick = (e) => {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        if (window.scrollToKalkulacka) {
+          window.scrollToKalkulacka(e);
+        } else {
+          const target = document.getElementById('kalkulacka') || document.getElementById('m-form') || document.getElementById('kontakt');
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+    }
+  });
+
+  // STRV Direct Native Click Listener Binding for Hero CTA Buttons (Preserves React VDOM & full-surface clickability)
+  document.querySelectorAll('button.bg-primary, a.bg-primary, [class*="hero"] button, [class*="hero"] a').forEach(btn => {
+    if (!btn.closest('header') && !btn.closest('footer') && !btn.closest('#kalkulacka') && !btn.closest('#m-form')) {
+      const text = (btn.textContent || '').trim().toLowerCase();
+      if (text.includes('spočítejte') || text.includes('spočítat') || text.includes('poptávk')) {
+        btn.style.cursor = 'pointer';
+        btn.onclick = (e) => {
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          if (window.scrollToKalkulacka) {
+            window.scrollToKalkulacka(e);
+          } else {
+            const target = document.getElementById('kalkulacka') || document.getElementById('m-form');
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+          }
+        };
+      }
     }
   });
 
@@ -657,25 +795,25 @@ const observeAll = () => {
   const patchNavContainers = () => {
     const containers = document.querySelectorAll('header nav, .nav-mobile-drawer, header div.md\\:flex, div[class*="mobile-menu"], header div[class*="space-y"]');
     containers.forEach(container => {
+      // Remove Konfigurátor, Jak to funguje, FAQ from container
+      container.querySelectorAll('a').forEach(a => {
+        const text = (a.textContent || '').trim().toLowerCase();
+        const href = (a.getAttribute('href') || '').toLowerCase();
+        if (text === 'konfigurátor' || text === 'jak to funguje' || text === 'faq' || text === 'časté dotazy' || href === '#postup' || href === '#proces' || href === '#faq' || href === '/faq') {
+          a.remove();
+        }
+      });
+
       const links = Array.from(container.querySelectorAll('a'));
       if (links.length === 0) return;
 
-      const linkTexts = links.map(a => (a.textContent || '').trim().toLowerCase());
       const sluzbyLink = links.find(a => (a.textContent || '').trim().toLowerCase() === 'služby');
       const refLink = links.find(a => (a.textContent || '').trim().toLowerCase() === 'reference');
 
       const anchor = sluzbyLink || refLink || links[0];
       if (!anchor) return;
 
-      // 1. Konfigurátor
-      if (!links.some(a => (a.textContent || '').trim().toLowerCase().includes('konfigurátor') || (a.getAttribute('href') || '').includes('kalkulacka'))) {
-        const configLink = anchor.cloneNode(true);
-        configLink.textContent = 'Konfigurátor';
-        configLink.href = prefix + '#kalkulacka';
-        anchor.parentNode.insertBefore(configLink, anchor.nextSibling);
-      }
-
-      // 2. Blog
+      // 1. Blog
       if (!links.some(a => (a.textContent || '').trim().toLowerCase() === 'blog' || (a.getAttribute('href') || '').includes('blog'))) {
         const blogLink = anchor.cloneNode(true);
         blogLink.textContent = 'Blog';
@@ -684,7 +822,7 @@ const observeAll = () => {
         currentRef.parentNode.insertBefore(blogLink, currentRef.nextSibling);
       }
 
-      // 3. Galerie
+      // 2. Galerie
       if (!links.some(a => (a.textContent || '').trim().toLowerCase() === 'galerie' || (a.getAttribute('href') || '').includes('galerie'))) {
         const galleryLink = anchor.cloneNode(true);
         galleryLink.textContent = 'Galerie';
@@ -757,9 +895,67 @@ const observeAll = () => {
 
   window.nnf_closeMobileMenu = closeMobileMenu;
 
+  // STRV Staff Engineer Capture-Phase Listener: 100% full-surface clickability for Header Navbar CTA button ("Spočítat cenu")
+  document.addEventListener('click', (e) => {
+    const ctaBtn = e.target.closest('header .nav-cta-desktop, .drawer-cta, header button.bg-primary, header a.bg-primary, header button.bg-amber-500, header a[href*="kalkulacka"]');
+    let target = ctaBtn;
+
+    // Geometric Bounding-Box Hit-Test (with 6px padding tolerance around button edges)
+    if (!target && e.target && e.target.closest && e.target.closest('header')) {
+      const el = document.querySelector('header .nav-cta-desktop, .drawer-cta, header button.bg-primary, header a.bg-primary, header button.bg-amber-500');
+      if (el && typeof el.getBoundingClientRect === 'function') {
+        const rect = el.getBoundingClientRect();
+        if (e.clientX >= rect.left - 6 && e.clientX <= rect.right + 6 && e.clientY >= rect.top - 6 && e.clientY <= rect.bottom + 6) {
+          target = el;
+        }
+      }
+    }
+
+    if (target) {
+      const text = (target.textContent || '').trim().toLowerCase();
+      // Ensure we only catch the CTA button ("Spočítat cenu" / "Nezávazná poptávka"), not nav text links
+      if (target.classList.contains('nav-cta-desktop') || target.classList.contains('drawer-cta') || target.classList.contains('bg-primary') || target.classList.contains('bg-amber-500') || text.includes('spočítat') || text.includes('spočítejte') || text.includes('poptávk')) {
+        if (text.includes('služby') || text.includes('reference') || text.includes('blog') || text.includes('galerie') || text.includes('o nás') || text.includes('kontakt')) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (window.scrollToKalkulacka) {
+          window.scrollToKalkulacka(e);
+        } else {
+          const kalk = document.getElementById('kalkulacka') || document.getElementById('m-form') || document.getElementById('kontakt');
+          if (kalk) kalk.scrollIntoView({ behavior: 'smooth' });
+          else window.location.href = '/#kalkulacka';
+        }
+      }
+    }
+  }, true);
+
   // 6. Active link state & smooth scroll for in-page anchors & CTA buttons
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('a, button, [role="button"]');
+    let btn = e.target.closest('a, button, [role="button"], .nav-cta-desktop, .drawer-cta');
+    
+    // STRV Fallback 1: If click was within bounding box of header CTA button (prevents overlay deadzones)
+    if (!btn && e.target.closest('header')) {
+      const ctaEl = document.querySelector('header .nav-cta-desktop, .drawer-cta, header button.bg-primary, header a.bg-primary');
+      if (ctaEl && typeof ctaEl.getBoundingClientRect === 'function') {
+        const rect = ctaEl.getBoundingClientRect();
+        if (e.clientX >= rect.left - 6 && e.clientX <= rect.right + 6 && e.clientY >= rect.top - 6 && e.clientY <= rect.bottom + 6) {
+          btn = ctaEl;
+        }
+      }
+    }
+    
+    // STRV Fallback 2: Bounding box hit-test for Hero Section CTA button ("Spočítejte si cenu")
+    if (!btn || (btn && !btn.getAttribute('href') && !btn.onclick)) {
+      const heroCta = document.querySelector('main section:first-of-type button.bg-primary, main section:first-of-type a.bg-primary, [class*="hero"] button.bg-primary, [class*="hero"] a.bg-primary, #root section button.bg-primary');
+      if (heroCta && typeof heroCta.getBoundingClientRect === 'function') {
+        const rect = heroCta.getBoundingClientRect();
+        if (e.clientX >= rect.left - 5 && e.clientX <= rect.right + 5 && e.clientY >= rect.top - 5 && e.clientY <= rect.bottom + 5) {
+          btn = heroCta;
+        }
+      }
+    }
     if (!btn) return;
 
     const text = (btn.textContent || '').trim().toLowerCase();
@@ -816,9 +1012,14 @@ const observeAll = () => {
         // Allow normal browser navigation to the specific service subpage
         return;
       }
-      if (href.includes('kalkulacka') || text.includes('konfigurát') || (text.includes('spočítejte') && !btn.classList.contains('cta-buttons'))) {
+      if (href.includes('kalkulacka') || text.includes('konfigurát') || text.includes('spočítat') || text.includes('spočítejte') || text.includes('poptávk')) {
         e.preventDefault();
-        window.location.href = '/#kalkulacka';
+        const hasLocalCalc = document.getElementById('kalkulacka') || document.querySelector('.hero-calc-card') || document.querySelector('#m-form');
+        if (hasLocalCalc) {
+          window.scrollToKalkulacka(e);
+        } else {
+          window.location.href = '/#kalkulacka';
+        }
         return;
       }
       if (href.includes('realizace') || href.includes('reference') || text === 'reference' || text === 'realizace') {
@@ -874,7 +1075,7 @@ const observeAll = () => {
     }
 
     // B. "Spočítejte si cenu" / "Spočítejte si to" / Konfigurátor / Poptávka / Zadat poptávku -> MUST scroll to #kalkulacka
-    if (href.includes('#kalkulacka') || href === '/poptavka' || text.includes('spočítejte') || text.includes('spočítat') || text.includes('kalkul') || text.includes('poptávk') || text.includes('nezávazná') || btn.dataset.heroCtaPatched === 'true' || btn.dataset.heroBtnType === 'kalkulacka' || btn.classList.contains('nav-cta-desktop') || btn.classList.contains('drawer-cta')) {
+    if (href.includes('#kalkulacka') || href === '/poptavka' || text.includes('spočítejte') || text.includes('spočítat') || text.includes('kalkul') || text.includes('poptávk') || text.includes('nezávazná') || btn.dataset.heroCtaPatched === 'true' || btn.dataset.heroBtnType === 'kalkulacka' || btn.classList.contains('nav-cta-desktop') || btn.classList.contains('drawer-cta') || btn.classList.contains('bg-primary')) {
       e.preventDefault();
       window.scrollToKalkulacka(e);
       return;
@@ -925,6 +1126,8 @@ const observeAll = () => {
     footerTexts.forEach(p => {
       if (p.textContent.includes('IČ:')) {
         p.innerHTML = `IČ: 29375363 | 
+          <a href="/obchodni-podminky" style="color: #94a3b8; text-decoration: underline;">Obchodní podmínky</a> | 
+          <a href="/gdpr" style="color: #94a3b8; text-decoration: underline;">GDPR</a> | 
           <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" class="footer-eshop-link" style="color: #f59e0b; font-weight: 700; text-decoration: underline;">E-shop</a> | 
           <a href="https://nanofusion-j3bs.vercel.app/admin/login" class="footer-admin-link">Zaměstnanci</a> | 
           <a href="https://www.aerisq.tech" target="_blank" rel="noopener noreferrer" class="footer-created-link" style="color: #94a3b8; text-decoration: none; font-weight: 600;">Created by 💚</a>`;
@@ -932,9 +1135,10 @@ const observeAll = () => {
     });
 
     // Update Tagline
-    footer.querySelectorAll('p.text-sm.text-neutral-400').forEach(p => {
-      if (!p.dataset.brUpdated && (p.textContent.includes('Od roku 2012') || p.textContent.includes('13 let') || p.textContent.includes('12 let'))) {
+    footer.querySelectorAll('p.text-sm.text-neutral-400, p').forEach(p => {
+      if (!p.dataset.brUpdated && (p.textContent.includes('Od roku 2012') || p.textContent.includes('13 let') || p.textContent.includes('12 let') || p.textContent.includes('pečujeme o váš majetek'))) {
         p.innerHTML = 'Profesionální čištění, impregnace a nátěry.<br>Již 14 let pečujeme o váš majetek po celé ČR.';
+        p.style.color = '#94a3b8';
         p.dataset.brUpdated = 'true';
       }
     });

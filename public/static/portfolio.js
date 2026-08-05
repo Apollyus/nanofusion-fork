@@ -308,7 +308,7 @@ const injectPortfolio = async () => {
             </div>
 
             <div style="display:flex;justify-content:center;padding:5rem 0;">
-                <button onclick="if(window.scrollToKalkulacka){window.scrollToKalkulacka(event);}else{window.location.href='/#kalkulacka';}"
+                <button onclick="if(window.nnf_closeModalAndScrollToKalkulacka){window.nnf_closeModalAndScrollToKalkulacka();}else if(window.scrollToKalkulacka){window.scrollToKalkulacka(event);}else{window.location.href='/#kalkulacka';}"
                     class="inline-flex items-center px-12 py-6 bg-amber-500 text-white font-black rounded-2xl hover:bg-amber-600 transition-all shadow-2xl active:scale-95 uppercase tracking-widest text-sm hover:translate-y-[-2px]">
                     Spočítejte si to
                     <svg class="ml-3 w-6 h-6 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>

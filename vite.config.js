@@ -21,6 +21,10 @@ export default defineConfig({
             req.url = '/faq/index.html';
           } else if (cleanUrl === '/poptavka' || cleanUrl === '/poptavka/') {
             req.url = '/poptavka/index.html';
+          } else if (cleanUrl === '/obchodni-podminky' || cleanUrl === '/obchodni-podminky/') {
+            req.url = '/obchodni-podminky/index.html';
+          } else if (cleanUrl === '/gdpr' || cleanUrl === '/gdpr/') {
+            req.url = '/gdpr/index.html';
           }
 
           // Match /sluzby/[slug] or /sluzby/[slug]/

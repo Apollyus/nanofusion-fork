@@ -133,33 +133,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --- Step 1 -> Step 2 Transition ---
   if (btnNext) {
     btnNext.onclick = () => {
-      const firstName = firstNameInput ? firstNameInput.value.trim() : '';
-      const lastName = lastNameInput ? lastNameInput.value.trim() : '';
+      const fullName = firstNameInput ? firstNameInput.value.trim() : '';
       const location = locationInput ? locationInput.value.trim() : '';
       const phone = phoneInput ? phoneInput.value.trim() : '';
       const email = emailInput ? emailInput.value.trim() : '';
 
-      if (!firstName || firstName.length < 2) {
-        alert('Prosím zadejte Vaše jméno.');
+      if (!fullName || fullName.length < 2) {
+        alert('Prosím zadejte Vaše jméno a příjmení.');
         if (firstNameInput) firstNameInput.focus();
         return;
       }
-      const fnLetters = firstName.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
-      if (fnLetters.length < 2 || /^\d+$/.test(firstName)) {
-        alert('Prosím zadejte platné jméno.');
+      const fnLetters = fullName.replace(/[^a-zA-Zá-žÁ-Ž\s]/g, '');
+      if (fnLetters.length < 2 || /^\d+$/.test(fullName)) {
+        alert('Prosím zadejte platné jméno a příjmení.');
         if (firstNameInput) firstNameInput.focus();
-        return;
-      }
-
-      if (!lastName || lastName.length < 2) {
-        alert('Prosím zadejte Vaše příjmení.');
-        if (lastNameInput) lastNameInput.focus();
-        return;
-      }
-      const lnLetters = lastName.replace(/[^a-zA-Zá-žÁ-Ž]/g, '');
-      if (lnLetters.length < 2 || /^\d+$/.test(lastName)) {
-        alert('Prosím zadejte platné příjmení.');
-        if (lastNameInput) lastNameInput.focus();
         return;
       }
 
@@ -187,6 +174,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
+      const gdprInput = document.getElementById('m-gdpr');
+      if (gdprInput && !gdprInput.checked) {
+        alert('Prosím potvrďte souhlas se zpracováním osobních údajů (GDPR).');
+        if (gdprInput) gdprInput.focus();
+        return;
+      }
+
       // Smooth transition to Step 2
       if (step1Container) step1Container.style.display = 'none';
       if (step2Container) step2Container.style.display = 'block';
@@ -206,6 +200,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --- Step 2 Final Submission ---
   if (btnReveal) {
     btnReveal.onclick = async () => {
+      const gdprInput = document.getElementById('m-gdpr');
+      if (gdprInput && !gdprInput.checked) {
+        alert('Prosím potvrďte souhlas se zpracováním osobních údajů (GDPR).');
+        return;
+      }
       const firstName = firstNameInput ? firstNameInput.value.trim() : '';
       const lastName = lastNameInput ? lastNameInput.value.trim() : '';
       const fullName = `${firstName} ${lastName}`.trim();
