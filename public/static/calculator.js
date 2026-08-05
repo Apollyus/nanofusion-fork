@@ -106,7 +106,7 @@ const injectCalculator = () => {
           </div>
 
           <div id="step-1">
-            <p class="calc-label" style="text-align: center; margin-bottom: 1.5rem;">1. Co budeme čistit?</p>
+            <p class="calc-label" style="text-align: center; margin-bottom: 1.5rem;">1. Co budeme provádět?</p>
             <div class="calc-service-grid" style="display: grid; gap: 0.75rem; margin-bottom: 2rem;">
               ${services.map(s => `
                 <div class="calc-service-card" data-price="${s.price}" data-id="${s.id}" style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 1rem; text-align: center; cursor: pointer; transition: all 0.2s;">

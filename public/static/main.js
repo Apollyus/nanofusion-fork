@@ -155,6 +155,31 @@ const injectGlobalResponsiveStyles = () => {
     .nav-cta-desktop *, .drawer-cta *, a.bg-amber-500 *, a.bg-primary *, button.bg-primary *, a[href*="kalkulacka"] *, [data-hero-btn-type] *, [class*="hero"] button *, [class*="hero"] a * {
       pointer-events: none !important;
     }
+    /* Mobile Top Header Bar Single-Row Layout (Logo + Spočítat cenu + Hamburger Toggle) */
+    @media (max-width: 1024px) {
+      header .max-w-7xl > div,
+      header .container > div,
+      .nav-main-bar {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+        gap: 0.5rem !important;
+      }
+      header .nav-cta-desktop,
+      header button.bg-primary,
+      header a.bg-primary {
+        display: inline-flex !important;
+        font-size: 0.75rem !important;
+        padding: 0.4rem 0.85rem !important;
+        border-radius: 99px !important;
+        white-space: nowrap !important;
+        margin-left: auto !important;
+        margin-right: 0.25rem !important;
+        z-index: 100005 !important;
+      }
+    }
     /* Ensure FAQ/Reviews/Accordion Bubbles are strictly LEFT-ALIGNED */
     .faq-toggle, .faq-item button, [class*="faq"] button, [class*="accordion"] button {
       text-align: left !important;

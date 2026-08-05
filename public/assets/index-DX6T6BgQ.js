@@ -20543,7 +20543,7 @@ function YO() {
                     }),
                     S.jsx(Uo, {
                       className:
-                        "bg-primary hover:bg-primary/90 text-white font-semibold px-6 rounded-full hidden sm:flex",
+                        "bg-primary hover:bg-primary/90 text-white font-semibold px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-sm rounded-full flex items-center justify-center whitespace-nowrap nav-cta-desktop",
                       onClick: (ev) => {
                         if (ev) ev.preventDefault();
                         if (window.scrollToKalkulacka) { window.scrollToKalkulacka(ev); }
