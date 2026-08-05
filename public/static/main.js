@@ -54,10 +54,15 @@ const injectGlobalResponsiveStyles = () => {
       }
     }
     @media (max-width: 768px) {
-      section.hero-section,
-      .hero-section,
+      /* Homepage Hero Section with Video (reduced top margin/padding below fixed navbar) */
       #root > div > section:first-of-type,
-      main > section:first-of-type {
+      main > section:first-of-type:not(.hero-section) {
+        padding-top: 8.5rem !important;
+        padding-bottom: 1.75rem !important;
+      }
+      /* Service Detail Subpages Hero */
+      section.hero-section,
+      .hero-section {
         padding-top: 14.5rem !important;
         padding-bottom: 2.5rem !important;
       }
@@ -84,6 +89,36 @@ const injectGlobalResponsiveStyles = () => {
         padding: 0 !important;
         opacity: 0 !important;
       }
+    }
+    /* Mobile Hamburger & Close Cross ('X') Toggle Styling */
+    .nav-mobile-toggle, #nav-toggle, header button.lg\:hidden {
+      position: relative !important;
+      z-index: 100010 !important;
+      cursor: pointer !important;
+      pointer-events: auto !important;
+      color: #1e293b !important;
+    }
+    .nav-mobile-toggle span {
+      display: block !important;
+      width: 26px !important;
+      height: 2.5px !important;
+      background: #1e293b !important;
+      border-radius: 2px !important;
+      transition: all 0.3s ease !important;
+    }
+    .nav-mobile-toggle.open span:nth-child(1),
+    header.menu-open .nav-mobile-toggle span:nth-child(1) {
+      transform: translateY(7.5px) rotate(45deg) !important;
+      background: #0f172a !important;
+    }
+    .nav-mobile-toggle.open span:nth-child(2),
+    header.menu-open .nav-mobile-toggle span:nth-child(2) {
+      opacity: 0 !important;
+    }
+    .nav-mobile-toggle.open span:nth-child(3),
+    header.menu-open .nav-mobile-toggle span:nth-child(3) {
+      transform: translateY(-7.5px) rotate(-45deg) !important;
+      background: #0f172a !important;
     }
     /* STRV-grade 100% full-surface button clickability & z-index isolation */
     .nav-cta-desktop, .drawer-cta {
@@ -834,22 +869,29 @@ const observeAll = () => {
   };
 
   patchNavContainers();
-  // Re-run on click of hamburger toggles and clear leftover inline display:none styles
+  // Re-run on click of hamburger toggles & ensure 'X' icon is visible on open drawer
   document.addEventListener('click', (e) => {
-    const toggleBtn = e.target.closest('.nav-mobile-toggle, header button.lg\\:hidden, #nav-toggle, header button');
+    const toggleBtn = e.target.closest('.nav-mobile-toggle, header button.lg\\:hidden, #nav-toggle');
     if (toggleBtn) {
-      document.querySelectorAll('header div.lg\\:hidden, .nav-mobile-drawer, .mobile-menu, header div.space-y-1').forEach(el => {
-        el.style.removeProperty('display');
-        el.style.display = '';
-      });
       const headerEl = toggleBtn.closest('header') || document.querySelector('header');
-      const drawerEl = document.getElementById('nav-drawer') || document.querySelector('.nav-mobile-drawer');
-      if (headerEl && (toggleBtn.classList.contains('nav-mobile-toggle') || toggleBtn.id === 'nav-toggle')) {
-        setTimeout(() => {
-          const isOpen = toggleBtn.classList.contains('open') || (drawerEl && drawerEl.classList.contains('open'));
-          headerEl.classList.toggle('menu-open', isOpen);
-        }, 10);
-      }
+      const drawerEl = document.getElementById('nav-drawer') || document.querySelector('.nav-mobile-drawer') || document.querySelector('header div.lg\\:hidden');
+
+      setTimeout(() => {
+        const isOpen = toggleBtn.classList.contains('open') || (drawerEl && (drawerEl.classList.contains('open') || drawerEl.classList.contains('active') || drawerEl.style.display === 'flex' || drawerEl.style.display === 'block'));
+        toggleBtn.classList.toggle('open', isOpen);
+        if (headerEl) headerEl.classList.toggle('menu-open', isOpen);
+
+        // SVG transformation to Close 'X' icon
+        const svg = toggleBtn.querySelector('svg');
+        if (svg) {
+          if (isOpen) {
+            svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" stroke="currentColor"></path>';
+          } else {
+            svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" stroke="currentColor"></path>';
+          }
+        }
+      }, 10);
+
       setTimeout(patchNavContainers, 50);
       setTimeout(patchNavContainers, 200);
     }
@@ -868,8 +910,12 @@ const observeAll = () => {
         el.style.display = 'none';
         el.classList.remove('open', 'active', 'show', 'drawer-open');
       });
-      document.querySelectorAll('header, .nav-mobile-toggle, #nav-toggle').forEach(el => {
+      document.querySelectorAll('header, .nav-mobile-toggle, #nav-toggle, header button.lg\\:hidden').forEach(el => {
         el.classList.remove('menu-open', 'open');
+        const svg = el.querySelector('svg');
+        if (svg) {
+          svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" stroke="currentColor"></path>';
+        }
       });
 
       // 2. Dispatch Keyboard Escape event for modal/sheet closing (non-clicking)
