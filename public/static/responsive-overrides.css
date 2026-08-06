@@ -19,13 +19,22 @@ header {
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  z-index: 100000 !important;
+  /* Modest baseline so page overlays/modals (e.g. the realization detail
+     modal, z-index 9999) can render above the header. It only needs to
+     out-rank everything else while its own mobile drawer is open. */
+  z-index: 500 !important;
   background: rgba(255, 255, 255, 0.88) !important;
   backdrop-filter: blur(16px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
   transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
   box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+header:has(.nav-mobile-drawer.open),
+header:has(.nav-mobile-toggle.open),
+header.menu-open {
+  z-index: 100000 !important;
 }
 
 header.header-scrolled {
@@ -149,7 +158,7 @@ header.menu-open .nav-mobile-toggle span:nth-child(3) {
   pointer-events: auto !important;
 }
 
-a.bg-amber-500, a.bg-primary, button.bg-primary, a[href*="kalkulacka"], [data-hero-btn-type], [class*="hero"] button, [class*="hero"] a {
+a.bg-amber-500, a.bg-primary:not(.hidden), button.bg-primary:not(.hidden), a[href*="kalkulacka"], [data-hero-btn-type], [class*="hero"] button, [class*="hero"] a {
   position: relative !important;
   z-index: 10 !important;
   display: inline-flex !important;
@@ -184,10 +193,35 @@ a.bg-amber-500, a.bg-primary, button.bg-primary, a[href*="kalkulacka"], [data-he
     justify-content: space-between !important;
     flex-wrap: nowrap !important;
     gap: 0.5rem !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
   }
-  header .nav-cta-desktop,
-  header button.bg-primary,
-  header a.bg-primary {
+  /* The logo renders at 82px tall (modern-ui.css wins the cascade over the
+     72px attempt below) inside a Tailwind h-16 (64px) row, and centers with
+     an 11px top offset because of its -16px margin-bottom -- so it needs
+     the row to be ~104px tall to stay fully inside the white background. */
+  header .max-w-7xl,
+  header .container {
+    min-height: 104px !important;
+  }
+  header img:not(.chat-logo):not(.ai-chat-launcher img),
+  nav img:not(.chat-logo),
+  .nav-logo-img {
+    height: 72px !important;
+    max-height: 75px !important;
+    width: auto !important;
+    margin-bottom: -16px !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+  /* Scoped to .nav-cta-desktop only (the static service-page header's CTA
+     class) -- NOT the bare .bg-primary selector, which used to also catch
+     the React homepage header's intentionally-desktop-only "Spočítat cenu"
+     button (Tailwind `hidden sm:flex`). That button wraps onto a second
+     row on narrow screens and has no room reserved for it, so forcing it
+     visible made it spill out past the header's white background. It's
+     redundant anyway -- the mobile drawer has its own CTA at the bottom. */
+  header .nav-cta-desktop {
     display: inline-flex !important;
     font-size: 0.75rem !important;
     padding: 0.4rem 0.85rem !important;
@@ -197,6 +231,16 @@ a.bg-amber-500, a.bg-primary, button.bg-primary, a[href*="kalkulacka"], [data-he
     margin-right: 0.25rem !important;
     z-index: 100005 !important;
   }
+}
+
+/* ─── Anchor-link Scroll Offset ──────────────────────────────────────────
+   The header is fixed/sticky at all times (~90px tall on mobile). Without
+   this, clicking a nav link (or landing on an anchor) scrolls the target
+   section flush to the viewport top, so its heading renders hidden behind
+   the frosted-glass header -- e.g. "Naše realizace v detailu" looked like
+   it had vanished. Matches the existing #kalkulacka fix in calculator.css. */
+#sluzby, #reference, #realizace, #blog, #galerie, #o-nas, #kontakt, #faq {
+  scroll-margin-top: 100px !important;
 }
 
 /* ─── Section Spacing (realizace, blog, faq, kalkulacka) ───────────────── */

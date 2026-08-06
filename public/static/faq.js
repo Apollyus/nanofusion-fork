@@ -81,23 +81,8 @@ const injectFaqs = async () => {
 
         const wrapperClass = isFaqPage ? 'max-w-4xl mx-auto' : 'max-w-3xl mx-auto';
 
-        // Přidáme křížek do pravého rohu sekce
-        const closeBtn = !isFaqPage ? `
-            <button
-                onclick="const s=document.getElementById('faq'); if(s){s.style.transition='opacity 0.3s ease';s.style.opacity='0';setTimeout(()=>{s.style.display='none';},320);}"
-                style="position:absolute;top:20px;right:20px;background:#f1f5f9;color:#0f172a;border:1px solid #cbd5e1;width:40px;height:40px;border-radius:50%;cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.07);transition:all 0.2s;"
-                onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.08)';"
-                onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';"
-                aria-label="Zavřít">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>` : '';
-
         const faqHtml = `
             <div style="position:relative;">
-                ${closeBtn}
                 <div class="container mx-auto px-6">
                     ${headerHtml}
                     <div class="${wrapperClass}">
