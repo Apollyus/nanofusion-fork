@@ -15,6 +15,26 @@ const supabaseUrl = 'https://mgmtkdwvhgrzefmyucvr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nbXRrZHd2aGdyemVmbXl1Y3ZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMjc1NTUsImV4cCI6MjA5MTkwMzU1NX0.yWlwZvuTXmx8Op6BXR6t3z-xwXa1xWqwvklNLP1mOuk';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Build-time mirror of the client-side window.nnf_optimizeImage helper
+// (public/static/supabase-config.js): routes Supabase-hosted images through
+// the wsrv.nl resize/WebP proxy so the static HTML embeds already-optimized
+// URLs. Same source images, same Supabase storage -- only the delivered
+// bytes get smaller. Non-Supabase URLs (e.g. base44, unsplash fallbacks) and
+// SVGs pass through untouched, matching the client helper's behavior.
+function optimizeImg(url, width = 800) {
+    if (!url || typeof url !== 'string') return url || '';
+    let normalized = url;
+    if (!url.startsWith('http') && !url.startsWith('//')) {
+        normalized = `${supabaseUrl}/storage/v1/object/public/${url}`;
+    } else if (url.startsWith('//')) {
+        normalized = 'https:' + url;
+    }
+    if (normalized.toLowerCase().endsWith('.svg') || !normalized.includes('supabase.co')) {
+        return normalized;
+    }
+    return `https://wsrv.nl/?url=${encodeURIComponent(normalized)}&w=${width}&q=80&output=webp`;
+}
+
 // --- High-fidelity Catalog static fallbacks ---
 const localCatalog = {
     'facade': {
@@ -486,9 +506,9 @@ async function syncContent() {
             const ytMatch = video ? video.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/) : null;
             const ytId = ytMatch ? ytMatch[1] : null;
 
-            let mediaHtml = `<img src="${validImage}" alt="${title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">`;
+            let mediaHtml = `<img src="${optimizeImg(validImage, 800)}" alt="${title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">`;
             if (ytId) {
-                mediaHtml = `<div class="relative w-full h-full overflow-hidden bg-slate-900"><img src="${validImage}" alt="${title}" class="absolute inset-0 w-full h-full object-cover"><iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1&playsinline=1" class="absolute inset-0 w-full h-full border-0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" style="width:100%;height:100%;top:0;left:0;position:absolute;"></iframe></div>`;
+                mediaHtml = `<div class="relative w-full h-full overflow-hidden bg-slate-900"><img src="${optimizeImg(validImage, 800)}" alt="${title}" class="absolute inset-0 w-full h-full object-cover"><iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1&playsinline=1" class="absolute inset-0 w-full h-full border-0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" style="width:100%;height:100%;top:0;left:0;position:absolute;"></iframe></div>`;
             } else if (video) {
                 mediaHtml = `<video src="${video}" autoplay loop muted playsinline webkit-playsinline class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"></video>`;
             }
@@ -531,7 +551,7 @@ async function syncContent() {
                 <div style="display: flex; gap: 1.5rem; overflow-x: auto; padding: 1rem 0 3rem; scrollbar-width: none;">
                     ${(portfolioRes.data || []).map(p => `
                         <div style="flex: 0 0 400px; background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-                            <img src="${p.realization_photos?.[0]?.url}" alt="${p.title}" style="width: 100%; height: 250px; object-fit: cover;">
+                            <img src="${optimizeImg(p.realization_photos?.[0]?.url, 600)}" alt="${p.title}" style="width: 100%; height: 250px; object-fit: cover;">
                             <div style="padding: 2rem;">
                                 <span style="color: #f59e0b; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">${p.work_type}</span>
                                 <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.5rem;">${p.title}</h3>
@@ -629,7 +649,7 @@ async function syncContent() {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-8">
                 ${aboutCerts.map(c => `
                     <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-md">
-                        <img src="${c.imageUrl ? c.imageUrl.replace(/\s+/g, '') : ''}" alt="${c.title}" class="w-full h-48 object-cover rounded-2xl mb-4">
+                        <img src="${c.imageUrl ? optimizeImg(c.imageUrl.replace(/\s+/g, ''), 500) : ''}" alt="${c.title}" class="w-full h-48 object-cover rounded-2xl mb-4">
                         <h3 class="text-xl font-bold text-slate-900 mb-2">${c.title}</h3>
                         <p class="text-slate-500 text-sm leading-relaxed">${c.description}</p>
                     </div>
@@ -895,9 +915,9 @@ async function syncContent() {
                         </h2>
                         <p style="text-align: center; color: #64748b; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">Táhněte posuvníkem a porovnejte rozdíl sami</p>
                         <div style="position: relative; border-radius: 1.25rem; overflow: hidden; aspect-ratio: 16/10; user-select: none; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 2px solid #f59e0b;">
-                            <img src="${afterImg}" alt="Po" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+                            <img src="${optimizeImg(afterImg, 700)}" alt="Po" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
                             <div id="${s.slug}-clip" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; clip-path: inset(0 50% 0 0);">
-                                <img src="${beforeImg}" alt="Před" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${optimizeImg(beforeImg, 700)}" alt="Před" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
                             </div>
                             <div id="${s.slug}-handle" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.7); pointer-events: none; z-index: 5;">
                                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 2.75rem; height: 2.75rem; background: #f59e0b; border: 2.5px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.6); color: white; font-weight: 900; font-size: 0.95rem; animation: pulse-slider 2s infinite ease-in-out;">⟷</div>
@@ -929,7 +949,7 @@ async function syncContent() {
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
                             ${galleryPhotos.map((url, i) => `
                             <div style="position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" onclick="window.nnf_openLightbox('${url}')">
-                                <img src="${url}" alt="Realizace ${i + 1}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
+                                <img src="${optimizeImg(url, 400)}" alt="Realizace ${i + 1}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.06)';" onmouseout="this.style.transform='scale(1)';" />
                             </div>`).join('')}
                         </div>
                     </div>
@@ -980,18 +1000,24 @@ async function syncContent() {
                 }
             }
 
-            // FAQ Accordion HTML compilation (DB FAQs with Local Fallbacks)
-            const dbFaqs = dbServiceFaqs.filter(faq => faq.service_id === s.id);
-            let faqHtml = '';
+            const faqIconHtml = `
+                        <span class="faq-icon" style="flex-shrink:0; width:22px; height:22px; border-radius:50%; background:#fff7ed; border:1.5px solid #f59e0b; display:flex; align-items:center; justify-content:center; transition:all 0.25s ease;">
+                            <svg class="faq-plus" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round">
+                                <line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/>
+                            </svg>
+                            <svg class="faq-times" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" style="display:none;">
+                                <line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/>
+                            </svg>
+                        </span>`;
 
-            if (dbFaqs.length > 0) {
-                faqHtml = dbFaqs.map(f => `
+            const dbServiceFaqsForService = dbServiceFaqs.filter(faq => faq.service_id === s.id);
+            let faqHtml = '';
+            if (dbServiceFaqsForService.length > 0) {
+                faqHtml = dbServiceFaqsForService.map(f => `
                 <div class="faq-item" style="border: 1px solid #e2e8f0; border-radius: 0.875rem; overflow: hidden; background: white; transition: all 0.3s ease;">
                     <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer;">
                         <span style="font-weight: 700; color: #1e293b; font-size: 0.938rem;">${f.question}</span>
-                        <svg class="faq-arrow transition-transform flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(0deg); transition: transform 0.2s;">
-                            <path d="M6 9l6 6 6-6"></path>
-                        </svg>
+                        ${faqIconHtml}
                     </button>
                     <div class="faq-answer" style="display: none; padding: 0 1.5rem 1.25rem; color: #64748b; line-height: 1.6; font-size: 0.875rem;">
                         ${f.answer}
@@ -1002,9 +1028,7 @@ async function syncContent() {
                 <div class="faq-item" style="border: 1px solid #e2e8f0; border-radius: 0.875rem; overflow: hidden; background: white; transition: all 0.3s ease;">
                     <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer;">
                         <span style="font-weight: 700; color: #1e293b; font-size: 0.938rem;">${f.q}</span>
-                        <svg class="faq-arrow transition-transform flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(0deg); transition: transform 0.2s;">
-                            <path d="M6 9l6 6 6-6"></path>
-                        </svg>
+                        ${faqIconHtml}
                     </button>
                     <div class="faq-answer" style="display: none; padding: 0 1.5rem 1.25rem; color: #64748b; line-height: 1.6; font-size: 0.875rem;">
                         ${f.a}
@@ -1016,9 +1040,7 @@ async function syncContent() {
                 <div class="faq-item" style="border: 1px solid #e2e8f0; border-radius: 0.875rem; overflow: hidden; background: white; transition: all 0.3s ease;">
                     <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer;">
                         <span style="font-weight: 700; color: #1e293b; font-size: 0.938rem;">Jak dlouho trvá realizace?</span>
-                        <svg class="faq-arrow transition-transform flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(0deg); transition: transform 0.2s;">
-                            <path d="M6 9l6 6 6-6"></path>
-                        </svg>
+                        ${faqIconHtml}
                     </button>
                     <div class="faq-answer" style="display: none; padding: 0 1.5rem 1.25rem; color: #64748b; line-height: 1.6; font-size: 0.875rem;">
                         Většinu standardních rodinných domů stihneme ošetřit za 1-2 dny. U větších objektů nebo průmyslových hal se doba realizace stanovuje individuálně.
@@ -1027,9 +1049,7 @@ async function syncContent() {
                 <div class="faq-item" style="border: 1px solid #e2e8f0; border-radius: 0.875rem; overflow: hidden; background: white; transition: all 0.3s ease;">
                     <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer;">
                         <span style="font-weight: 700; color: #1e293b; font-size: 0.938rem;">Je vaše chemie bezpečná?</span>
-                        <svg class="faq-arrow transition-transform flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(0deg); transition: transform 0.2s;">
-                            <path d="M6 9l6 6 6-6"></path>
-                        </svg>
+                        ${faqIconHtml}
                     </button>
                     <div class="faq-answer" style="display: none; padding: 0 1.5rem 1.25rem; color: #64748b; line-height: 1.6; font-size: 0.875rem;">
                         Ano, používáme výhradně ekologicky odbouratelnou a certifikovanou chemii, která je naprosto bezpečná pro lidi, domácí mazlíčky i zahradní výsadbu.

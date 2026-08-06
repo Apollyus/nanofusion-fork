@@ -15,5 +15,10 @@ scratch/
 scratch_*.js
 seed_*.js
 inspect-*.js
+fix_images.js
+test_images.js
+master_seed.js
+history.sql
+visual_reference.md
 assets_backup/
 static_backup/

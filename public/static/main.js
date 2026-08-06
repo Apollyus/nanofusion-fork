@@ -1,240 +1,11 @@
 import './legal-modal.js';
+import { openAboutUsModal } from './about-us.js';
 
-// Global Responsive & Touch Device Optimizations (Frosted Glassmorphism Header)
-const injectGlobalResponsiveStyles = () => {
-  if (document.getElementById('nnf-responsive-styles')) return;
-  const styleEl = document.createElement('style');
-  styleEl.id = 'nnf-responsive-styles';
-  styleEl.textContent = `
-    html {
-      overflow-x: clip !important;
-    }
-    body {
-      overflow-x: clip !important;
-      max-width: 100vw !important;
-    }
-    header {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      z-index: 100000 !important;
-      background: rgba(255, 255, 255, 0.88) !important;
-      backdrop-filter: blur(16px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-      transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-    }
-    header.header-scrolled {
-      background: rgba(255, 255, 255, 0.78) !important;
-      backdrop-filter: blur(22px) saturate(200%) !important;
-      -webkit-backdrop-filter: blur(22px) saturate(200%) !important;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
-    }
-    /* Enlarge hero video section height slightly */
-    @media (min-width: 769px) {
-      section.hero-section {
-        padding-top: clamp(11rem, 13vw, 13.5rem) !important;
-      }
-      #root > div > section:first-of-type,
-      main > section:first-of-type {
-        padding-top: clamp(9.5rem, 10.5vw, 10.5rem) !important;
-        padding-bottom: 2.75rem !important;
-      }
-      #root > div > section:first-of-type > div.relative,
-      main > section:first-of-type > div.relative {
-        padding-top: 3rem !important;
-        padding-bottom: 2.5rem !important;
-      }
-      #root > div > section:nth-of-type(2),
-      main > section:nth-of-type(2) {
-        padding-top: 2rem !important;
-      }
-    }
-    @media (max-width: 768px) {
-      /* Homepage Hero Section with Video (reduced top margin/padding below fixed navbar) */
-      #root > div > section:first-of-type,
-      main > section:first-of-type:not(.hero-section) {
-        padding-top: 8.5rem !important;
-        padding-bottom: 1.75rem !important;
-      }
-      /* Service Detail Subpages Hero */
-      section.hero-section,
-      .hero-section {
-        padding-top: 14.5rem !important;
-        padding-bottom: 2.5rem !important;
-      }
-      #root > div > section:nth-of-type(2),
-      main > section:nth-of-type(2) {
-        padding-top: 2rem !important;
-      }
-    }
-    input, button, select, textarea {
-      font-family: inherit;
-    }
-    @media (min-width: 1025px) {
-      .nav-mobile-toggle,
-      #nav-toggle,
-      .nav-mobile-drawer,
-      header button.lg\:hidden,
-      header div.lg\:hidden {
-        display: none !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        opacity: 0 !important;
-      }
-    }
-    /* Mobile Hamburger & Close Cross ('X') Toggle Styling */
-    .nav-mobile-toggle, #nav-toggle, header button.lg\:hidden {
-      position: relative !important;
-      z-index: 100010 !important;
-      cursor: pointer !important;
-      pointer-events: auto !important;
-      color: #1e293b !important;
-    }
-    .nav-mobile-toggle span {
-      display: block !important;
-      width: 26px !important;
-      height: 2.5px !important;
-      background: #1e293b !important;
-      border-radius: 2px !important;
-      transition: all 0.3s ease !important;
-    }
-    .nav-mobile-toggle.open span:nth-child(1),
-    header.menu-open .nav-mobile-toggle span:nth-child(1) {
-      transform: translateY(7.5px) rotate(45deg) !important;
-      background: #0f172a !important;
-    }
-    .nav-mobile-toggle.open span:nth-child(2),
-    header.menu-open .nav-mobile-toggle span:nth-child(2) {
-      opacity: 0 !important;
-    }
-    .nav-mobile-toggle.open span:nth-child(3),
-    header.menu-open .nav-mobile-toggle span:nth-child(3) {
-      transform: translateY(-7.5px) rotate(-45deg) !important;
-      background: #0f172a !important;
-    }
-    /* STRV-grade 100% full-surface button clickability & z-index isolation */
-    .nav-cta-desktop, .drawer-cta {
-      position: relative !important;
-      z-index: 100001 !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex-shrink: 0 !important;
-      cursor: pointer !important;
-      user-select: none !important;
-      -webkit-tap-highlight-color: transparent !important;
-      box-sizing: border-box !important;
-      pointer-events: auto !important;
-    }
-    a.bg-amber-500, a.bg-primary, button.bg-primary, a[href*="kalkulacka"], [data-hero-btn-type], [class*="hero"] button, [class*="hero"] a {
-      position: relative !important;
-      z-index: 10 !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex-shrink: 0 !important;
-      cursor: pointer !important;
-      user-select: none !important;
-      -webkit-tap-highlight-color: transparent !important;
-      box-sizing: border-box !important;
-      pointer-events: auto !important;
-    }
-    .nav-desktop, header nav {
-      position: relative !important;
-      z-index: 1 !important;
-      flex-shrink: 1 !important;
-    }
-    .nav-cta-desktop *, .drawer-cta *, a.bg-amber-500 *, a.bg-primary *, button.bg-primary *, a[href*="kalkulacka"] *, [data-hero-btn-type] *, [class*="hero"] button *, [class*="hero"] a * {
-      pointer-events: none !important;
-    }
-    /* Mobile Top Header Bar Single-Row Layout (Logo + Spočítat cenu + Hamburger Toggle) */
-    @media (max-width: 1024px) {
-      header .max-w-7xl > div,
-      header .container > div,
-      .nav-main-bar {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        flex-wrap: nowrap !important;
-        gap: 0.5rem !important;
-      }
-      header .nav-cta-desktop,
-      header button.bg-primary,
-      header a.bg-primary {
-        display: inline-flex !important;
-        font-size: 0.75rem !important;
-        padding: 0.4rem 0.85rem !important;
-        border-radius: 99px !important;
-        white-space: nowrap !important;
-        margin-left: auto !important;
-        margin-right: 0.25rem !important;
-        z-index: 100005 !important;
-      }
-    }
-    /* Ensure FAQ/Reviews/Accordion Bubbles are strictly LEFT-ALIGNED */
-    .faq-toggle, .faq-item button, [class*="faq"] button, [class*="accordion"] button {
-      text-align: left !important;
-      justify-content: space-between !important;
-      align-items: center !important;
-      display: flex !important;
-      width: 100% !important;
-    }
-    .faq-toggle span, .faq-item button span, [class*="faq"] button span {
-      text-align: left !important;
-    }
-    /* Hero Badges Orange Color Styling */
-    .hero-badges > div, .hero-badges-row > div {
-      color: #f59e0b !important;
-      font-weight: 700 !important;
-    }
-    /* Touch & Mobile device typography & input zoom prevention */
-    @media (max-width: 768px) {
-      body {
-        -webkit-tap-highlight-color: transparent;
-      }
-      input, select, textarea {
-        font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
-      }
-      a, button, input[type="button"], input[type="submit"] {
-        min-height: 44px;
-      }
-    }
-    @media (max-width: 640px) {
-      .top-info-bar-inner {
-        padding: 0.4rem 1rem !important;
-        font-size: 0.78rem !important;
-      }
-      .service-hero-title {
-        font-size: clamp(1.75rem, 6.5vw, 2.5rem) !important;
-      }
-      .service-section-title {
-        font-size: clamp(1.4rem, 5vw, 1.85rem) !important;
-      }
-      .cta-buttons {
-        flex-direction: column !important;
-        width: 100% !important;
-      }
-      .cta-buttons a, .cta-buttons button {
-        width: 100% !important;
-      }
-    }
-  `;
-  document.head.appendChild(styleEl);
-};
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectGlobalResponsiveStyles);
-} else {
-  injectGlobalResponsiveStyles();
-}
+window.openAboutUsModal = openAboutUsModal;
+window.nnf_openAboutUs = openAboutUsModal;
+
+
+
 
 // Navbar Frosted Glass Scroll Effect
 const handleNavbarBlurScroll = () => {
@@ -292,10 +63,12 @@ if (isReload) {
   }
   window.scrollTo(0, 0);
 } else if (window.location.hash) {
-  // Plynulý dojezd na sekci po načtení hlavní strany z podstránky
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(handleIncomingHash, 150);
-  });
+  // Plynulý dojezd na sekci okamžitě po načtení hlavní strany z podstránky (0ms zpoždění)
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    handleIncomingHash();
+  } else {
+    document.addEventListener('DOMContentLoaded', handleIncomingHash);
+  }
 } else {
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
@@ -352,6 +125,19 @@ const sendYTCommand = (iframe, func, args = []) => {
       }), '*');
     }
   } catch (e) { }
+};
+
+// Module-level scrollToKalkulacka — dostupná okamžitě pro všechny click listenery
+window.scrollToKalkulacka = (e) => {
+  if (e && e.preventDefault) e.preventDefault();
+  if (e && e.stopPropagation) e.stopPropagation();
+  const el = document.getElementById('kalkulacka') || document.querySelector('.hero-calc-card') || document.querySelector('.calc-section') || document.querySelector('#calc-steps') || document.querySelector('#m-form');
+  if (el) {
+    const top = Math.round(el.getBoundingClientRect().top + window.pageYOffset - 90);
+    window.scrollTo({ top, behavior: 'smooth' });
+  } else {
+    window.location.href = '/#kalkulacka';
+  }
 };
 
 // Global interaction trigger to unlock video autoplay on 100% of browsers
@@ -623,9 +409,6 @@ const observeAll = () => {
     };
 
     performScroll();
-    setTimeout(performScroll, 100);
-    setTimeout(performScroll, 300);
-    setTimeout(performScroll, 600);
   };
   // Eagerly inject Configurator on homepage load above #kontakt
   const ensureCalculatorInjected = () => {
@@ -758,15 +541,26 @@ const observeAll = () => {
     phoneEl.style.cssText = 'color: inherit; font-weight: 400; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.2s;';
     phoneEl.onmouseover = function () { this.style.color = '#f59e0b'; };
     phoneEl.onmouseout = function () { this.style.color = 'inherit'; };
-    phoneEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> +420 774 509 409';
+    phoneEl.innerHTML = '+420 774 509 409';
     topContacts.insertBefore(phoneEl, topContacts.firstChild);
   }
+
+  // Remove any icons or 3-lines next to phone number in top black bar
+  document.querySelectorAll('a[href*="774509409"]').forEach(link => {
+    if (link.closest('.top-info-bar-contacts, header div.bg-neutral-800, header div.bg-neutral-900, header div.text-xs')) {
+      const svg = link.querySelector('svg');
+      if (svg) svg.remove();
+      const i = link.querySelector('i');
+      if (i) i.remove();
+      link.innerHTML = link.innerHTML.replace(/^[^\+\d]+/, '');
+    }
+  });
 
   // Remove duplicated phone number from white header navbar next to "Nezávazná poptávka" button
   document.querySelectorAll('header div.gap-3 > a[href*="774509409"], header nav + div > a[href*="774509409"]').forEach(el => el.remove());
 
   // 4. Update Logos (SRC only, sizes are in CSS)
-  const logos = document.querySelectorAll('header img:not(.chat-logo):not(.ai-chat-launcher img), nav img:not(.chat-logo), footer img');
+  const logos = document.querySelectorAll('header img:not(.chat-logo):not(.ai-chat-launcher img), nav img:not(.chat-logo)');
   logos.forEach(img => {
     if (!img.dataset.patched && (img.src.includes('logo.jpg') || img.src.includes('logo-nav.jpg') || img.src.includes('logo_dark.jpg'))) {
       img.src = '/static/nanofusion-long.png';
@@ -781,20 +575,34 @@ const observeAll = () => {
     }
   });
 
+  const footerLogos = document.querySelectorAll('footer img');
+  footerLogos.forEach(img => {
+    img.src = '/static/nanofusion-footer-logo.png';
+    img.dataset.patched = 'true';
+    if (!img.parentElement || img.parentElement.tagName !== 'A') {
+      const a = document.createElement('a');
+      a.href = '/';
+      a.className = 'footer-logo-link';
+      a.style.cssText = 'display: inline-flex; align-items: center; text-decoration: none; cursor: pointer; margin-bottom: 1rem;';
+      img.parentNode.insertBefore(a, img);
+      a.appendChild(img);
+    }
+  });
+
   // 5. Navigation Links & CTA Buttons Cleanup
   // Strictly filter out removed items ("Jak to funguje", "FAQ", "Konfigurátor") from all navbar containers
   document.querySelectorAll('header nav a, header div a, .nav-mobile-drawer a, div[class*="mobile-menu"] a').forEach(a => {
     const text = (a.textContent || '').trim().toLowerCase();
     const href = (a.getAttribute('href') || '').toLowerCase();
     if (
-      text === 'jak to funguje' || 
-      text === 'faq' || 
-      text === 'časté dotazy' || 
-      text === 'konfigurátor' || 
-      href === '#postup' || 
-      href === '#proces' || 
-      href === '#faq' || 
-      href === '/faq' || 
+      text === 'jak to funguje' ||
+      text === 'faq' ||
+      text === 'časté dotazy' ||
+      text === 'konfigurátor' ||
+      href === '#postup' ||
+      href === '#proces' ||
+      href === '#faq' ||
+      href === '/faq' ||
       (href.includes('kalkulacka') && !a.classList.contains('nav-cta-desktop') && !a.classList.contains('drawer-cta') && !a.className.includes('amber'))
     ) {
       a.remove();
@@ -806,24 +614,29 @@ const observeAll = () => {
     const text = (a.textContent || '').trim().toLowerCase();
     if (a.classList.contains('nav-cta-desktop') || a.classList.contains('drawer-cta') || a.classList.contains('bg-primary') || text.includes('nezávazn') || text.includes('poptávk') || text.includes('spočítejte') || text.includes('spočítat')) {
       if (text.includes('služby') || text.includes('reference') || text.includes('blog') || text.includes('galerie') || text.includes('o nás') || text.includes('kontakt')) return;
-      const svg = a.querySelector('svg');
-      if (svg) {
-        a.innerHTML = `Spočítat cenu ${svg.outerHTML}`;
-      } else {
-        a.textContent = 'Spočítat cenu';
-      }
-      a.onclick = (e) => {
-        if (e) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-        if (window.scrollToKalkulacka) {
-          window.scrollToKalkulacka(e);
+      // Only overwrite content if not already patched (preserve SVG arrows from template)
+      if (!a.dataset.ctaNavPatched) {
+        const svg = a.querySelector('svg');
+        if (svg) {
+          // Preserve existing SVG — just ensure pointer-events:none on SVG to prevent dead zones
+          svg.style.pointerEvents = 'none';
         } else {
-          const target = document.getElementById('kalkulacka') || document.getElementById('m-form') || document.getElementById('kontakt');
-          if (target) target.scrollIntoView({ behavior: 'smooth' });
+          a.textContent = 'Spočítat cenu';
         }
-      };
+        a.dataset.ctaNavPatched = 'true';
+      }
+      // onclick is handled by capture handler; set as redundant fallback only
+      if (!a.dataset.ctaOnclickSet) {
+        a.onclick = (e) => {
+          if (e) { e.preventDefault(); e.stopPropagation(); }
+          if (window.scrollToKalkulacka) { window.scrollToKalkulacka(e); }
+          else {
+            const target = document.getElementById('kalkulacka') || document.getElementById('m-form') || document.getElementById('kontakt');
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+          }
+        };
+        a.dataset.ctaOnclickSet = 'true';
+      }
     }
   });
 
@@ -889,6 +702,15 @@ const observeAll = () => {
         galleryLink.href = prefix + '#galerie';
         const currentBlog = Array.from(container.querySelectorAll('a')).find(a => (a.textContent || '').trim().toLowerCase() === 'blog') || anchor;
         currentBlog.parentNode.insertBefore(galleryLink, currentBlog.nextSibling);
+      }
+
+      // 3. O nás
+      if (!links.some(a => (a.textContent || '').trim().toLowerCase() === 'o nás' || (a.getAttribute('href') || '').includes('o-nas'))) {
+        const aboutLink = anchor.cloneNode(true);
+        aboutLink.textContent = 'O nás';
+        aboutLink.href = prefix + '#o-nas';
+        const currentGallery = Array.from(container.querySelectorAll('a')).find(a => (a.textContent || '').trim().toLowerCase() === 'galerie') || anchor;
+        currentGallery.parentNode.insertBefore(aboutLink, currentGallery.nextSibling);
       }
     });
   };
@@ -966,38 +788,73 @@ const observeAll = () => {
 
   window.nnf_closeMobileMenu = closeMobileMenu;
 
-  // STRV Staff Engineer Capture-Phase Listener: 100% full-surface clickability for Header Navbar CTA button ("Spočítat cenu")
+  // STRV Capture-Phase Event Delegation for navbar CTA buttons ("Spočítat cenu")
   document.addEventListener('click', (e) => {
-    const ctaBtn = e.target.closest('header .nav-cta-desktop, .drawer-cta, header button.bg-primary, header a.bg-primary, header button.bg-amber-500, header a[href*="kalkulacka"]');
-    let target = ctaBtn;
+    const btn = e.target && e.target.closest ? e.target.closest('.nav-cta-desktop, .drawer-cta, .cta-btn-primary, header a[href*="kalkulacka"], header a[href*="poptavka"], header button.bg-amber-500, header a.bg-amber-500, header button.bg-primary, header a.bg-primary') : null;
+    let isCta = !!btn;
 
-    // Geometric Bounding-Box Hit-Test (with 6px padding tolerance around button edges)
-    if (!target && e.target && e.target.closest && e.target.closest('header')) {
-      const el = document.querySelector('header .nav-cta-desktop, .drawer-cta, header button.bg-primary, header a.bg-primary, header button.bg-amber-500');
-      if (el && typeof el.getBoundingClientRect === 'function') {
-        const rect = el.getBoundingClientRect();
-        if (e.clientX >= rect.left - 6 && e.clientX <= rect.right + 6 && e.clientY >= rect.top - 6 && e.clientY <= rect.bottom + 6) {
-          target = el;
+    if (!isCta && e.target && e.target.closest) {
+      const headerBtn = e.target.closest('header button, header a, .nav-mobile-drawer a, .nav-mobile-drawer button');
+      if (headerBtn) {
+        const text = (headerBtn.textContent || '').trim().toLowerCase();
+        if (text.includes('spočítat') || text.includes('spočítejte') || text.includes('poptávk') || text.includes('nezávazn')) {
+          if (!text.includes('služby') && !text.includes('reference') && !text.includes('blog') && !text.includes('galerie') && !text.includes('o nás') && !text.includes('kontakt')) {
+            isCta = true;
+          }
         }
       }
     }
 
-    if (target) {
-      const text = (target.textContent || '').trim().toLowerCase();
-      // Ensure we only catch the CTA button ("Spočítat cenu" / "Nezávazná poptávka"), not nav text links
-      if (target.classList.contains('nav-cta-desktop') || target.classList.contains('drawer-cta') || target.classList.contains('bg-primary') || target.classList.contains('bg-amber-500') || text.includes('spočítat') || text.includes('spočítejte') || text.includes('poptávk')) {
-        if (text.includes('služby') || text.includes('reference') || text.includes('blog') || text.includes('galerie') || text.includes('o nás') || text.includes('kontakt')) return;
+    if (isCta) {
+      e.preventDefault();
+      // Use stopImmediatePropagation to prevent second capture handler from double-calling scrollToKalkulacka
+      e.stopImmediatePropagation();
+      // Close mobile menu if open
+      if (typeof closeMobileMenu === 'function') {
+        closeMobileMenu();
+      } else if (window.nnf_closeMobileMenu) {
+        window.nnf_closeMobileMenu();
+      }
+      if (window.scrollToKalkulacka) {
+        window.scrollToKalkulacka(e);
+      } else {
+        window.location.href = '/#kalkulacka';
+      }
+    }
+  }, true);
 
+
+  // STRV Staff Engineer Capture-Phase Listener: Instant 0ms modal opening for "O nás" (Prevents page reloads & delays)
+  document.addEventListener('click', (e) => {
+    const link = e.target && e.target.closest ? e.target.closest('a, button, [role="button"]') : null;
+    if (link) {
+      const href = (link.getAttribute('href') || '').toLowerCase();
+      const text = (link.textContent || '').trim().toLowerCase();
+      if (href.includes('o-nas') || href.includes('o-nas.html') || href === '#about' || href === '#o-nas' || text === 'o nás' || text.includes('o nás')) {
         e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
 
-        if (window.scrollToKalkulacka) {
-          window.scrollToKalkulacka(e);
-        } else {
-          const kalk = document.getElementById('kalkulacka') || document.getElementById('m-form') || document.getElementById('kontakt');
-          if (kalk) kalk.scrollIntoView({ behavior: 'smooth' });
-          else window.location.href = '/#kalkulacka';
+        if (typeof window.openAboutUsModal === 'function') {
+          window.openAboutUsModal();
+        } else if (typeof window.nnf_openAboutUs === 'function') {
+          window.nnf_openAboutUs();
         }
+        return;
+      }
+    }
+  }, true);
+
+  // STRV Fast Listener: Logo Click -> Instant Smooth Scroll to Top (or Home)
+  document.addEventListener('click', (e) => {
+    const logoLink = e.target && e.target.closest ? e.target.closest('header a[href="/"], header a[href="/index.html"], header a.nav-logo-link, footer a[href="/"], .nav-logo-img') : null;
+    if (logoLink) {
+      const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '';
+      if (isHomePage) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
   }, true);
@@ -1005,7 +862,7 @@ const observeAll = () => {
   // 6. Active link state & smooth scroll for in-page anchors & CTA buttons
   document.addEventListener('click', (e) => {
     let btn = e.target.closest('a, button, [role="button"], .nav-cta-desktop, .drawer-cta');
-    
+
     // STRV Fallback 1: If click was within bounding box of header CTA button (prevents overlay deadzones)
     if (!btn && e.target.closest('header')) {
       const ctaEl = document.querySelector('header .nav-cta-desktop, .drawer-cta, header button.bg-primary, header a.bg-primary');
@@ -1016,7 +873,7 @@ const observeAll = () => {
         }
       }
     }
-    
+
     // STRV Fallback 2: Bounding box hit-test for Hero Section CTA button ("Spočítejte si cenu")
     if (!btn || (btn && !btn.getAttribute('href') && !btn.onclick)) {
       const heroCta = document.querySelector('main section:first-of-type button.bg-primary, main section:first-of-type a.bg-primary, [class*="hero"] button.bg-primary, [class*="hero"] a.bg-primary, #root section button.bg-primary');
@@ -1045,25 +902,23 @@ const observeAll = () => {
     // Do NOT intercept inner clicks on blog cards/modals unless it's a nav/footer link
     if (!isNavOrFooter && btn.closest('#blog-modal-overlay, .blog-card-modern, .gallery-modal')) return;
 
-    // 0. "O nás" link -> na službách přesměruje na hlavní stranu /#o-nas, na hlavní straně otevře modal O nás
+    // 0. "O nás" link -> otevírá modal O nás okamžitě (0ms latence) na hlavní straně i na podstránkách služeb
     if (href.includes('o-nas') || text.includes('o nás')) {
       e.preventDefault();
-      if (isHomePage) {
-        if (typeof window.openAboutUsModal === 'function') {
-          window.openAboutUsModal();
-        } else if (typeof window.nnf_openAboutUs === 'function') {
-          window.nnf_openAboutUs();
-        } else {
-          import('./about-us.js').then(m => {
-            if (m && m.openAboutUsModal) {
-              m.openAboutUsModal();
-            } else if (window.openAboutUsModal) {
-              window.openAboutUsModal();
-            }
-          }).catch(() => {});
-        }
+      if (typeof window.openAboutUsModal === 'function') {
+        window.openAboutUsModal();
+      } else if (typeof window.nnf_openAboutUs === 'function') {
+        window.nnf_openAboutUs();
       } else {
-        window.location.href = '/#o-nas';
+        import('./about-us.js').then(m => {
+          if (m && m.openAboutUsModal) {
+            m.openAboutUsModal();
+          } else if (window.openAboutUsModal) {
+            window.openAboutUsModal();
+          }
+        }).catch(() => {
+          window.location.href = '/#o-nas';
+        });
       }
       return;
     }
@@ -1128,9 +983,6 @@ const observeAll = () => {
         }
       };
       performRefScroll();
-      setTimeout(performRefScroll, 100);
-      setTimeout(performRefScroll, 300);
-      setTimeout(performRefScroll, 600);
       return;
     }
 
@@ -1626,7 +1478,15 @@ const injectGallery = () => {
     gallerySection = document.createElement('section');
     gallerySection.id = 'galerie';
     gallerySection.className = 'pt-24 pb-32 bg-white relative overflow-hidden';
-    referenceSection.parentNode.insertBefore(gallerySection, referenceSection.nextSibling);
+    // Anchor after #blog when it's already been injected (blog.js races this
+    // same insertion point independently), otherwise right after #reference.
+    // Keeps the Reference -> Blog -> Galerie order stable regardless of
+    // which async injector wins the race.
+    const blogSection = document.getElementById('blog');
+    const anchor = blogSection && blogSection.parentNode === referenceSection.parentNode
+      ? blogSection
+      : referenceSection;
+    anchor.parentNode.insertBefore(gallerySection, anchor.nextSibling);
 
     gallerySection.innerHTML = `
       <div class="container mx-auto px-4">

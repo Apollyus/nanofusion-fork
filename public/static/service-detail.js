@@ -327,11 +327,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Toggle display
       answer.style.display = isOpen ? 'none' : 'block';
-      
-      // Toggle rotation classes
+      btn.classList.toggle('faq-open', !isOpen);
+
+      // Toggle rotation classes if legacy arrow exists
       if (arrow) {
         arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
       }
     };
   });
 });
+

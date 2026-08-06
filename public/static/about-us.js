@@ -3,17 +3,34 @@
  * CTO Edition - STRV Premium Standards
  */
 
-import { supabase } from './supabase-config.js';
-
 // Globální cache pro okamžité otevírání (0ms)
-let aboutUsCache = null;
+let aboutUsCache = {
+  title: 'Příběh preciznosti a inovace',
+  subtitle: '14 let pečujeme o to, co jste usilovně vybudovali',
+  description: 'NANOfusion vznikla z vášně pro detail a potřeby chránit to, co naši klienti usilovně vybudovali. Věříme, že krása architektury by neměla blednout pod vlivem času a počasí.',
+  stats: [
+    { label: 'Realizací', value: '950+' },
+    { label: 'Let garance', value: '10' },
+    { label: 'Let zkušeností', value: '14' }
+  ],
+  certs: [],
+  whyTitle: 'Proč NANOfusion?',
+  whyPoints: [
+    "Vlastní prověřené postupy a špičková certifikovaná chemie",
+    "Zaměření, kalkulace a osobní konzultace po celé ČR zdarma",
+    "Profesionální tým specialistů s mnohaletou řemeslnou praxí"
+  ],
+  certsTitle: 'Naše certifikace a odbornost',
+  certsSubtitle: 'Spolupracujeme s předními výrobci v oboru a naši specialisté pravidelně procházejí náročným školením pro aplikaci moderních nano-materiálů.'
+};
 let isPreloading = false;
 
-// Pre-fetchování dat ihned při načtení stránky
+// Pre-fetchování dat ihned při načtení stránky (lazy load Supabase na pozadí)
 export const preloadAboutUsData = async () => {
   if (isPreloading) return;
   isPreloading = true;
   try {
+    const { supabase } = await import('./supabase-config.js');
     const { data: configData, error } = await supabase
       .from('site_config')
       .select('*')
@@ -101,227 +118,132 @@ export const preloadAboutUsData = async () => {
 // ============================================================
 // MODAL RENDERER & INTERACTIVE LOGIC
 // ============================================================
-export const openAboutUsModal = async () => {
+export const openAboutUsModal = () => {
 
-  // 1. Zobrazíme transparentní skleněné pozadí (web zůstane v pozadí plně vidět)
+  // 1. Zobrazíme transparentní pozadí okamžitě bez prodlevy (0ms)
   let overlay = document.getElementById('about-us-modal-overlay');
   if (!overlay) {
     overlay = document.createElement('div');
     overlay.id = 'about-us-modal-overlay';
-    // Měníme na rgba(15,23,42,0.4) a blur(8px)
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:99999999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.3s ease;';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:99999999;display:flex;align-items:center;justify-content:center;padding:20px;';
     document.body.appendChild(overlay);
-    setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-  } else {
-    overlay.style.display = 'flex';
-    overlay.style.opacity = '1';
   }
 
-  // 2. Pokud nemáme cache (téměř nenastane), ukážeme spinner a stáhneme data
-  if (!aboutUsCache) {
-    overlay.innerHTML = `
-      <div style="color:white;display:flex;flex-direction:column;align-items:center;gap:1rem;">
-        <div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:#f59e0b;border-radius:50%;animation:spin 1s infinite linear;"></div>
-        <span style="font-family:'Outfit',sans-serif;font-size:14px;color:white;font-weight:600;letter-spacing:0.05em;text-shadow:0 2px 10px rgba(0,0,0,0.5);">Načítání...</span>
+  // Pre-render obsahu pouze pokud ještě nebylo vygenerováno nebo se změnila cache
+  if (!overlay.dataset.rendered) {
+    const { title, subtitle, description, stats, certs, whyTitle, whyPoints, certsTitle, certsSubtitle } = aboutUsCache;
+
+    // Generování HTML statistik
+    const statsHtml = stats.map(s => `
+      <div style="background:#f8fafc;padding:1.5rem;border-radius:1.5rem;border:1px solid #e2e8f0;text-align:center;">
+        <div style="font-size:2.25rem;font-weight:900;background:linear-gradient(135deg, #f59e0b, #d97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.25rem;">${s.value}</div>
+        <div style="font-size:0.875rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">${s.label}</div>
       </div>
-      <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+    `).join('');
+
+    // Generování HTML certifikátů
+    const certsHtml = certs.length > 0
+      ? certs.map(c => `
+          <div class="cert-card" onclick="window.nnf_openCertDetail('${c.id}')" style="background:#ffffff;border-radius:1.5rem;border:1px solid #e2e8f0;overflow:hidden;cursor:pointer;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);box-shadow:0 4px 12px rgba(0,0,0,0.03);position:relative;">
+            <div style="height:150px;position:relative;overflow:hidden;background:#f8fafc;">
+              <img src="${window.nnf_optimizeImage ? window.nnf_optimizeImage(c.imageUrl, 450) : c.imageUrl}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;" class="cert-img-hover" loading="lazy">
+              <div style="position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 60%);"></div>
+              <span style="position:absolute;bottom:12px;left:12px;background:rgba(245,158,11,0.95);color:white;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;">Certifikát</span>
+            </div>
+            <div style="padding:1.25rem;">
+              <h4 style="font-size:0.95rem;font-weight:800;color:#0f172a;margin-bottom:0.25rem;line-clamp:1;-webkit-line-clamp:1;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${c.title}</h4>
+              <p style="color:#64748b;font-size:0.813rem;line-height:1.5;line-clamp:2;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;margin:0;">${c.description}</p>
+            </div>
+          </div>
+        `).join('')
+      : `<div style="grid-column:1/-1;text-align:center;padding:3rem;background:#f8fafc;border-radius:2rem;border:1px dashed #cbd5e1;color:#64748b;font-weight:600;">Naše certifikáty v oboru se připravují k zobrazení...</div>`;
+
+    // Vložíme hlavní obsah modal okna (0ms latence)
+    overlay.innerHTML = `
+      <div class="about-modal-card" style="background:white;width:100%;max-width:1100px;max-height:90vh;border-radius:32px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 30px 100px rgba(15,23,42,0.15);animation:modalReveal 0.12s ease-out;">
+        <!-- Zavírací tlačítko -->
+        <button onclick="window.nnf_closeAboutUs()" class="about-modal-close" style="position:absolute;top:24px;right:24px;background:#f1f5f9;color:#0f172a;border:1px solid #cbd5e1;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:1000;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.08);transition:all 0.2s;" onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.05)';" onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';" aria-label="Zavřít">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        
+        <div class="about-modal-scroll" style="flex:1;overflow-y:auto;padding:40px 60px;">
+          <!-- Hlavička -->
+          <div class="about-modal-header" style="margin-bottom:3rem;max-width:800px;">
+            <span style="color:#f59e0b;font-weight:800;text-transform:uppercase;font-size:13px;letter-spacing:0.15em;display:block;margin-bottom:8px;">O NÁS</span>
+            <h2 class="about-modal-title" style="font-size:2.5rem;font-weight:900;color:#0f172a;line-height:1.1;letter-spacing:-0.03em;margin:0 0 12px 0;">${title}</h2>
+            <div class="about-modal-subtitle" style="font-size:1.15rem;font-weight:600;color:#64748b;line-height:1.4;">${subtitle}</div>
+          </div>
+
+          <!-- Mřížka obsahu (Obtékání na desktopu) -->
+          <div class="about-content-wrapper" style="margin-bottom:4rem;">
+            <!-- Pravý sloupec: Proč NANOfusion (Dark Box) -->
+            <div class="about-modal-accent-box" style="background:#0f172a;color:white;padding:2.5rem;border-radius:2rem;position:relative;overflow:hidden;">
+              <h3 style="font-size:1.5rem;font-weight:800;margin:0 0 1.5rem 0;color:#f59e0b;">${whyTitle}</h3>
+              <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1.25rem;">
+                ${whyPoints.map(p => `
+                  <li style="display:flex;align-items:flex-start;gap:12px;line-height:1.5;">
+                    <span style="color:#f59e0b;font-weight:800;font-size:1.15rem;">✓</span>
+                    <span>${p}</span>
+                  </li>
+                `).join('')}
+              </ul>
+              <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" style="position:absolute;right:-80px;bottom:-80px;width:256px;height:256px;background:rgba(245,158,11,0.1);border-radius:50%;filter:blur(40px);pointer-events:none;"></div>
+            </div>
+
+            <!-- Levý sloupec: Text -->
+            <div class="about-modal-desc" style="font-size:1.05rem;line-height:1.75;color:#334155;">${description}</div>
+            
+            <div style="clear:both;"></div>
+            
+            <!-- Statistiky -->
+            <div class="about-modal-stats-grid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:20px;margin-top:3rem;">
+              ${statsHtml}
+            </div>
+          </div>
+
+          <!-- Sekce Certifikáty -->
+          <div>
+            <div class="about-modal-certs-header" style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;">
+              <h3 style="font-size:1.5rem;font-weight:800;color:#0f172a;margin:0;">${certsTitle}</h3>
+              <div class="about-modal-certs-line" style="height:2px;flex:1;background:#f1f5f9;margin-left:24px;"></div>
+            </div>
+            <p class="about-modal-certs-subtitle" style="color:#64748b;font-size:0.95rem;margin-bottom:2rem;max-width:700px;">${certsSubtitle}</p>
+            
+            <!-- Mřížka certifikátů -->
+            <div class="about-modal-certs-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));gap:24px;">
+              ${certsHtml}
+            </div>
+          </div>
+        </div>
+      </div>
     `;
-    await preloadAboutUsData();
+    overlay.dataset.rendered = 'true';
   }
+
+  overlay.style.display = 'flex';
+  overlay.style.opacity = '1';
+  document.body.style.overflow = 'hidden';
+
+  // Zavření při kliknutí na pozadí overlay
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      window.nnf_closeAboutUs();
+    }
+  };
 
   // Spustíme revalidaci na pozadí pro případ, že se v CMS změnila data od posledního načtení
   preloadAboutUsData();
-
-  const { title, subtitle, description, stats, certs, whyTitle, whyPoints, certsTitle, certsSubtitle } = aboutUsCache;
-
-  // Generování HTML statistik
-  const statsHtml = stats.map(s => `
-    <div style="background:#f8fafc;padding:1.5rem;border-radius:1.5rem;border:1px solid #e2e8f0;text-align:center;">
-      <div style="font-size:2.25rem;font-weight:900;background:linear-gradient(135deg, #f59e0b, #d97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.25rem;">${s.value}</div>
-      <div style="font-size:0.875rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">${s.label}</div>
-    </div>
-  `).join('');
-
-  // Generování HTML certifikátů
-  const certsHtml = certs.length > 0
-    ? certs.map(c => `
-        <div class="cert-card" onclick="window.nnf_openCertDetail('${c.id}')" style="background:#ffffff;border-radius:1.5rem;border:1px solid #e2e8f0;overflow:hidden;cursor:pointer;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);box-shadow:0 4px 12px rgba(0,0,0,0.03);position:relative;">
-          <div style="height:150px;position:relative;overflow:hidden;background:#f8fafc;">
-            <img src="${window.nnf_optimizeImage(c.imageUrl, 450)}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;" class="cert-img-hover" loading="lazy">
-            <div style="position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 60%);"></div>
-            <span style="position:absolute;bottom:12px;left:12px;background:rgba(245,158,11,0.95);color:white;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;">Certifikát</span>
-          </div>
-          <div style="padding:1.25rem;">
-            <h4 style="font-size:0.95rem;font-weight:800;color:#0f172a;margin-bottom:0.25rem;line-clamp:1;-webkit-line-clamp:1;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${c.title}</h4>
-            <p style="color:#64748b;font-size:0.813rem;line-height:1.5;line-clamp:2;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;margin:0;">${c.description}</p>
-          </div>
-        </div>
-      `).join('')
-    : `<div style="grid-column:1/-1;text-align:center;padding:3rem;background:#f8fafc;border-radius:2rem;border:1px dashed #cbd5e1;color:#64748b;font-weight:600;">Naše certifikáty v oboru se připravují k zobrazení...</div>`;
-
-  // Vložíme hlavní obsah modal okna (0ms latence, vše vykresleno okamžitě)
-  overlay.innerHTML = `
-    <div class="about-modal-card" style="background:white;width:100%;max-width:1100px;max-height:90vh;border-radius:32px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 30px 100px rgba(15,23,42,0.15);animation:modalReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
-      <!-- Zavírací tlačítko -->
-      <button onclick="window.nnf_closeAboutUs()" class="about-modal-close" style="position:absolute;top:20px;right:20px;background:#f1f5f9;border:none;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:24px;z-index:100;font-weight:bold;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">&times;</button>
-      
-      <div class="about-modal-scroll" style="flex:1;overflow-y:auto;padding:40px 60px;">
-        <!-- Hlavička -->
-        <div class="about-modal-header" style="margin-bottom:3rem;max-width:800px;">
-          <span style="color:#f59e0b;font-weight:800;text-transform:uppercase;font-size:13px;letter-spacing:0.15em;display:block;margin-bottom:8px;">O NÁS</span>
-          <h2 class="about-modal-title" style="font-size:2.5rem;font-weight:900;color:#0f172a;line-height:1.1;letter-spacing:-0.03em;margin:0 0 12px 0;">${title}</h2>
-          <div class="about-modal-subtitle" style="font-size:1.15rem;font-weight:600;color:#64748b;line-height:1.4;">${subtitle}</div>
-        </div>
-
-        <!-- Mřížka obsahu (Obtékání na desktopu) -->
-        <div class="about-content-wrapper" style="margin-bottom:4rem;">
-          <!-- Pravý sloupec: Proč NANOfusion (Dark Box) -->
-          <div class="about-modal-accent-box" style="background:#0f172a;color:white;padding:2.5rem;border-radius:2rem;position:relative;overflow:hidden;">
-            <h3 style="font-size:1.5rem;font-weight:800;margin:0 0 1.5rem 0;color:#f59e0b;">${whyTitle}</h3>
-            <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1.25rem;">
-              ${whyPoints.map(p => `
-                <li style="display:flex;align-items:flex-start;gap:12px;line-height:1.5;">
-                  <span style="color:#f59e0b;font-weight:800;font-size:1.15rem;">✓</span>
-                  <span>${p}</span>
-                </li>
-              `).join('')}
-            </ul>
-            <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" style="position:absolute;right:-80px;bottom:-80px;width:256px;height:256px;background:rgba(245,158,11,0.1);border-radius:50%;filter:blur(40px);pointer-events:none;"></div>
-          </div>
-
-          <!-- Levý sloupec: Text -->
-          <div class="about-modal-desc" style="font-size:1.05rem;line-height:1.75;color:#334155;">${description}</div>
-          
-          <div style="clear:both;"></div>
-          
-          <!-- Statistiky -->
-          <div class="about-modal-stats-grid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:20px;margin-top:3rem;">
-            ${statsHtml}
-          </div>
-        </div>
-
-        <!-- Sekce Certifikáty -->
-        <div>
-          <div class="about-modal-certs-header" style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;">
-            <h3 style="font-size:1.5rem;font-weight:800;color:#0f172a;margin:0;">${certsTitle}</h3>
-            <div class="about-modal-certs-line" style="height:2px;flex:1;background:#f1f5f9;margin-left:24px;"></div>
-          </div>
-          <p class="about-modal-certs-subtitle" style="color:#64748b;font-size:0.95rem;margin-bottom:2rem;max-width:700px;">${certsSubtitle}</p>
-          
-          <!-- Mřížka certifikátů -->
-          <div class="about-modal-certs-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));gap:24px;">
-            ${certsHtml}
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <style>
-      @keyframes modalReveal {
-        from { opacity: 0; transform: scale(0.95) translateY(10px); }
-        to { opacity: 1; transform: scale(1) translateY(0); }
-      }
-      .cert-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
-        border-color: #f59e0b !important;
-      }
-      .cert-card:hover .cert-img-hover {
-        transform: scale(1.08);
-      }
-      @media (max-width: 768px) {
-        .about-modal-card {
-          border-radius: 20px !important;
-          max-height: 95vh !important;
-          width: 100% !important;
-        }
-        .about-modal-scroll {
-          padding: 24px 20px !important;
-        }
-        .about-modal-close {
-          top: 12px !important;
-          right: 12px !important;
-          width: 36px !important;
-          height: 36px !important;
-          font-size: 20px !important;
-        }
-        .about-modal-header {
-          margin-bottom: 1.5rem !important;
-        }
-        .about-modal-title {
-          font-size: 1.75rem !important;
-          margin-bottom: 8px !important;
-        }
-        .about-modal-subtitle {
-          font-size: 0.95rem !important;
-          line-height: 1.3 !important;
-        }
-        .about-grid-responsive {
-          grid-template-columns: 1fr !important;
-          gap: 24px !important;
-          margin-bottom: 2.5rem !important;
-        }
-        .about-modal-desc {
-          font-size: 0.938rem !important;
-          line-height: 1.6 !important;
-          margin-bottom: 1.5rem !important;
-        }
-        .about-modal-stats-grid {
-          gap: 12px !important;
-        }
-        .about-modal-stats-grid > div {
-          padding: 1rem !important;
-          border-radius: 1rem !important;
-        }
-        .about-modal-stats-grid > div > div:first-child {
-          font-size: 1.75rem !important;
-        }
-        .about-modal-stats-grid > div > div:last-child {
-          font-size: 0.75rem !important;
-        }
-        .about-modal-accent-box {
-          padding: 1.5rem !important;
-          border-radius: 1.25rem !important;
-        }
-        .about-modal-accent-box h3 {
-          font-size: 1.25rem !important;
-          margin-bottom: 1rem !important;
-        }
-        .about-modal-accent-box ul {
-          gap: 0.75rem !important;
-        }
-        .about-modal-accent-box li {
-          font-size: 0.875rem !important;
-        }
-        .about-modal-certs-header h3 {
-          font-size: 1.25rem !important;
-        }
-        .about-modal-certs-line {
-          margin-left: 12px !important;
-        }
-        .about-modal-certs-subtitle {
-          font-size: 0.875rem !important;
-          margin-bottom: 1.25rem !important;
-        }
-        .about-modal-certs-grid {
-          gap: 16px !important;
-          grid-template-columns: 1fr !important;
-        }
-      }
-    </style>
-  `;
-
-  document.body.style.overflow = 'hidden';
 };
 
 window.nnf_closeAboutUs = () => {
   const overlay = document.getElementById('about-us-modal-overlay');
   if (overlay) {
-    overlay.style.opacity = '0';
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      document.body.style.overflow = '';
-    }, 300);
+    overlay.style.display = 'none';
+    overlay.style.opacity = '1';
+    document.body.style.overflow = '';
   }
 };
 
@@ -451,35 +373,8 @@ export const patchNavigation = () => {
 preloadAboutUsData();
 
 // ============================================================
-// INICIALIZACE A DELEGACE UDÁLOSTÍ
+// INICIALIZACE A EXPORTY
 // ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-  patchNavigation();
-  preloadAboutUsData(); // Dvojitá pojistka
-  // Zpožděný run pro dynamické nav linky generované Reactem
-  setTimeout(patchNavigation, 1000);
-  setTimeout(patchNavigation, 2500);
-});
-
-// Sledujeme změny v DOMu (MutationObserver) pro re-injektování do React navigace
-const aboutObserver = new MutationObserver(() => {
-  patchNavigation();
-});
-aboutObserver.observe(document.body, { childList: true, subtree: true });
-
-// Globální odchytávání kliknutí na /o-nas linky -> otevírá modální okno O nás
-document.addEventListener('click', (e) => {
-  const link = e.target.closest('a');
-  if (link) {
-    const href = (link.getAttribute('href') || '').toLowerCase();
-    const text = (link.textContent || '').trim().toLowerCase();
-    if (href.includes('o-nas') || text === 'o nás' || link.classList.contains('about-us-injected-link')) {
-      e.preventDefault();
-      openAboutUsModal();
-    }
-  }
-}, true);
-
 window.openAboutUsModal = openAboutUsModal;
 window.nnf_openAboutUs = openAboutUsModal;
 

@@ -1,10 +1,21 @@
 <!doctype html>
 <html lang="cs">
 <head>
-  <!-- DIAGNOSTICKÝ OVERLAY PRO CHYBY -->
+  <!-- DIAGNOSTICKÝ OVERLAY PRO CHYBY (jen na localhost / ?debug=1 -- viz níže) -->
   <script>
     (function() {
+      // Full-screen overlay is a *developer* aid and must never block real
+      // visitors: it used to fire (and eat every click on the page) on any
+      // unhandled promise rejection, including harmless/unrelated ones (a
+      // stale third-party bundle makes a health-check call that 404s on
+      // every load, everywhere, dev included). Console logging stays on
+      // everywhere; the blocking visual is opt-in via ?debug=1 only, so it
+      // never fires automatically -- not even on localhost.
+      var isDebugEnv = /(?:^|[?&])debug=1(?:&|$)/.test(window.location.search);
+
       function showErrorOverlay(title, message, stack) {
+        console.error('NANOfusion [' + title + ']:', message, stack || '');
+        if (!isDebugEnv) return;
         var el = document.getElementById('nnf-debug-overlay');
         if (!el) {
           el = document.createElement('div');
@@ -24,7 +35,7 @@
         var reason = event.reason || {};
         showErrorOverlay('Asynchronní Promise chyba', reason.message || reason, reason.stack || '');
       };
-      console.log('NANOfusion Diagnostic Error Catcher: Active');
+      console.log('NANOfusion Diagnostic Error Catcher: Active' + (isDebugEnv ? ' (overlay enabled)' : ' (console-only)'));
     })();
   </script>
 
@@ -138,6 +149,7 @@
   <script type="module" crossorigin src="/assets/index-DnPFhj9u.js"></script>
 
   <link rel="stylesheet" crossorigin href="/assets/index-D7rL3D6v.css">
+  <link rel="stylesheet" href="/static/responsive-overrides.css">
   <link rel="stylesheet" href="/static/modern-ui.css">
   <link href="/static/calculator.css" rel="stylesheet" />
   <link href="/static/ai-chat.css" rel="stylesheet" />
@@ -237,7 +249,7 @@
                         
                         <div onclick="window.location.href='/sluzby/cisteni-strech'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
-                                <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/6d579ded-7c4f-45c2-b85a-4e353526fa0d/1778587606619-ebccdd4b-0112-4940-9c8f-dc74a6d2a964.jpg" alt="Čištění střech " class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                <img src="https://wsrv.nl/?url=https%3A%2F%2Fmgmtkdwvhgrzefmyucvr.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fservices%2F6d579ded-7c4f-45c2-b85a-4e353526fa0d%2F1778587606619-ebccdd4b-0112-4940-9c8f-dc74a6d2a964.jpg&w=800&q=80&output=webp" alt="Čištění střech " class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-3">
@@ -256,7 +268,7 @@
                         
                         <div onclick="window.location.href='/sluzby/cisteni-dlazby'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
-                                <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/d3a3e70f-75a6-4e7f-939e-0b37a31dbe7e/1782719190553-1363c65c-5ebb-4537-8301-e557488d1193.jpg" alt="Čištění dlažeb" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                <img src="https://wsrv.nl/?url=https%3A%2F%2Fmgmtkdwvhgrzefmyucvr.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fservices%2Fd3a3e70f-75a6-4e7f-939e-0b37a31dbe7e%2F1782719190553-1363c65c-5ebb-4537-8301-e557488d1193.jpg&w=800&q=80&output=webp" alt="Čištění dlažeb" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-3">
@@ -275,7 +287,7 @@
                         
                         <div onclick="window.location.href='/sluzby/cisteni-fotovoltaiky'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
-                                <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/b4a44704-7c51-4519-bce9-1aec045ba0a4/1782724082936-019f6bac-e616-4276-9a60-0476ed2efca6.jpg" alt="Solární panely" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                <img src="https://wsrv.nl/?url=https%3A%2F%2Fmgmtkdwvhgrzefmyucvr.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fservices%2Fb4a44704-7c51-4519-bce9-1aec045ba0a4%2F1782724082936-019f6bac-e616-4276-9a60-0476ed2efca6.jpg&w=800&q=80&output=webp" alt="Solární panely" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-3">
@@ -294,7 +306,7 @@
                         
                         <div onclick="window.location.href='/sluzby/odstraneni-graffiti'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
-                                <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/ae650994-a138-416a-9799-33c6b26292ed/1782724804145-2f23f37e-a05e-4662-8656-75f28e327919.jpg" alt="Odstranění graffiti" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                <img src="https://wsrv.nl/?url=https%3A%2F%2Fmgmtkdwvhgrzefmyucvr.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fservices%2Fae650994-a138-416a-9799-33c6b26292ed%2F1782724804145-2f23f37e-a05e-4662-8656-75f28e327919.jpg&w=800&q=80&output=webp" alt="Odstranění graffiti" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-3">
@@ -313,7 +325,7 @@
                         
                         <div onclick="window.location.href='/sluzby/prumyslove-cisteni'" class="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-in">
                             <div class="aspect-[16/9] overflow-hidden">
-                                <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/cb86cbf5-34a6-4f7e-9a91-dd1266c6dddf/1782730331685-6ab2b2d4-6318-42b2-bf7b-4ffab38a4876.jpg" alt="Průmyslové čištění" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                <img src="https://wsrv.nl/?url=https%3A%2F%2Fmgmtkdwvhgrzefmyucvr.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fservices%2Fcb86cbf5-34a6-4f7e-9a91-dd1266c6dddf%2F1782730331685-6ab2b2d4-6318-42b2-bf7b-4ffab38a4876.jpg&w=800&q=80&output=webp" alt="Průmyslové čištění" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-3">
@@ -460,7 +472,7 @@
                 <div style="display: flex; gap: 1.5rem; overflow-x: auto; padding: 1rem 0 3rem; scrollbar-width: none;">
                     
                         <div style="flex: 0 0 400px; background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-                            <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/realizations/7834d0fe-b77e-4304-b95f-4f4269e85389/1782739294905-66de637c-5cdd-4228-b34d-b28e7b23e59c.jpeg" alt="Čištění fasády - Kobylí" style="width: 100%; height: 250px; object-fit: cover;">
+                            <img src="https://wsrv.nl/?url=https%3A%2F%2Fmgmtkdwvhgrzefmyucvr.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Frealizations%2F7834d0fe-b77e-4304-b95f-4f4269e85389%2F1782739294905-66de637c-5cdd-4228-b34d-b28e7b23e59c.jpeg&w=600&q=80&output=webp" alt="Čištění fasády - Kobylí" style="width: 100%; height: 250px; object-fit: cover;">
                             <div style="padding: 2rem;">
                                 <span style="color: #f59e0b; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">Čištění fasád</span>
                                 <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.5rem;">Čištění fasády - Kobylí</h3>
@@ -469,7 +481,7 @@
                         </div>
                     
                         <div style="flex: 0 0 400px; background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-                            <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/realizations/279e67a3-2310-4369-9907-cfb7af358375/1782739648206-08143557-a0d4-4918-988f-ecf5bfd7b408.jpeg" alt="Revitalizace bytového domu v Hlubočkách " style="width: 100%; height: 250px; object-fit: cover;">
+                            <img src="https://wsrv.nl/?url=https%3A%2F%2Fmgmtkdwvhgrzefmyucvr.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Frealizations%2F279e67a3-2310-4369-9907-cfb7af358375%2F1782739648206-08143557-a0d4-4918-988f-ecf5bfd7b408.jpeg&w=600&q=80&output=webp" alt="Revitalizace bytového domu v Hlubočkách " style="width: 100%; height: 250px; object-fit: cover;">
                             <div style="padding: 2rem;">
                                 <span style="color: #f59e0b; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">Čištění fasád</span>
                                 <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.5rem;">Revitalizace bytového domu v Hlubočkách </h3>
@@ -478,7 +490,7 @@
                         </div>
                     
                         <div style="flex: 0 0 400px; background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-                            <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/realizations/220fb4f8-39b8-4cd9-8280-03e6ccc622e2/1782739935072-12a5a81c-06b4-42f7-ba03-653d0711e31d.jpeg" alt="Čištění 30 let staré krytiny" style="width: 100%; height: 250px; object-fit: cover;">
+                            <img src="https://wsrv.nl/?url=https%3A%2F%2Fmgmtkdwvhgrzefmyucvr.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Frealizations%2F220fb4f8-39b8-4cd9-8280-03e6ccc622e2%2F1782739935072-12a5a81c-06b4-42f7-ba03-653d0711e31d.jpeg&w=600&q=80&output=webp" alt="Čištění 30 let staré krytiny" style="width: 100%; height: 250px; object-fit: cover;">
                             <div style="padding: 2rem;">
                                 <span style="color: #f59e0b; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">Čištění střech</span>
                                 <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.5rem;">Čištění 30 let staré krytiny</h3>
@@ -487,7 +499,7 @@
                         </div>
                     
                         <div style="flex: 0 0 400px; background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-                            <img src="https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/realizations/c69b37b9-3b4a-4a47-bcf9-869129c183a6/1782740355359-80509d2b-bc19-4b48-9f5d-41dd0c00015f.jpeg" alt="Čištění střechy Brandýs nad Labem" style="width: 100%; height: 250px; object-fit: cover;">
+                            <img src="https://wsrv.nl/?url=https%3A%2F%2Fmgmtkdwvhgrzefmyucvr.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Frealizations%2Fc69b37b9-3b4a-4a47-bcf9-869129c183a6%2F1782740355359-80509d2b-bc19-4b48-9f5d-41dd0c00015f.jpeg&w=600&q=80&output=webp" alt="Čištění střechy Brandýs nad Labem" style="width: 100%; height: 250px; object-fit: cover;">
                             <div style="padding: 2rem;">
                                 <span style="color: #f59e0b; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">Čištění střech</span>
                                 <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.5rem;">Čištění střechy Brandýs nad Labem</h3>

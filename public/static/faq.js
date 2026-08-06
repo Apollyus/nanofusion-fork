@@ -39,7 +39,7 @@ const injectFaqs = async () => {
     const render = (faqs, isFaqPage) => {
         const buttonHtml = !isFaqPage 
             ? `
-            <div class="text-center" style="margin-top: 3.5rem;">
+            <div class="text-center" style="margin-top: 1.75rem;">
                 <button onclick="window.nnf_openFaqModal()" style="
                     display: inline-flex;
                     align-items: center;
@@ -81,29 +81,53 @@ const injectFaqs = async () => {
 
         const wrapperClass = isFaqPage ? 'max-w-4xl mx-auto' : 'max-w-3xl mx-auto';
 
+        // Přidáme křížek do pravého rohu sekce
+        const closeBtn = !isFaqPage ? `
+            <button
+                onclick="const s=document.getElementById('faq'); if(s){s.style.transition='opacity 0.3s ease';s.style.opacity='0';setTimeout(()=>{s.style.display='none';},320);}"
+                style="position:absolute;top:20px;right:20px;background:#f1f5f9;color:#0f172a;border:1px solid #cbd5e1;width:40px;height:40px;border-radius:50%;cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.07);transition:all 0.2s;"
+                onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.08)';"
+                onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';"
+                aria-label="Zavřít">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>` : '';
+
         const faqHtml = `
-            <div class="container mx-auto px-6">
-                ${headerHtml}
-                <div class="${wrapperClass}">
-                    ${faqs.map((f, i) => `
-                        <div class="faq-item" style="margin-bottom: 1.25rem; border: 1px solid #e2e8f0; border-radius: 0.875rem; overflow: hidden; background: white; transition: all 0.3s ease;">
-                            <button onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')"
-                                    style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer;">
-                                <span style="font-weight: 700; color: #1e293b; font-size: 0.938rem;">${f.question}</span>
-                                <svg class="transition-transform flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M6 9l6 6 6-6"></path>
-                                </svg>
-                            </button>
-                            <div class="hidden" style="padding: 0 1.5rem 1.25rem; color: #64748b; line-height: 1.6; font-size: 0.875rem;">
-                                ${f.answer}
+            <div style="position:relative;">
+                ${closeBtn}
+                <div class="container mx-auto px-6">
+                    ${headerHtml}
+                    <div class="${wrapperClass}">
+                        ${faqs.map((f, i) => `
+                            <div class="faq-item" style="margin-bottom: 1.25rem; border: 1px solid #e2e8f0; border-radius: 0.875rem; overflow: hidden; background: white; transition: all 0.3s ease;">
+                                <button onclick="this.nextElementSibling.classList.toggle('hidden'); this.classList.toggle('faq-open')"
+                                        style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer;">
+                                    <span style="font-weight: 700; color: #1e293b; font-size: 0.938rem;">${f.question}</span>
+                                    <span class="faq-icon" style="flex-shrink:0; width:22px; height:22px; border-radius:50%; background:#fff7ed; border:1.5px solid #f59e0b; display:flex; align-items:center; justify-content:center; transition:all 0.25s ease;">
+                                        <svg class="faq-plus" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round">
+                                            <line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/>
+                                        </svg>
+                                        <svg class="faq-times" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" style="display:none;">
+                                            <line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/>
+                                        </svg>
+                                    </span>
+                                </button>
+                                <div class="hidden" style="padding: 0 1.5rem 1.25rem; color: #64748b; line-height: 1.6; font-size: 0.875rem;">
+                                    ${f.answer}
+                                </div>
                             </div>
-                        </div>
-                    `).join('')}
+                        `).join('')}
+                    </div>
+                    ${buttonHtml}
                 </div>
-                ${buttonHtml}
             </div>
         `;
         faqSection.innerHTML = faqHtml;
+        // Skryjeme šedé pozadí React sekce
+        faqSection.style.background = 'white';
         faqSection.dataset.injected = 'true';
     };
 
@@ -130,12 +154,17 @@ window.nnf_openFaqModal = () => {
 
     const faqListHtml = faqs.map((f, i) => `
         <div class="faq-item" style="margin-bottom: 1.25rem; border: 1px solid #e2e8f0; border-radius: 0.875rem; overflow: hidden; background: white; transition: all 0.3s ease;">
-            <button onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')"
+            <button onclick="this.nextElementSibling.classList.toggle('hidden'); this.classList.toggle('faq-open')"
                     style="width: 100%; text-align: left; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer;">
                 <span style="font-weight: 700; color: #1e293b; font-size: 0.938rem;">${f.question}</span>
-                <svg class="transition-transform flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 9l6 6 6-6"></path>
-                </svg>
+                <span class="faq-icon" style="flex-shrink:0; width:22px; height:22px; border-radius:50%; background:#fff7ed; border:1.5px solid #f59e0b; display:flex; align-items:center; justify-content:center; transition:all 0.25s ease;">
+                    <svg class="faq-plus" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round">
+                        <line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/>
+                    </svg>
+                    <svg class="faq-times" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" style="display:none;">
+                        <line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/>
+                    </svg>
+                </span>
             </button>
             <div class="hidden" style="padding: 0 1.5rem 1.25rem; color: #64748b; line-height: 1.6; font-size: 0.875rem;">
                 ${f.answer}
@@ -143,25 +172,48 @@ window.nnf_openFaqModal = () => {
         </div>
     `).join('');
 
-    overlay.innerHTML = `
-        <div class="faq-modal-card" style="background:white;width:100%;max-width:1100px;max-height:90vh;border-radius:32px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 30px 100px rgba(15,23,42,0.15);animation:modalReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
-            <!-- Zavírací tlačítko -->
-            <button onclick="window.nnf_closeFaq()" class="faq-modal-close" style="position:absolute;top:20px;right:20px;background:#f1f5f9;border:none;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:24px;z-index:100;font-weight:bold;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">&times;</button>
-            
-            <div class="faq-modal-scroll" style="flex:1;overflow-y:auto;padding:40px 60px;">
-                <!-- Hlavička -->
-                <div class="faq-modal-header" style="margin-bottom:3rem;max-width:800px;">
-                    <span style="color:#f59e0b;font-weight:800;text-transform:uppercase;font-size:13px;letter-spacing:0.15em;display:block;margin-bottom:8px;">ČASTÉ DOTAZY</span>
-                    <h2 class="faq-modal-title" style="font-size:2.5rem;font-weight:900;color:#0f172a;line-height:1.1;letter-spacing:-0.03em;margin:0 0 12px 0;">Často kladené dotazy</h2>
-                    <div class="faq-modal-subtitle" style="font-size:1.15rem;font-weight:600;color:#64748b;line-height:1.4;">Vše, co potřebujete vědět o našich technologiích, postupech a zárukách.</div>
-                </div>
+    overlay.onclick = (e) => {
+        if (e.target === overlay) {
+            window.nnf_closeFaq();
+        }
+    };
 
-                <!-- Otázky -->
-                <div style="max-width:900px;margin-bottom:2rem;">
-                    ${faqListHtml}
+    overlay.innerHTML = `
+        <div style="position:relative;width:100%;max-width:1100px;display:flex;flex-direction:column;">
+            <!-- Zavírací tlačítko — MIMO overflow:hidden -->
+            <button onclick="window.nnf_closeFaq()" class="faq-modal-close" aria-label="Zavřít"
+                style="position:absolute;top:-18px;right:-18px;z-index:100000001;
+                       width:44px;height:44px;border-radius:50%;
+                       background:white;border:2px solid #e2e8f0;
+                       cursor:pointer;display:flex;align-items:center;justify-content:center;
+                       box-shadow:0 4px 20px rgba(15,23,42,0.18);
+                       transition:background 0.2s,transform 0.2s;"
+                onmouseover="this.style.background='#f1f5f9';this.style.transform='scale(1.1)';"
+                onmouseout="this.style.background='white';this.style.transform='scale(1)';">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                     stroke="#0f172a" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="2" y1="2" x2="14" y2="14"></line>
+                    <line x1="14" y1="2" x2="2" y2="14"></line>
+                </svg>
+            </button>
+
+            <div class="faq-modal-card" style="background:white;width:100%;max-height:90vh;border-radius:32px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 100px rgba(15,23,42,0.15);animation:modalReveal 0.2s ease-out;">
+                <div class="faq-modal-scroll" style="flex:1;overflow-y:auto;padding:40px 60px;">
+                    <!-- Hlavička -->
+                    <div class="faq-modal-header" style="margin-bottom:3rem;max-width:800px;">
+                        <span style="color:#f59e0b;font-weight:800;text-transform:uppercase;font-size:13px;letter-spacing:0.15em;display:block;margin-bottom:8px;">ČASTÉ DOTAZY</span>
+                        <h2 class="faq-modal-title" style="font-size:2.5rem;font-weight:900;color:#0f172a;line-height:1.1;letter-spacing:-0.03em;margin:0 0 12px 0;">Často kladené dotazy</h2>
+                        <div class="faq-modal-subtitle" style="font-size:1.15rem;font-weight:600;color:#64748b;line-height:1.4;">Vše, co potřebujete vědět o našich technologiích, postupech a zárukách.</div>
+                    </div>
+
+                    <!-- Otázky -->
+                    <div style="max-width:900px;margin-bottom:2rem;">
+                        ${faqListHtml}
+                    </div>
                 </div>
             </div>
         </div>
+
         <style>
             @keyframes modalReveal {
                 from { opacity: 0; transform: scale(0.95) translateY(10px); }
@@ -177,11 +229,10 @@ window.nnf_openFaqModal = () => {
                     padding: 24px 20px !important;
                 }
                 .faq-modal-close {
-                    top: 12px !important;
-                    right: 12px !important;
+                    top: 10px !important;
+                    right: 10px !important;
                     width: 36px !important;
                     height: 36px !important;
-                    font-size: 20px !important;
                 }
                 .faq-modal-header {
                     margin-bottom: 1.5rem !important;

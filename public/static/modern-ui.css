@@ -55,6 +55,32 @@ header div.space-y-1 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
 }
 
+/* React SPA mobile drawer (homepage): this exact class combo only ever exists
+   in the DOM while the menu is open (React mounts/unmounts it), so this is a
+   reliable hook to force it into a full-viewport overlay -- otherwise it sits
+   in normal flow at its content height and the hero/page content underneath
+   bleeds through in the same viewport. Mirrors the .nav-mobile-drawer overlay
+   used on the static subpages. z-index sits above the header's forced-visible
+   mobile CTA pill (100005) so that button doesn't poke through the first
+   drawer item, but stays below the hamburger/close toggle (100010) so the
+   toggle remains clickable to close the drawer. */
+header div.lg\:hidden.border-t.bg-white.px-6.py-4.space-y-1 {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  z-index: 100006 !important;
+  margin: 0 !important;
+  padding: 6.5rem 1.5rem 2.5rem !important;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Fix clipping issue when header has backdrop-filter on static subpages */
 header:has(.nav-mobile-drawer.open),
 header:has(.nav-mobile-toggle.open),
@@ -159,9 +185,17 @@ header.menu-open {
 
 header img:not(.chat-logo):not(.ai-chat-launcher img), 
 nav img:not(.chat-logo),
-footer img {
-  height: 75px !important;
+.nav-logo-img {
+  height: 82px !important;
+  max-height: 85px !important;
   width: auto !important;
+}
+
+footer img {
+  height: 80px !important;
+  max-height: 85px !important;
+  width: auto !important;
+  filter: drop-shadow(0 2px 10px rgba(245, 158, 11, 0.15)) !important;
 }
 
 /* surgical-fix: hide legacy logos until they are patched with the long version to avoid flashing */
