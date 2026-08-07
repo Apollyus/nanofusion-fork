@@ -873,6 +873,29 @@ Test</p>
         });
       });
     })();
+    
+    // Remove black bar and phone number that main.js tries to inject
+    setTimeout(function() {
+      document.querySelectorAll('.bg-neutral-800, .bg-neutral-900, .bg-black').forEach(function(el) {
+        if (!el.closest('footer') && !el.closest('[data-mainjs-ignored="true"]')) {
+          el.style.display = 'none !important';
+          el.style.visibility = 'hidden !important';
+        }
+      });
+      var headers = document.querySelectorAll('header');
+      headers.forEach(function(h) {
+        if (h.dataset.mainjsIgnored === 'true') return;
+        h.querySelectorAll('a[href*="774509409"]').forEach(function(a) {
+          a.style.display = 'none !important';
+          a.style.visibility = 'hidden !important';
+          a.style.height = '0 !important';
+          a.style.overflow = 'hidden !important';
+        });
+      });
+      document.querySelectorAll('.top-info-bar-contacts').forEach(function(el) {
+        el.style.display = 'none !important';
+      });
+    }, 100);
   </script>
 </body>
 </html>
