@@ -747,15 +747,34 @@ async function syncContent() {
             if (filename === 'index.html') {
                 const heroTitleText = configMap.hero_title || 'Špičková péče o to, co jste usilovně vybudovali';
                 const fallbackHtml = `
-                <header style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
-                    <a href="/" style="font-weight: bold; font-size: 1.5rem; text-decoration: none; color: #0f172a;">NANOfusion</a>
-                    <nav style="display: flex; gap: 1.5rem;">
-                        <a href="/" style="text-decoration: none; color: #0f172a; font-weight: 500;">Domů</a>
-                        <a href="#sluzby" style="text-decoration: none; color: #0f172a; font-weight: 500;">Služby</a>
-                        <a href="#realizace" style="text-decoration: none; color: #0f172a; font-weight: 500;">Reference</a>
-                        <a href="/o-nas" style="text-decoration: none; color: #0f172a; font-weight: 500;">O nás</a>
-                        <a href="/faq" style="text-decoration: none; color: #0f172a; font-weight: 500;">Časté dotazy</a>
-                    </nav>
+                <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                    <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 1.5rem;">
+                        <div style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+                            <a href="/" class="nav-logo-link" style="display: flex; align-items: center; text-decoration: none; cursor: pointer;">
+                                <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 82px; width: auto; transition: transform 0.2s ease;" data-patched="true">
+                            </a>
+                            <nav class="nav-desktop" style="display: flex; gap: 0.35rem; align-items: center;" data-nav-patched="true">
+                                <a href="/#sluzby" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Služby</a>
+                                <a href="/#realizace" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Reference</a>
+                                <a href="/#blog" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Blog</a>
+                                <a href="/#galerie" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Galerie</a>
+                                <a href="/#o-nas" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">O nás</a>
+                                <a href="/#kontakt" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Kontakt</a>
+                            </nav>
+                            <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
+                                <span></span><span></span><span></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="nav-mobile-drawer" id="nav-drawer">
+                        <a href="/#sluzby">Služby</a>
+                        <a href="/#realizace">Reference</a>
+                        <a href="/#blog">Blog</a>
+                        <a href="/#galerie">Galerie</a>
+                        <a href="/#o-nas">O nás</a>
+                        <a href="/#kontakt">Kontakt</a>
+                        <a href="#kalkulacka" class="drawer-cta">Spočítat cenu</a>
+                    </div>
                 </header>
                 <main style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
                     <section class="hero" style="text-align: center; padding: 4rem 1rem; background: #f8fafc; border-radius: 2rem; margin-bottom: 3rem;">

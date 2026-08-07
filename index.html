@@ -201,20 +201,96 @@
       0%, 80%, 100% { transform: scale(0); }
       40% { transform: scale(1.0); }
     }
+    
+    /* Force hide React navbar and top bar */
+    #root .min-h-screen > div.bg-neutral-800,
+    #root .min-h-screen > header.sticky {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      height: 0 !important;
+    }
+    
+    /* Ensure old nav doesn't show at all */
+    #root nav {
+      display: none !important;
+    }
+
+    /* Force Outfit font on React app */
+    #root, #root * {
+      font-family: 'Outfit', sans-serif !important;
+    }
+    
+    /* Ensure the persistent-nav is visible */
+    #persistent-nav {
+      display: block !important;
+      visibility: visible !important;
+      z-index: 2147483647 !important; /* Max z-index */
+    }
+
+    /* Add padding so hero doesn't hide behind new navbar */
+    #root > div {
+      padding-top: 100px !important;
+    }
   </style>
 
+  <header id="persistent-nav" style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+    <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 1.5rem;">
+      <div style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+        <a href="/" class="nav-logo-link" style="display: flex; align-items: center; text-decoration: none; cursor: pointer;">
+          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 82px; width: auto; transition: transform 0.2s ease;">
+        </a>
+        <nav class="nav-desktop" style="display: flex; gap: 0.35rem; align-items: center;">
+          <a href="/#sluzby" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Služby</a>
+          <a href="/#realizace" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Reference</a>
+          <a href="/#blog" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Blog</a>
+          <a href="/#galerie" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Galerie</a>
+          <a href="/#o-nas" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">O nás</a>
+          <a href="/#kontakt" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Kontakt</a>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+          <div style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; line-height: 1.2;">
+            <a href="tel:+420774509409" style="color: #0f172a; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: color 0.2s;">+420 774 509 409</a>
+            <a href="mailto:info@nanofusion.cz" style="color: #64748b; font-size: 0.8rem; text-decoration: none; transition: color 0.2s;">info@nanofusion.cz</a>
+          </div>
+          <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
   <div id="root">
     <!-- SYNC:FALLBACK:START -->
 
-                <header style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
-                    <a href="/" style="font-weight: bold; font-size: 1.5rem; text-decoration: none; color: #0f172a;">NANOfusion</a>
-                    <nav style="display: flex; gap: 1.5rem;">
-                        <a href="/" style="text-decoration: none; color: #0f172a; font-weight: 500;">Domů</a>
-                        <a href="#sluzby" style="text-decoration: none; color: #0f172a; font-weight: 500;">Služby</a>
-                        <a href="#realizace" style="text-decoration: none; color: #0f172a; font-weight: 500;">Reference</a>
-                        <a href="/o-nas" style="text-decoration: none; color: #0f172a; font-weight: 500;">O nás</a>
-                        <a href="/faq" style="text-decoration: none; color: #0f172a; font-weight: 500;">Časté dotazy</a>
-                    </nav>
+                <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                    <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 1.5rem;">
+                        <div style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+                            <a href="/" class="nav-logo-link" style="display: flex; align-items: center; text-decoration: none; cursor: pointer;">
+                                <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 82px; width: auto; transition: transform 0.2s ease;" data-patched="true">
+                            </a>
+                            <nav class="nav-desktop" style="display: flex; gap: 0.35rem; align-items: center;" data-nav-patched="true">
+                                <a href="/#sluzby" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Služby</a>
+                                <a href="/#realizace" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Reference</a>
+                                <a href="/#blog" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Blog</a>
+                                <a href="/#galerie" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Galerie</a>
+                                <a href="/#o-nas" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">O nás</a>
+                                <a href="/#kontakt" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Kontakt</a>
+                            </nav>
+                            <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
+                                <span></span><span></span><span></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="nav-mobile-drawer" id="nav-drawer">
+                        <a href="/#sluzby">Služby</a>
+                        <a href="/#realizace">Reference</a>
+                        <a href="/#blog">Blog</a>
+                        <a href="/#galerie">Galerie</a>
+                        <a href="/#o-nas">O nás</a>
+                        <a href="/#kontakt">Kontakt</a>
+                        <a href="#kalkulacka" class="drawer-cta">Spočítat cenu</a>
+                    </div>
                 </header>
                 <main style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
                     <section class="hero" style="text-align: center; padding: 4rem 1rem; background: #f8fafc; border-radius: 2rem; margin-bottom: 3rem;">

@@ -446,9 +446,22 @@
             data-nav-patched="true">Kontakt</a>
         </nav>
         <!-- Hamburger toggle -->
-        <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
+        
+        <div style="display: flex; align-items: center; gap: 1.5rem;" data-contact-patched="true">
+          <div class="contact-desktop-only" style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; line-height: 1.2;">
+            <a href="tel:+420774509409" style="color: #0f172a; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: color 0.2s;">+420 774 509 409</a>
+            <a href="mailto:info@nanofusion.cz" style="color: #64748b; font-size: 0.8rem; text-decoration: none; transition: color 0.2s;">info@nanofusion.cz</a>
+          </div>
+          <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
           <span></span><span></span><span></span>
         </button>
+        </div>
+        <style>
+          @media (max-width: 768px) {
+            .contact-desktop-only { display: none !important; }
+          }
+        </style>
+        
       </div>
     </div>
     <!-- Mobile Drawer -->
@@ -468,7 +481,7 @@
 
     <!-- HERO -->
     <section class="hero-section"
-      style="padding: 12.5rem 2.5rem 4.5rem; background: linear-gradient(135deg, rgba(15, 23, 42, 0.72) 0%, rgba(15, 23, 42, 0.55) 50%, rgba(15, 23, 42, 0.40) 100%), url('https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/ae650994-a138-416a-9799-33c6b26292ed/1782724804145-2f23f37e-a05e-4662-8656-75f28e327919.jpg') center/cover no-repeat; color: white;">
+      style="padding: 4rem 2.5rem 4.5rem; background: linear-gradient(135deg, rgba(15, 23, 42, 0.72) 0%, rgba(15, 23, 42, 0.55) 50%, rgba(15, 23, 42, 0.40) 100%), url('https://mgmtkdwvhgrzefmyucvr.supabase.co/storage/v1/object/public/services/ae650994-a138-416a-9799-33c6b26292ed/1782724804145-2f23f37e-a05e-4662-8656-75f28e327919.jpg') center/cover no-repeat; color: white;">
       <div class="hero-grid"
         style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr; gap: 4rem; align-items: center;">
         <div>
