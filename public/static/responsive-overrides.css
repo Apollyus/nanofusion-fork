@@ -23,11 +23,12 @@ header {
      modal, z-index 9999) can render above the header. It only needs to
      out-rank everything else while its own mobile drawer is open. */
   z-index: 500 !important;
+  height: 105px !important;
   background: rgba(255, 255, 255, 0.88) !important;
   backdrop-filter: blur(16px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
   transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -35,6 +36,7 @@ header:has(.nav-mobile-drawer.open),
 header:has(.nav-mobile-toggle.open),
 header.menu-open {
   z-index: 100000 !important;
+  height: 50px !important;
 }
 
 header.header-scrolled {
@@ -202,7 +204,7 @@ a.bg-amber-500, a.bg-primary:not(.hidden), button.bg-primary:not(.hidden), a[hre
      the row to be ~104px tall to stay fully inside the white background. */
   header .max-w-7xl,
   header .container {
-    min-height: 104px !important;
+    min-height: 80px !important;
   }
   header img:not(.chat-logo):not(.ai-chat-launcher img),
   nav img:not(.chat-logo),
