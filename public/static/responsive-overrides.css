@@ -36,7 +36,7 @@ header:has(.nav-mobile-drawer.open),
 header:has(.nav-mobile-toggle.open),
 header.menu-open {
   z-index: 100000 !important;
-  height: 50px !important;
+  height: 70px !important;
 }
 
 header.header-scrolled {

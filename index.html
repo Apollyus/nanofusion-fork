@@ -156,6 +156,27 @@
   <link rel="stylesheet" href="/static/modern-ui.css">
   <link href="/static/calculator.css" rel="stylesheet" />
   <link href="/static/ai-chat.css" rel="stylesheet" />
+  <style>
+    @media (max-width: 1024px) {
+      .nav-desktop {
+        display: none !important;
+      }
+    }
+    header:has(.nav-mobile-drawer.open),
+    header:has(.nav-mobile-toggle.open),
+    header.menu-open {
+      height: 100vh !important;
+      height: 100dvh !important;
+      max-height: 100vh !important;
+      background: #ffffff !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      overflow: hidden !important;
+    }
+    body .nav-mobile-toggle.open span:nth-child(2) {
+      opacity: 1 !important;
+    }
+  </style>
   <script>
     // Emergency preloader removal fallback
     setTimeout(function() {
@@ -233,65 +254,61 @@
 
   </style>
 
-  <header id="persistent-nav" style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+  <!-- Premium Static Navigation Header (Matches the official live site navbar 1:1) -->
+  <header
+    data-mainjs-ignored="true"
+    style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+
     <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 1.5rem;">
-      <div style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+      <div
+        style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
         <a href="/" class="nav-logo-link" style="display: flex; align-items: center; text-decoration: none; cursor: pointer;">
-          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 82px; width: auto; transition: transform 0.2s ease;">
+          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion"
+            style="height: 82px; width: auto; transition: transform 0.2s ease;" data-patched="true">
         </a>
-        <nav class="nav-desktop" style="display: flex; gap: 0.35rem; align-items: center;">
-          <a href="/#sluzby" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Služby</a>
-          <a href="/#realizace" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Reference</a>
-          <a href="/#blog" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Blog</a>
-          <a href="/#galerie" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Galerie</a>
-          <a href="/#o-nas" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">O nás</a>
-          <a href="/#kontakt" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;">Kontakt</a>
+        <nav class="nav-desktop" style="display: flex; gap: 0.35rem; align-items: center;" data-nav-patched="true">
+          <a href="/#sluzby"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Služby</a>
+          <a href="/#realizace"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Reference</a>
+          <a href="/#blog"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Blog</a>
+          <a href="/#galerie"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Galerie</a>
+          <a href="/#o-nas"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">O nás</a>
+          <a href="/#kontakt"
+            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
+            data-nav-patched="true">Kontakt</a>
         </nav>
-        <div style="display: flex; align-items: center; gap: 1.5rem;">
-          <div style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; line-height: 1.2;">
-            <a href="tel:+420774509409" style="color: #0f172a; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: color 0.2s;">+420 774 509 409</a>
-            <a href="mailto:info@nanofusion.cz" style="color: #64748b; font-size: 0.8rem; text-decoration: none; transition: color 0.2s;">info@nanofusion.cz</a>
-          </div>
-          <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
-            <span></span><span></span><span></span>
-          </button>
-        </div>
+        <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu" style="display: flex !important; flex-direction: column; justify-content: center; align-items: center; width: 44px !important; height: 44px !important; background: transparent !important; border: none !important; cursor: pointer !important; padding: 8px !important; flex-shrink: 0 !important; position: relative !important;">
+          <span style="display: block !important; width: 24px !important; height: 3px !important; background: #1e293b !important; margin: 3px 0 !important; border-radius: 2px !important; transform: none !important; opacity: 1 !important;"></span>
+          <span style="display: block !important; width: 24px !important; height: 3px !important; background: #1e293b !important; margin: 3px 0 !important; border-radius: 2px !important; transform: none !important; opacity: 1 !important;"></span>
+          <span style="display: block !important; width: 24px !important; height: 3px !important; background: #1e293b !important; margin: 3px 0 !important; border-radius: 2px !important; transform: none !important; opacity: 1 !important;"></span>
+        </button>
       </div>
     </div>
-  </header>
-  <div id="root">
-    <!-- SYNC:FALLBACK:START -->
 
-                <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
-                    <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 1.5rem;">
-                        <div style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
-                            <a href="/" class="nav-logo-link" style="display: flex; align-items: center; text-decoration: none; cursor: pointer;">
-                                <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" style="height: 82px; width: auto; transition: transform 0.2s ease;" data-patched="true">
-                            </a>
-                            <nav class="nav-desktop" style="display: flex; gap: 0.35rem; align-items: center;" data-nav-patched="true">
-                                <a href="/#sluzby" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Služby</a>
-                                <a href="/#realizace" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Reference</a>
-                                <a href="/#blog" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Blog</a>
-                                <a href="/#galerie" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Galerie</a>
-                                <a href="/#o-nas" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">O nás</a>
-                                <a href="/#kontakt" style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;" data-nav-patched="true">Kontakt</a>
-                            </nav>
-                            <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
-                                <span></span><span></span><span></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="nav-mobile-drawer" id="nav-drawer">
-                        <a href="/#sluzby">Služby</a>
-                        <a href="/#realizace">Reference</a>
-                        <a href="/#blog">Blog</a>
-                        <a href="/#galerie">Galerie</a>
-                        <a href="/#o-nas">O nás</a>
-                        <a href="/#kontakt">Kontakt</a>
-                        <a href="#kalkulacka" class="drawer-cta">Spočítat cenu</a>
-                    </div>
-                </header>
-                <main style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
+    <div class="nav-mobile-drawer" id="nav-drawer">
+      <a href="/#sluzby">Služby</a>
+      <a href="/#realizace">Reference</a>
+      <a href="/#blog">Blog</a>
+      <a href="/#galerie">Galerie</a>
+      <a href="/#o-nas">O nás</a>
+      <a href="/#kontakt">Kontakt</a>
+      <a href="#kalkulacka" class="drawer-cta">Spočítat cenu</a>
+    </div>
+  </header>
+
+  <div id="root"></div>
+
+    <!-- SYNC:FALLBACK:START -->
+    <main style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
                     <section class="hero" style="text-align: center; padding: 4rem 1rem; background: #f8fafc; border-radius: 2rem; margin-bottom: 3rem;">
                         <h1 style="font-size: 3rem; font-weight: 900; color: #0f172a; line-height: 1.2; margin-bottom: 1.5rem;">Špičková péče o to,<br><span style="color: #f59e0b">co jste usilovně vybudovali</span></h1>
                         <p style="font-size: 1.25rem; color: #64748b; max-width: 800px; margin: 0 auto;">Specialisté na profesionální čištění a dlouhodobou nano-ochranu střech, fasád, dlažeb a fotovoltaiky.</p>
@@ -790,5 +807,37 @@ Test</p>
   <script src="/static/gallery-hero.js" type="module"></script>
   <script src="/static/faq.js" type="module"></script>
   <script src="/static/about-us.js" type="module"></script>
+
+  <!-- Mobile Hamburger Menu Script -->
+  <script>
+    (function () {
+      const toggle = document.getElementById('nav-toggle');
+      const drawer = document.getElementById('nav-drawer');
+      const header = toggle ? toggle.closest('header') : document.querySelector('header');
+      if (!toggle || !drawer) return;
+      toggle.addEventListener('click', function () {
+        var isOpen = drawer.classList.contains('open');
+        if (isOpen) {
+          drawer.classList.remove('open');
+          toggle.classList.remove('open');
+          if (header) header.classList.remove('menu-open');
+          document.body.style.overflow = '';
+        } else {
+          drawer.classList.add('open');
+          toggle.classList.add('open');
+          if (header) header.classList.add('menu-open');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+      drawer.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () {
+          drawer.classList.remove('open');
+          toggle.classList.remove('open');
+          if (header) header.classList.remove('menu-open');
+          document.body.style.overflow = '';
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
