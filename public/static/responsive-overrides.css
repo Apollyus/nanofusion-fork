@@ -50,11 +50,11 @@ header.header-scrolled {
 /* ─── Hero Section Spacing ──────────────────────────────────────────────── */
 @media (min-width: 769px) {
   section.hero-section {
-    padding-top: clamp(11rem, 13vw, 13.5rem) !important;
+    padding-top: clamp(8rem, 10vw, 10.5rem) !important;
   }
   #root > div > section:first-of-type,
   main > section:first-of-type {
-    padding-top: clamp(9.5rem, 10.5vw, 10.5rem) !important;
+    padding-top: clamp(6.5rem, 7.5vw, 7.5rem) !important;
     padding-bottom: 2.75rem !important;
   }
   #root > div > section:first-of-type > div.relative,
@@ -72,13 +72,13 @@ header.header-scrolled {
   /* Homepage Hero Section with Video (reduced top margin/padding below fixed navbar) */
   #root > div > section:first-of-type,
   main > section:first-of-type:not(.hero-section) {
-    padding-top: 8.5rem !important;
+    padding-top: 5.5rem !important;
     padding-bottom: 1.75rem !important;
   }
   /* Service Detail Subpages Hero */
   section.hero-section,
   .hero-section {
-    padding-top: 14.5rem !important;
+    padding-top: 10.5rem !important;
     padding-bottom: 2.5rem !important;
   }
   #root > div > section:nth-of-type(2),
