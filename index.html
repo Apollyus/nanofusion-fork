@@ -161,6 +161,41 @@
       .nav-desktop {
         display: none !important;
       }
+      header .nav-main-bar,
+      #root header .nav-main-bar {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+      }
+      header .nav-main-bar > div,
+      #root header .nav-main-bar > div {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 1rem !important;
+      }
+      header .nav-logo-link,
+      #root header .nav-logo-link {
+        margin-right: auto !important;
+      }
+      #root header,
+      header {
+        display: flex !important;
+        align-items: center !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+      .nav-mobile-toggle,
+      #nav-toggle {
+        margin-left: 0 !important;
+      }
+      .nav-logo-img,
+      #root header .nav-logo-img,
+      header img.nav-logo-img {
+        height: 75px !important;
+        max-height: 75px !important;
+      }
     }
     header:has(.nav-mobile-drawer.open),
     header:has(.nav-mobile-toggle.open),
@@ -259,9 +294,9 @@
     data-mainjs-ignored="true"
     style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
 
-    <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 1.5rem;">
+    <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 0; display: flex; align-items: center; justify-content: space-between; width: 100%;">
       <div
-        style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+        style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 1.5rem;">
         <a href="/" class="nav-logo-link" style="display: flex; align-items: center; text-decoration: none; cursor: pointer;">
           <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion"
             style="height: 82px; width: auto; transition: transform 0.2s ease;" data-patched="true">
