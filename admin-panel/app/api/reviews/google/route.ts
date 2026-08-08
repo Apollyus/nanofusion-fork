@@ -4,8 +4,12 @@ import { createClient } from '@supabase/supabase-js'
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const key = searchParams.get('key')
+  // Vercel Cron automaticky posílá "Authorization: Bearer <CRON_SECRET>" -
+  // to je primární cesta. ?key= zůstává jen pro ruční/manuální spuštění.
+  const authHeader = request.headers.get('authorization')
 
   const isAuthorized =
+    authHeader === `Bearer ${process.env.CRON_SECRET}` ||
     key === process.env.CRON_SECRET ||
     process.env.NODE_ENV !== 'production'
 
