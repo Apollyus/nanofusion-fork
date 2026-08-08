@@ -137,9 +137,8 @@
 
 .nav-mobile-toggle.open span:nth-child(1),
 header.menu-open .nav-mobile-toggle span:nth-child(1) {
-  transform: translateY(7.5px) rotate(45deg) !important;
+  transform: translateY(8.5px) rotate(45deg) !important;
   background: #0f172a !important;
-  margin: 0;
 }
 
 .nav-mobile-toggle.open span:nth-child(2),
@@ -149,9 +148,8 @@ header.menu-open .nav-mobile-toggle span:nth-child(2) {
 
 .nav-mobile-toggle.open span:nth-child(3),
 header.menu-open .nav-mobile-toggle span:nth-child(3) {
-  transform: translateY(-7.5px) rotate(-45deg) !important;
+  transform: translateY(-8.5px) rotate(-45deg) !important;
   background: #0f172a !important;
-  margin: 0;
 }
 
 /* ── Mobile Drawer ── */
