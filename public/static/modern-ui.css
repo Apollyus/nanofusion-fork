@@ -118,6 +118,9 @@ header.menu-open {
 
 @media (max-width: 1024px) {
   .nav-mobile-drawer {
+    display: none !important;
+  }
+  .nav-mobile-drawer.show {
     display: flex !important;
   }
 }

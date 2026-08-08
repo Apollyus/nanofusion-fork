@@ -197,19 +197,14 @@
         max-height: 75px !important;
       }
     }
-    header:has(.nav-mobile-drawer.open),
-    header:has(.nav-mobile-toggle.open),
+    header.menu-open .nav-mobile-toggle,
+    header.menu-open #nav-toggle {
+      display: none !important;
+    }
     header.menu-open {
-      height: 100vh !important;
-      height: 100dvh !important;
-      max-height: 100vh !important;
       background: #ffffff !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
-      overflow: hidden !important;
-    }
-    body .nav-mobile-toggle.open span:nth-child(2) {
-      opacity: 1 !important;
     }
   </style>
   <script>
@@ -329,7 +324,7 @@
       </div>
     </div>
 
-    <div class="nav-mobile-drawer" id="nav-drawer">
+ <div class="nav-mobile-drawer" id="nav-drawer" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: white; z-index: 10000; flex-direction: column; padding: 5rem 2rem 2rem; overflow-y: auto;">
       <a href="/#sluzby">Služby</a>
       <a href="/#realizace">Reference</a>
       <a href="/#blog">Blog</a>
@@ -337,6 +332,7 @@
       <a href="/#o-nas">O nás</a>
       <a href="/#kontakt">Kontakt</a>
       <a href="#kalkulacka" class="drawer-cta">Spočítat cenu</a>
+      <button id="drawer-close" style="position: fixed; top: 1rem; right: 1rem; background: transparent; border: none; cursor: pointer; font-size: 2rem; color: #1e293b; padding: 8px; z-index: 10001; line-height: 1;">✕</button>
     </div>
   </header>
 
@@ -851,27 +847,36 @@ Test</p>
       const header = toggle ? toggle.closest('header') : document.querySelector('header');
       if (!toggle || !drawer) return;
       toggle.addEventListener('click', function () {
-        var isOpen = drawer.classList.contains('open');
+        var isOpen = drawer.classList.contains('show');
         if (isOpen) {
-          drawer.classList.remove('open');
-          toggle.classList.remove('open');
+          drawer.classList.remove('show');
+          toggle.style.setProperty('display', 'flex', 'important');
           if (header) header.classList.remove('menu-open');
           document.body.style.overflow = '';
         } else {
-          drawer.classList.add('open');
-          toggle.classList.add('open');
+          drawer.classList.add('show');
+          toggle.style.setProperty('display', 'none', 'important');
           if (header) header.classList.add('menu-open');
           document.body.style.overflow = 'hidden';
         }
       });
       drawer.querySelectorAll('a').forEach(function (a) {
         a.addEventListener('click', function () {
-          drawer.classList.remove('open');
-          toggle.classList.remove('open');
+          drawer.classList.remove('show');
+          toggle.style.setProperty('display', 'flex', 'important');
           if (header) header.classList.remove('menu-open');
           document.body.style.overflow = '';
         });
       });
+      var closeBtn = document.getElementById('drawer-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          drawer.classList.remove('show');
+          toggle.style.setProperty('display', 'flex', 'important');
+          if (header) header.classList.remove('menu-open');
+          document.body.style.overflow = '';
+        });
+      }
     })();
     
     // Remove black bar and phone number that main.js tries to inject
