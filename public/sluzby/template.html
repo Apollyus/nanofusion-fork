@@ -413,61 +413,34 @@
 
 <body class="bg-slate-50">
 
-  <!-- Premium Static Navigation Header (Matches the official live site navbar 1:1) -->
-  <!-- Premium Two-Tier Navigation Header (Matches the official main site 1:1) -->
-  <header
-    style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+  <!-- Premium Static Navigation Header -->
+  <header class="site-header">
 
-
-
-    <!-- Main Navigation Bar (White background, dark text) -->
-    <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 1.5rem;">
-      <div
-        style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
-        <a href="/" class="nav-logo-link" style="display: flex; align-items: center; text-decoration: none; cursor: pointer;">
-          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion"
-            style="height: 82px; width: auto; transition: transform 0.2s ease;" data-patched="true">
+    <div class="nav-main-bar">
+      <div class="nav-bar-inner">
+        <a href="/" class="nav-logo-link">
+          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" data-patched="true">
         </a>
-        <nav class="nav-desktop" style="display: flex; gap: 0.35rem; align-items: center;" data-nav-patched="true">
-          <a href="/#sluzby"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Služby</a>
-          <a href="/#realizace"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Reference</a>
-          <a href="/#blog"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Blog</a>
-          <a href="/#galerie"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Galerie</a>
-          <a href="/#o-nas"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">O nás</a>
-          <a href="/#kontakt"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Kontakt</a>
+        <nav class="nav-desktop" data-nav-patched="true">
+          <a href="/#sluzby" data-nav-patched="true">Služby</a>
+          <a href="/#realizace" data-nav-patched="true">Reference</a>
+          <a href="/#blog" data-nav-patched="true">Blog</a>
+          <a href="/#galerie" data-nav-patched="true">Galerie</a>
+          <a href="/#o-nas" data-nav-patched="true">O nás</a>
+          <a href="/#kontakt" data-nav-patched="true">Kontakt</a>
         </nav>
-        <!-- Hamburger toggle -->
-        
-        <div style="display: flex; align-items: center; gap: 1.5rem;" data-contact-patched="true">
-          <div class="contact-desktop-only" style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; line-height: 1.2;">
-            <a href="tel:+420774509409" style="color: #0f172a; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: color 0.2s;">+420 774 509 409</a>
-            <a href="mailto:info@nanofusion.cz" style="color: #64748b; font-size: 0.8rem; text-decoration: none; transition: color 0.2s;">info@nanofusion.cz</a>
-          </div>
-          <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
-          <span></span><span></span><span></span>
-        </button>
+        <div class="nav-contact-info" data-contact-patched="true">
+          <a href="tel:+420774509409" class="contact-phone">+420 774 509 409</a>
+          <a href="mailto:info@nanofusion.cz" class="contact-email">info@nanofusion.cz</a>
         </div>
-        <style>
-          @media (max-width: 768px) {
-            .contact-desktop-only { display: none !important; }
-          }
-        </style>
-        
+        <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
-    <!-- Mobile Drawer -->
+
     <div class="nav-mobile-drawer" id="nav-drawer">
       <a href="/#sluzby">Služby</a>
       <a href="/#realizace">Reference</a>
@@ -476,6 +449,7 @@
       <a href="/#o-nas">O nás</a>
       <a href="/#kontakt">Kontakt</a>
       <a href="#kalkulacka" class="drawer-cta">Spočítat cenu</a>
+      <button class="drawer-close-btn" id="drawer-close" aria-label="Zavřít menu">✕</button>
     </div>
   </header>
 

@@ -288,46 +288,34 @@
   </style>
 
   <!-- Premium Static Navigation Header (Matches the official live site navbar 1:1) -->
-  <header
-    data-mainjs-ignored="true"
-    style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+  <header class="site-header" data-mainjs-ignored="true">
 
-    <div class="nav-main-bar" style="background: transparent; padding: 0.5rem 0; display: flex; align-items: center; justify-content: space-between; width: 100%;">
-      <div
-        style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 1.5rem;">
-        <a href="/" class="nav-logo-link" style="display: flex; align-items: center; text-decoration: none; cursor: pointer;">
-          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion"
-            style="height: 82px; width: auto; transition: transform 0.2s ease;" data-patched="true">
+    <div class="nav-main-bar">
+      <div class="nav-bar-inner">
+        <a href="/" class="nav-logo-link">
+          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" data-patched="true">
         </a>
-        <nav class="nav-desktop" style="display: flex; gap: 0.35rem; align-items: center;" data-nav-patched="true">
-          <a href="/#sluzby"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Služby</a>
-          <a href="/#realizace"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Reference</a>
-          <a href="/#blog"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Blog</a>
-          <a href="/#galerie"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Galerie</a>
-          <a href="/#o-nas"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">O nás</a>
-          <a href="/#kontakt"
-            style="text-decoration: none; color: #475569; font-weight: 500; font-size: 0.875rem; padding: 0.4rem 0.65rem; border-radius: 0.5rem; transition: all 0.2s;"
-            data-nav-patched="true">Kontakt</a>
+        <nav class="nav-desktop" data-nav-patched="true">
+          <a href="/#sluzby" data-nav-patched="true">Služby</a>
+          <a href="/#realizace" data-nav-patched="true">Reference</a>
+          <a href="/#blog" data-nav-patched="true">Blog</a>
+          <a href="/#galerie" data-nav-patched="true">Galerie</a>
+          <a href="/#o-nas" data-nav-patched="true">O nás</a>
+          <a href="/#kontakt" data-nav-patched="true">Kontakt</a>
         </nav>
-        <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu" style="display: flex !important; flex-direction: column; justify-content: center; align-items: center; width: 44px !important; height: 44px !important; background: transparent !important; border: none !important; cursor: pointer !important; padding: 8px !important; flex-shrink: 0 !important; position: relative !important;">
-          <span style="display: block !important; width: 24px !important; height: 3px !important; background: #1e293b !important; margin: 3px 0 !important; border-radius: 2px !important; transform: none !important; opacity: 1 !important;"></span>
-          <span style="display: block !important; width: 24px !important; height: 3px !important; background: #1e293b !important; margin: 3px 0 !important; border-radius: 2px !important; transform: none !important; opacity: 1 !important;"></span>
-          <span style="display: block !important; width: 24px !important; height: 3px !important; background: #1e293b !important; margin: 3px 0 !important; border-radius: 2px !important; transform: none !important; opacity: 1 !important;"></span>
+        <div class="nav-contact-info" data-contact-patched="true">
+          <a href="tel:+420774509409" class="contact-phone">+420 774 509 409</a>
+          <a href="mailto:info@nanofusion.cz" class="contact-email">info@nanofusion.cz</a>
+        </div>
+        <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </div>
     </div>
 
- <div class="nav-mobile-drawer" id="nav-drawer" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: white; z-index: 10000; flex-direction: column; padding: 5rem 2rem 2rem; overflow-y: auto;">
+    <div class="nav-mobile-drawer" id="nav-drawer">
       <a href="/#sluzby">Služby</a>
       <a href="/#realizace">Reference</a>
       <a href="/#blog">Blog</a>
@@ -335,14 +323,14 @@
       <a href="/#o-nas">O nás</a>
       <a href="/#kontakt">Kontakt</a>
       <a href="#kalkulacka" class="drawer-cta">Spočítat cenu</a>
-      <button id="drawer-close" style="position: fixed; top: 1rem; right: 1rem; background: transparent; border: none; cursor: pointer; font-size: 2rem; color: #1e293b; padding: 8px; z-index: 10001; line-height: 1;">✕</button>
+      <button class="drawer-close-btn" id="drawer-close" aria-label="Zavřít menu">✕</button>
     </div>
   </header>
 
   <div id="root"></div>
 
     <!-- SYNC:FALLBACK:START -->
-    <main style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
+                <main style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
                     <section class="hero" style="text-align: center; padding: 4rem 1rem; background: #f8fafc; border-radius: 2rem; margin-bottom: 3rem;">
                         <h1 style="font-size: 3rem; font-weight: 900; color: #0f172a; line-height: 1.2; margin-bottom: 1.5rem;">Špičková péče o to,<br><span style="color: #f59e0b">co jste usilovně vybudovali</span></h1>
                         <p style="font-size: 1.25rem; color: #64748b; max-width: 800px; margin: 0 auto;">Specialisté na profesionální čištění a dlouhodobou nano-ochranu střech, fasád, dlažeb a fotovoltaiky.</p>
@@ -439,7 +427,7 @@
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">Služba</span>
                                 </div>
                                 <h3 class="text-xl font-bold mb-2"><span style="color: #0f172a;">Odstranění</span> <span style="color: #f59e0b;">graffiti</span></h3>
-                                <div class="text-muted-foreground text-sm line-clamp-2"><p><span style="color: rgb(102, 102, 102); font-family: Poppins, sans-serif;">Provádíme odstranění a vyčištění graffiti z různých druhů povrchů. Aplikujeme vysoce účinnou a transparentní antigraffiti ochranu, která vydrží až 10 cyklů odstranění.</span></p><p></p></div>
+                                <div class="text-muted-foreground text-sm line-clamp-2"><p><span style="color: rgb(102, 102, 102); font-family: Outfit, sans-serif;">Provádíme odstranění a vyčištění graffiti z různých druhů povrchů. Aplikujeme vysoce účinnou a transparentní antigraffiti ochranu, která vydrží až 10 cyklů odstranění.</span></p><p></p></div>
                                 <div class="mt-4 flex items-center text-primary font-bold text-sm">
                                     Zjistit více 
                                     <svg class="ml-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
