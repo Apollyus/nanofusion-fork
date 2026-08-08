@@ -156,57 +156,7 @@
   <link rel="stylesheet" href="/static/modern-ui.css">
   <link href="/static/calculator.css" rel="stylesheet" />
   <link href="/static/ai-chat.css" rel="stylesheet" />
-  <style>
-    @media (max-width: 1024px) {
-      .nav-desktop {
-        display: none !important;
-      }
-      header .nav-main-bar,
-      #root header .nav-main-bar {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-      }
-      header .nav-main-bar > div,
-      #root header .nav-main-bar > div {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        gap: 1rem !important;
-      }
-      header .nav-logo-link,
-      #root header .nav-logo-link {
-        margin-right: auto !important;
-      }
-      #root header,
-      header {
-        display: flex !important;
-        align-items: center !important;
-        padding-top: 0.5rem !important;
-        padding-bottom: 0.5rem !important;
-      }
-      .nav-mobile-toggle,
-      #nav-toggle {
-        margin-left: 0 !important;
-      }
-      .nav-logo-img,
-      #root header .nav-logo-img,
-      header img.nav-logo-img {
-        height: 75px !important;
-        max-height: 75px !important;
-      }
-    }
-    header.menu-open .nav-mobile-toggle,
-    header.menu-open #nav-toggle {
-      display: none !important;
-    }
-    header.menu-open {
-      background: #ffffff !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-  </style>
+
   <script>
     // Emergency preloader removal fallback
     setTimeout(function() {
@@ -317,9 +267,9 @@
       <a href="/#galerie">Galerie</a>
       <a href="/#o-nas">O nás</a>
       <a href="/#kontakt">Kontakt</a>
-      <a href="#kalkulacka" class="drawer-cta">Spočítat cenu</a>
-      <button class="drawer-close-btn" id="drawer-close" aria-label="Zavřít menu">✕</button>
+      <a href="/#kalkulacka" class="drawer-cta">Spočítat cenu</a>
     </div>
+    
   </header>
 
   <div id="root"></div>
@@ -833,36 +783,19 @@ Test</p>
       const header = toggle ? toggle.closest('header') : document.querySelector('header');
       if (!toggle || !drawer) return;
       toggle.addEventListener('click', function () {
-        var isOpen = drawer.classList.contains('show');
-        if (isOpen) {
-          drawer.classList.remove('show');
-          toggle.style.setProperty('display', 'flex', 'important');
-          if (header) header.classList.remove('menu-open');
-          document.body.style.overflow = '';
-        } else {
-          drawer.classList.add('show');
-          toggle.style.setProperty('display', 'none', 'important');
-          if (header) header.classList.add('menu-open');
-          document.body.style.overflow = 'hidden';
-        }
+        const open = drawer.classList.toggle('open');
+        toggle.classList.toggle('open', open);
+        if (header) header.classList.toggle('menu-open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
       });
       drawer.querySelectorAll('a').forEach(function (a) {
         a.addEventListener('click', function () {
-          drawer.classList.remove('show');
-          toggle.style.setProperty('display', 'flex', 'important');
+          drawer.classList.remove('open');
+          toggle.classList.remove('open');
           if (header) header.classList.remove('menu-open');
           document.body.style.overflow = '';
         });
       });
-      var closeBtn = document.getElementById('drawer-close');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', function () {
-          drawer.classList.remove('show');
-          toggle.style.setProperty('display', 'flex', 'important');
-          if (header) header.classList.remove('menu-open');
-          document.body.style.overflow = '';
-        });
-      }
     })();
     
     // Remove black bar and phone number that main.js tries to inject

@@ -32,12 +32,7 @@ header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-header:has(.nav-mobile-drawer.open),
-header:has(.nav-mobile-toggle.open),
-header.menu-open {
-  z-index: 100000 !important;
-  height: 70px !important;
-}
+
 
 header.header-scrolled {
   background: rgba(255, 255, 255, 0.78) !important;
@@ -92,58 +87,7 @@ input, button, select, textarea {
   font-family: inherit;
 }
 
-/* ─── Mobile Navigation Toggle Hiding on Desktop ───────────────────────── */
-@media (min-width: 1025px) {
-  .nav-mobile-toggle,
-  #nav-toggle,
-  .nav-mobile-drawer,
-  header button.lg\:hidden,
-  header div.lg\:hidden {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    width: 0 !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    opacity: 0 !important;
-  }
-}
 
-/* ─── Mobile Hamburger & Close Cross ('X') Toggle Styling ──────────────── */
-.nav-mobile-toggle, #nav-toggle, header button.lg\:hidden {
-  position: relative !important;
-  z-index: 100010 !important;
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  color: #1e293b !important;
-}
-
-.nav-mobile-toggle span {
-  display: block !important;
-  width: 26px !important;
-  height: 2.5px !important;
-  background: #1e293b !important;
-  border-radius: 2px !important;
-  transition: all 0.3s ease !important;
-}
-
-.nav-mobile-toggle.open span:nth-child(1),
-header.menu-open .nav-mobile-toggle span:nth-child(1) {
-  transform: translateY(7.5px) rotate(45deg) !important;
-  background: #0f172a !important;
-}
-
-.nav-mobile-toggle.open span:nth-child(2),
-header.menu-open .nav-mobile-toggle span:nth-child(2) {
-  opacity: 0 !important;
-}
-
-.nav-mobile-toggle.open span:nth-child(3),
-header.menu-open .nav-mobile-toggle span:nth-child(3) {
-  transform: translateY(-7.5px) rotate(-45deg) !important;
-  background: #0f172a !important;
-}
 
 /* ─── Button & CTA Clickability & Z-Index Isolation ────────────────────── */
 .nav-cta-desktop, .drawer-cta {
@@ -184,56 +128,7 @@ a.bg-amber-500, a.bg-primary:not(.hidden), button.bg-primary:not(.hidden), a[hre
   pointer-events: none !important;
 }
 
-/* ─── Mobile Top Header Bar Single-Row Layout ───────────────────────────── */
-@media (max-width: 1024px) {
-  header .max-w-7xl > div,
-  header .container > div,
-  .nav-main-bar {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    flex-wrap: nowrap !important;
-    gap: 0.5rem !important;
-    padding-top: 1.25rem !important;
-    padding-bottom: 1.25rem !important;
-  }
-  /* The logo renders at 82px tall (modern-ui.css wins the cascade over the
-     72px attempt below) inside a Tailwind h-16 (64px) row, and centers with
-     an 11px top offset because of its -16px margin-bottom -- so it needs
-     the row to be ~104px tall to stay fully inside the white background. */
-  header .max-w-7xl,
-  header .container {
-    min-height: 100px !important;
-  }
-  header img:not(.chat-logo):not(.ai-chat-launcher img),
-  nav img:not(.chat-logo),
-  .nav-logo-img {
-    height: 60px !important;
-    max-height: 75px !important;
-    width: auto !important;
-    margin-bottom: -16px !important;
-    position: relative !important;
-    z-index: 10 !important;
-  }
-  /* Scoped to .nav-cta-desktop only (the static service-page header's CTA
-     class) -- NOT the bare .bg-primary selector, which used to also catch
-     the React homepage header's intentionally-desktop-only "Spočítat cenu"
-     button (Tailwind `hidden sm:flex`). That button wraps onto a second
-     row on narrow screens and has no room reserved for it, so forcing it
-     visible made it spill out past the header's white background. It's
-     redundant anyway -- the mobile drawer has its own CTA at the bottom. */
-  header .nav-cta-desktop {
-    display: inline-flex !important;
-    font-size: 0.75rem !important;
-    padding: 0.4rem 0.85rem !important;
-    border-radius: 99px !important;
-    white-space: nowrap !important;
-    margin-left: auto !important;
-    margin-right: 0.25rem !important;
-    z-index: 100005 !important;
-  }
-}
+
 
 /* ─── Anchor-link Scroll Offset ──────────────────────────────────────────
    The header is fixed/sticky at all times (~90px tall on mobile). Without
