@@ -46,8 +46,7 @@ const handleIncomingHash = () => {
     }
 
     if (targetEl && typeof targetEl.getBoundingClientRect === 'function') {
-      const topOffset = Math.round(targetEl.getBoundingClientRect().top + window.pageYOffset - 90);
-      window.scrollTo({ top: topOffset, behavior: 'smooth' });
+      targetEl.scrollIntoView({ behavior: 'smooth' });
     }
   }
 };
@@ -133,8 +132,7 @@ window.scrollToKalkulacka = (e) => {
   if (e && e.stopPropagation) e.stopPropagation();
   const el = document.getElementById('kalkulacka') || document.querySelector('.hero-calc-card') || document.querySelector('.calc-section') || document.querySelector('#calc-steps') || document.querySelector('#m-form');
   if (el) {
-    const top = Math.round(el.getBoundingClientRect().top + window.pageYOffset - 90);
-    window.scrollTo({ top, behavior: 'smooth' });
+    el.scrollIntoView({ behavior: 'smooth' });
   } else {
     window.location.href = '/#kalkulacka';
   }
@@ -395,9 +393,7 @@ const observeAll = () => {
         targetEl = document.getElementById('kalkulacka') || document.querySelector('.hero-calc-card') || document.querySelector('.calc-section') || document.querySelector('#calc-steps') || document.querySelector('#m-form');
       }
 
-      if (targetEl && typeof targetEl.getBoundingClientRect === 'function') {
-        const topOffset = Math.round(targetEl.getBoundingClientRect().top + window.pageYOffset - 90);
-        window.scrollTo({ top: topOffset, behavior: 'smooth' });
+      targetEl.scrollIntoView({ behavior: 'smooth' });
 
         setTimeout(() => {
           const firstInput = targetEl.querySelector('input, select, button');
@@ -976,8 +972,7 @@ const observeAll = () => {
       const performRefScroll = () => {
         const refEl = document.getElementById('reference') || document.getElementById('realizace') || document.getElementById('realizace-sec') || document.getElementById('recenze');
         if (refEl && typeof refEl.getBoundingClientRect === 'function') {
-          const topOffset = Math.round(refEl.getBoundingClientRect().top + window.pageYOffset - 90);
-          window.scrollTo({ top: topOffset, behavior: 'smooth' });
+          refEl.scrollIntoView({ behavior: 'smooth' });
         } else {
           window.location.href = '/#reference';
         }
@@ -991,8 +986,7 @@ const observeAll = () => {
       const sluzbyEl = document.getElementById('sluzby') || document.getElementById('sluzby-sec');
       if (sluzbyEl) {
         e.preventDefault();
-        const topOffset = Math.round(sluzbyEl.getBoundingClientRect().top + window.pageYOffset - 90);
-        window.scrollTo({ top: topOffset, behavior: 'smooth' });
+        sluzbyEl.scrollIntoView({ behavior: 'smooth' });
         return;
       }
     }
@@ -1022,8 +1016,7 @@ const observeAll = () => {
 
         if (targetEl && typeof targetEl.getBoundingClientRect === 'function') {
           e.preventDefault();
-          const topOffset = Math.round(targetEl.getBoundingClientRect().top + window.pageYOffset - 90);
-          window.scrollTo({ top: topOffset, behavior: 'smooth' });
+          targetEl.scrollIntoView({ behavior: 'smooth' });
           return;
         }
       }
