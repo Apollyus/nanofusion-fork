@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="cs" class="scroll-smooth">
 
 <head>
@@ -45,67 +45,38 @@
 
 <body class="bg-slate-50">
 
-  <!-- Navigation Header -->
-  <header
-    style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-    <div
-      style="background: #1c1c1e; color: #e5e5ea; font-size: 0.85rem; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.05);">
-      <div class="top-info-bar-inner"
-        style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 2.5rem;">
-        <div>Jezdíme po celé ČR · Po–Pá 7:00–18:00</div>
-        <div class="top-info-bar-contacts" style="display: flex; gap: 1.5rem; align-items: center;">
-          <a href="tel:+420774509409"
-            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">📞 +420 774
-            509 409</a>
-          <a href="mailto:info@nanofusion.cz"
-            style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">✉️
-            info@nanofusion.cz</a>
-        </div>
-      </div>
-    </div>
-    <div class="nav-main-bar"
-      style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 0.85rem 2.5rem;">
-      <div
-        style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
-        <a href="/" style="display: flex; align-items: center; text-decoration: none;">
-          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion"
-            style="height: 60px; width: auto;" data-patched="true">
+ <header class="site-header">
+
+    <div class="nav-main-bar">
+      <div class="nav-bar-inner">
+        <a href="/" class="nav-logo-link">
+          <img class="nav-logo-img" src="/static/nanofusion-long.png" alt="NANOfusion" data-patched="true">
         </a>
-        <nav class="nav-desktop" style="display: flex; gap: 2rem; align-items: center;">
-          <a href="/#sluzby" style="text-decoration: none; color: #475569; font-weight: 500;">Služby</a>
-          <a href="/#realizace" style="text-decoration: none; color: #475569; font-weight: 500;">Reference</a>
-          <a href="/o-nas" style="text-decoration: none; color: #475569; font-weight: 500;">O nás</a>
+        <nav class="nav-desktop" data-nav-patched="true">
+          <a href="/#sluzby" data-nav-patched="true">Služby</a>
+          <a href="/#realizace" data-nav-patched="true">Reference</a>
+          <a href="/#blog" data-nav-patched="true">Blog</a>
+          <a href="/#galerie" data-nav-patched="true">Galerie</a>
+          <a href="/#o-nas" data-nav-patched="true">O nás</a>
+          <a href="/#kontakt" data-nav-patched="true">Kontakt</a>
         </nav>
-        <a class="nav-cta-desktop" href="#kalkulacka"
-          style="background: #f59e0b; color: white; padding: 0.75rem 2rem; border-radius: 99px; text-decoration: none; font-weight: 700; font-size: 0.95rem;">Spočítat cenu</a>
-        <!-- Hamburger toggle -->
-        
-        <div style="display: flex; align-items: center; gap: 1.5rem;" data-contact-patched="true">
-          <div class="contact-desktop-only" style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; line-height: 1.2;">
-            <a href="tel:+420774509409" style="color: #0f172a; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: color 0.2s;">+420 774 509 409</a>
-            <a href="mailto:info@nanofusion.cz" style="color: #64748b; font-size: 0.8rem; text-decoration: none; transition: color 0.2s;">info@nanofusion.cz</a>
-          </div>
-          <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
-          <span></span><span></span><span></span>
+        <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Otevřít menu">
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
-        </div>
-        <style>
-          @media (max-width: 768px) {
-            .contact-desktop-only { display: none !important; }
-          }
-        </style>
-        
       </div>
     </div>
-    <!-- Mobile Drawer -->
+
     <div class="nav-mobile-drawer" id="nav-drawer">
       <a href="/#sluzby">Služby</a>
       <a href="/#realizace">Reference</a>
       <a href="/#blog">Blog</a>
       <a href="/#galerie">Galerie</a>
-      <a href="/o-nas">O nás</a>
+      <a href="/#o-nas">O nás</a>
       <a href="/#kontakt">Kontakt</a>
       <a href="#kalkulacka" class="drawer-cta">Spočítat cenu</a>
+      <button class="drawer-close-btn" id="drawer-close" aria-label="Zavřít menu">✕</button>
     </div>
   </header>
 
