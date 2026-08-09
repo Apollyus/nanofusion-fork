@@ -154,6 +154,9 @@ const injectReviews = (list) => {
 
             scroller.onmouseenter = stopAutoplay;
             scroller.onmouseleave = startAutoplay;
+            scroller.addEventListener('touchstart', stopAutoplay, {passive: true});
+            scroller.addEventListener('touchend', startAutoplay, {passive: true});
+            scroller.addEventListener('touchcancel', startAutoplay, {passive: true});
 
             startAutoplay();
         }
