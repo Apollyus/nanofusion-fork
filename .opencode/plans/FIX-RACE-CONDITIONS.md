@@ -138,3 +138,17 @@ a za ~2 s je SPA vytvořilo = flash.
 
 Ověřeno na dev serveru: `hasFallbackMarkers` přítomen, starý `hasRealSections` pryč,
 `node --check` OK.
+
+## Dodatek 3 — rychlost vs. flash (finální vyvážení)
+
+- Odstraněno čekání na hero video/obrázky (odhalení už blokuje jen „swap obsahu mezi
+  zdroji", video se načítá až po odhalení). `gallery-hero.js` opět `markMediaReady()`
+  okamžitě.
+- Odstraněn blokující „quiet-DOM" hlídač (causa ~30 s): má jen urychlovat, nikdy blokovat —
+  odhalení garantuje `spaSettled + 0,8 s`, resp. později `spaSettled + 2,6 s`, i kdyby DOM
+  mutoval nepřetržitě.
+- SPA boot-spinner (`#root .fixed.inset-0:has(> .animate-spin)`) skryt trvale CSS →
+  kulatý loader bez loga už nikdy neprosvitne.
+- Preloader `z-index: 2147483647` (nad vším).
+- Krajní pojistky: 15 s (hero data), 30 s (SPA nenastavalo), 45 s (absolutní).
+- Ověřeno headless (rychlá cesta): `spaSettled` ~0,6 s, odhalení ~3,3 s, žádný spinner.

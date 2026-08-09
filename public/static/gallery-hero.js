@@ -113,13 +113,8 @@ export const loadHeroMedia = async () => {
       }, 100);
 
       fadeOutExisting();
-      // Čekáme na načtení YouTube playeru — NEodhalujeme stránku, dokud iframe
-      // nedotočí (jinak je v hero vidět jeho vlastní kulatý loading spinner
-      // a "hero bez videa", dokud video nezačne hrát).
-      let ytReady = false;
-      const ytDone = () => { if (ytReady) return; ytReady = true; markMediaReady(); };
-      iframe.addEventListener('load', ytDone);
-      setTimeout(ytDone, 5000); // pojišťka, kdyby YouTube blokoval nebo spadl
+      // Video se smí načítat i po odhalení stránky → mediaReady hlásíme okamžitě.
+      markMediaReady();
       console.log('NANOfusion: Hero YouTube video načteno:', videoId);
       
     } else if (isVideo) {
@@ -132,11 +127,7 @@ export const loadHeroMedia = async () => {
           existingVideo.load();
           existingVideo.play().catch(() => {});
           existingVideo.style.opacity = '1';
-          let vReady = false;
-          const vDone = () => { if (vReady) return; vReady = true; markMediaReady(); };
-          existingVideo.addEventListener('canplay', vDone);
-          existingVideo.addEventListener('loadeddata', vDone);
-          setTimeout(vDone, 5000);
+          markMediaReady();
         }, 50);
         console.log('NANOfusion: Hero video plynule nahrazeno z DB:', data.url);
       } else {
@@ -158,11 +149,7 @@ export const loadHeroMedia = async () => {
 
         video.play().catch(() => {});
         fadeOutExisting();
-        let v2Ready = false;
-        const v2Done = () => { if (v2Ready) return; v2Ready = true; markMediaReady(); };
-        video.addEventListener('canplay', v2Done);
-        video.addEventListener('loadeddata', v2Done);
-        setTimeout(v2Done, 5000);
+        markMediaReady();
       }
     } else if (data.type === 'image') {
       const existingMedia = heroSection.querySelector('video, iframe');

@@ -1639,23 +1639,15 @@ new MutationObserver(() => { nnf_lastDomMutationAt = performance.now(); })
 
 window.nnf_checkPreloader = () => {
   const s = window.nnf_preloaderState;
-  const quietMs = performance.now() - nnf_lastDomMutationAt;
-  // Počkáme na doznění vstupních animací SPA hero (titulek/CTA/video se uklidí pod krytem).
-  const entranceDone = nnf_spaSettledAt > 0 && (performance.now() - nnf_spaSettledAt) >= 1200;
+  const now = performance.now();
+  const quietMs = now - nnf_lastDomMutationAt;
+  const sinceSpa = nnf_spaSettledAt > 0 ? now - nnf_spaSettledAt : 0;
   const fontsOk = !document.fonts || document.fonts.status !== 'loading';
-  // Obrázky ve viewportu (ne lazy) musí být načtené — jinak se po odhalení "popnou"
-  // a layout/hero skáče. Budget 9 s od SPA settle jako pojistka (pomalá čistá síť).
-  const imgsOk = (() => {
-    if (nnf_spaSettledAt > 0 && (performance.now() - nnf_spaSettledAt) > 9000) return true;
-    const vh = window.innerHeight;
-    return Array.from(document.images).every((img) => {
-      if (img.getAttribute('loading') === 'lazy') return true;
-      const r = img.getBoundingClientRect();
-      if (r.top > vh || r.bottom < 0 || (r.width === 0 && r.height === 0)) return true;
-      return img.complete;
-    });
-  })();
-  if (s.titleReady && s.mediaReady && s.spaSettled && quietMs > 700 && fontsOk && entranceDone && imgsOk) {
+  // Odhalení řídí ČAS od převzetí SPA (doznění vstupních animací pod krytem),
+  // quiet-hlídač jen urychluje, nikdy NEBLOKUJE — jinak může velké mutation churn
+  // držet kryt až do krajní pojistky (=> pomalé načítání).
+  const ready = s.titleReady && s.mediaReady && s.spaSettled && fontsOk && sinceSpa >= 800;
+  if (ready && (quietMs > 450 || sinceSpa >= 2600)) {
     clearPreloader();
   }
 };
