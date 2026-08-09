@@ -268,25 +268,13 @@ const syncServicesMedia = async () => {
 const syncHeroText = async (heading) => {
   try {
     const titleVal = await heroTitlePromise;
-    const preloader = document.getElementById('preloader');
-    const isPreloaderVisible = preloader && !preloader.classList.contains('fade-out');
+    const fallbackTitle = 'Špičková péče o to,<br><span style="color: #f59e0b;">co jste usilovně vybudovali</span>';
 
     if (titleVal) {
-      if (isPreloaderVisible) {
-        // Under the preloader cover, apply immediately with NO opacity fade (0ms FOUC)
-        heading.innerHTML = titleVal;
-      } else {
-        // Apply with fade transition if the page is already visible
-        heading.style.transition = 'opacity 0.3s ease';
-        heading.style.opacity = '0';
-        setTimeout(() => {
-          heading.innerHTML = titleVal;
-          heading.style.opacity = '1';
-        }, 300);
-      }
+      heading.innerHTML = titleVal;
       console.log('NANOfusion: Hero text synchronizován');
     } else {
-      heading.innerHTML = 'Špičková péče o to,<br><span style="color: #f59e0b;">co jste usilovně vybudovali</span>';
+      heading.innerHTML = fallbackTitle;
     }
   } catch (e) {
     heading.innerHTML = 'Špičková péče o to,<br><span style="color: #f59e0b;">co jste usilovně vybudovali</span>';
@@ -1585,11 +1573,42 @@ const isHomepage = window.location.pathname === '/' || window.location.pathname 
 
 window.nnf_preloaderState = {
   titleReady: !isHomepage,
-  mediaReady: !isHomepage
+  mediaReady: !isHomepage,
+  spaSettled: !isHomepage
 };
 
+const markSpaSettled = () => {
+  if (window.nnf_preloaderState.spaSettled) return;
+  window.nnf_preloaderState.spaSettled = true;
+  window.nnf_checkPreloader();
+};
+
+// Na homepage čekáme, dokud React SPA nevyrenderuje reálné sekce do #root
+// (ne jen jeho boot/spinner), abychom uživatele nevystavili mezistavu.
+if (isHomepage) {
+  const rootEl = document.getElementById('root');
+  if (rootEl) {
+    let settledTimer = null;
+    const spaObserver = new MutationObserver(() => {
+      const hasRealSections = Array.from(rootEl.children).some(child =>
+        child && child.firstElementChild &&
+        (child.tagName === 'SECTION' || child.childElementCount >= 2)
+      );
+      clearTimeout(settledTimer);
+      if (hasRealSections) {
+        // Krátký debounce: počkáme, než se DOM ustálí (nereagovat na průběžné re-rendery)
+        settledTimer = setTimeout(markSpaSettled, 200);
+      }
+    });
+    spaObserver.observe(rootEl, { childList: true, subtree: true });
+    // Pojistka: nikdy neblokovat odhalení déle než 5s kvůli SPA
+    setTimeout(markSpaSettled, 5000);
+  }
+}
+
 window.nnf_checkPreloader = () => {
-  if (window.nnf_preloaderState.titleReady && window.nnf_preloaderState.mediaReady) {
+  const s = window.nnf_preloaderState;
+  if (s.titleReady && s.mediaReady && s.spaSettled) {
     clearPreloader();
   }
 };
@@ -1612,8 +1631,8 @@ const initApp = () => {
   observeAll();
   domObserver.observe(document.body, { childList: true, subtree: true });
 
-  // Safety timeout: 1.5s max for homepage, instant for subpages (static content, no preloader)
-  const maxWait = isHomepage ? 1500 : 0;
+  // Safety timeout: homepage čeká na SPA + data (max 7s), podstránky okamžitě
+  const maxWait = isHomepage ? 7000 : 0;
   setTimeout(() => {
     if (document.getElementById('preloader')) {
       console.log('NANOfusion: Preloader safety timeout reached');
@@ -1628,4 +1647,4 @@ if (document.readyState === 'loading') {
   initApp();
 }
 
-setTimeout(clearPreloader, 4000); // Fallback
+setTimeout(clearPreloader, 8000); // Final fallback

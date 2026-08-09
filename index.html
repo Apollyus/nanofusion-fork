@@ -154,7 +154,9 @@
   <link href="/static/calculator.css" rel="stylesheet" />
   <link href="/static/ai-chat.css" rel="stylesheet" />
   <script>
-    // Emergency preloader removal fallback
+    // Emergency preloader removal fallback — acts only as a last resort;
+    // the real (data-aware) removal is driven from main.js via nnf_preloaderState.
+    // 8s: long enough for the React SPA + Supabase data to settle without flashing.
     setTimeout(function() {
       var p = document.getElementById('preloader');
       if (p) {
@@ -164,7 +166,7 @@
         document.body.style.opacity = '1';
         document.body.style.overflow = 'auto';
       }
-    }, 4000);
+    }, 8000);
   </script>
 </head>
 
