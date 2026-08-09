@@ -337,6 +337,16 @@ section:first-of-type + section, section:first-of-type + div, .hero + section {
   visibility: hidden !important;
 }
 
+/* Dokud běží náš preloader, celoplošný boot-spinner SPA (.fixed.inset-0) nesmí
+   prosvitnout — uživatel vidí jen logo preloader. (Zbytek #root necháváme viditelný
+   pod krytem, aby neměnil chování reveal animací / IntersectionObserveru.) */
+/* SPA boot-spinner NIKDY neukazovat uživateli — ať už ho kryje preloader,
+   nebo stránka přešla v krajním případě přes časový limit. (Kulatý loader
+   bez loga už nikdy nesmí probliknout.) */
+#root .fixed.inset-0:has(> .animate-spin) {
+  visibility: hidden !important;
+}
+
 @keyframes fadeInGlobal {
   from { opacity: 0; }
   to { opacity: 1; }

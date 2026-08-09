@@ -1577,41 +1577,139 @@ window.nnf_preloaderState = {
   spaSettled: !isHomepage
 };
 
+let nnf_spaSettledAt = 0;
 const markSpaSettled = () => {
   if (window.nnf_preloaderState.spaSettled) return;
   window.nnf_preloaderState.spaSettled = true;
+  nnf_spaSettledAt = performance.now();
   window.nnf_checkPreloader();
 };
 
-// Na homepage čekáme, dokud React SPA nevyrenderuje reálné sekce do #root
-// (ne jen jeho boot/spinner), abychom uživatele nevystavili mezistavu.
+// Na homepage čekáme, dokud React SPA nepřevezme stránku po svém mountu.
+// Rozlišení SPA renderu od statického fallbacku: SPA při renderu vyprázdní celý #root,
+// čímž smaže komentářové markery <!-- SYNC:FALLBACK:... --> (createRoot.render()).
+// Dokud marker existuje, stránku drží statický fallback → NEpovažujeme ji za SPA.
 if (isHomepage) {
   const rootEl = document.getElementById('root');
   if (rootEl) {
     let settledTimer = null;
-    const spaObserver = new MutationObserver(() => {
-      const hasRealSections = Array.from(rootEl.children).some(child =>
-        child && child.firstElementChild &&
-        (child.tagName === 'SECTION' || child.childElementCount >= 2)
+
+    const hasFallbackMarkers = () =>
+      Array.from(rootEl.childNodes).some(n =>
+        n.nodeType === 8 && /SYNC:FALLBACK/.test(n.data || '')
       );
+
+    const hasRealSpaLayout = () =>
+      Array.from(rootEl.children).some(child =>
+        child && child.firstElementChild &&
+        (child.tagName === 'SECTION' || child.childElementCount >= 2) &&
+        !child.querySelector('.animate-spin')
+      );
+
+    const spaObserver = new MutationObserver(() => {
       clearTimeout(settledTimer);
-      if (hasRealSections) {
+      if (!hasFallbackMarkers() && hasRealSpaLayout()) {
         // Krátký debounce: počkáme, než se DOM ustálí (nereagovat na průběžné re-rendery)
         settledTimer = setTimeout(markSpaSettled, 200);
       }
     });
     spaObserver.observe(rootEl, { childList: true, subtree: true });
-    // Pojistka: nikdy neblokovat odhalení déle než 5s kvůli SPA
-    setTimeout(markSpaSettled, 5000);
+
+    // Pojistka: nikdy neoznačíme SPA za "usazené", dokud:
+//  (1) v DOM jede celoplošný boot-spinner SPA (.fixed.inset-0 .animate-spin), NEBO
+//  (2) statický fallback ještě drží stránku (markery SYNC:FALLBACK přítomny,
+//      bundle se teprve stahuje a zatím bychom odhalili statický obsah).
+// Jinak SPA visí na spinnersu (pomalé /api) → držíme kryt dál; odhalí se až landing
+// (nebo absolutní pojistky 11–12s).
+    const spaFallback = setInterval(() => {
+      if (window.nnf_preloaderState.spaSettled) { clearInterval(spaFallback); return; }
+      const rootNow = document.getElementById('root');
+      const fallbackPresent = rootNow && Array.from(rootNow.childNodes).some(n => n.nodeType === 8 && /SYNC:FALLBACK/.test(n.data || ''));
+      const fullscreenSpinner = document.querySelector('.fixed.inset-0 .animate-spin, .animate-spin');
+      if (!fullscreenSpinner && !fallbackPresent) { clearInterval(spaFallback); markSpaSettled(); }
+    }, 600);
   }
 }
 
+// Globální "quiet DOM" detekce: pamatujeme čas poslední DOM mutace, abychom odhalili
+// stránku až ve chvíli, kdy se obsah skutečně přestal měnit (SPA i naše patche dojely).
+// DOM se nesmí měnit 700 ms — jinak bychom odhalili rozjetý obsah.
+let nnf_lastDomMutationAt = 0;
+new MutationObserver(() => { nnf_lastDomMutationAt = performance.now(); })
+  .observe(document.body, { childList: true, subtree: true, attributes: true, characterData: true });
+
 window.nnf_checkPreloader = () => {
   const s = window.nnf_preloaderState;
-  if (s.titleReady && s.mediaReady && s.spaSettled) {
+  const quietMs = performance.now() - nnf_lastDomMutationAt;
+  // Počkáme na doznění vstupních animací SPA hero (titulek/CTA/video se uklidí pod krytem).
+  const entranceDone = nnf_spaSettledAt > 0 && (performance.now() - nnf_spaSettledAt) >= 1200;
+  const fontsOk = !document.fonts || document.fonts.status !== 'loading';
+  // Obrázky ve viewportu (ne lazy) musí být načtené — jinak se po odhalení "popnou"
+  // a layout/hero skáče. Budget 9 s od SPA settle jako pojistka (pomalá čistá síť).
+  const imgsOk = (() => {
+    if (nnf_spaSettledAt > 0 && (performance.now() - nnf_spaSettledAt) > 9000) return true;
+    const vh = window.innerHeight;
+    return Array.from(document.images).every((img) => {
+      if (img.getAttribute('loading') === 'lazy') return true;
+      const r = img.getBoundingClientRect();
+      if (r.top > vh || r.bottom < 0 || (r.width === 0 && r.height === 0)) return true;
+      return img.complete;
+    });
+  })();
+  if (s.titleReady && s.mediaReady && s.spaSettled && quietMs > 700 && fontsOk && entranceDone && imgsOk) {
     clearPreloader();
   }
 };
+
+// Periodické pře-kontrolování (každých 250 ms), dokud preloader existuje:
+// SP covers i stavy, kdy žádná událost flagů nepřijde (např. až SPA domaženo po zpoždění).
+const preloaderRecheck = setInterval(() => {
+  if (!document.getElementById('preloader')) { clearInterval(preloaderRecheck); return; }
+  window.nnf_checkPreloader();
+}, 250);
+
+// --- TEMP DEBUG: aktivuj přes URL ?dbg=1 (vyžaduje hard reload, zaloguje timeline) ---
+if (location.search.includes('dbg')) {
+  window.nnf_dbg = { t0: performance.now(), ev: [], lastFlags: null, preGone: false };
+  const dbgP = (m) => window.nnf_dbg.ev.push(`+${Math.round(performance.now() - window.nnf_dbg.t0)}ms ${m}`);
+  const flagTimer = setInterval(() => {
+    const s = window.nnf_preloaderState || {};
+    const sig = `title:${!!s.titleReady} media:${!!s.mediaReady} spa:${!!s.spaSettled}`;
+    if (sig !== window.nnf_dbg.lastFlags) { window.nnf_dbg.lastFlags = sig; dbgP('flags -> ' + sig); }
+  }, 30);
+  const preTimer = setInterval(() => {
+    const p = document.getElementById('preloader');
+    if (p && (p.classList.contains('fade-out') || !p.parentNode) && !window.nnf_dbg.preGone) {
+      window.nnf_dbg.preGone = true; dbgP('PRELOADER GONE'); clearInterval(preTimer);
+    }
+  }, 50);
+  let mutCount = 0; const sqlLog = { h1: 0, pref: 0, faq: 0 };
+  new MutationObserver((ms) => {
+    mutCount++;
+    ms.forEach(m => m.addedNodes.forEach(n => {
+      if (n.nodeType !== 1 || !n.querySelector) return;
+      if (n.querySelector('h1.font-heading')) sqlLog.h1++;
+      if (n.querySelector('#reference')) sqlLog.pref++;
+      if (n.querySelector('#faq')) sqlLog.faq++;
+    }));
+  }).observe(document.body, { childList: true, subtree: true });
+  setTimeout(() => {
+    const root = document.getElementById('root');
+    dbgP('dom mutations total: ' + mutCount);
+    dbgP('spa fallback markers present: ' + [...(root?.childNodes || [])].some(n => n.nodeType === 8 && /SYNC:FALLBACK/.test(n.data || '')));
+    dbgP('root children: ' + (root?.children.length || 0) + ' | first: ' + (root?.firstElementChild?.tagName || 'none') + '.' + (root?.firstElementChild?.className || '').slice(0, 40));
+    dbgP('spinner in root: ' + !!(root && root.querySelector('.animate-spin')));
+    dbgP('added: #reference x' + sqlLog.pref + ' | #faq x' + sqlLog.faq + ' | h1.font-heading x' + sqlLog.h1);
+    dbgP('imgs loaded: ' + [...document.images].filter(i => i.complete).length + '/' + document.images.length);
+    const dbgText = window.nnf_dbg.ev.join('\n');
+    console.info('[nnf-dbg]\n' + dbgText);
+    const out = document.createElement('pre');
+    out.id = 'nnf-dbg-out';
+    out.textContent = dbgText;
+    out.style.cssText = 'position:fixed;top:0;left:0;z-index:1000000;background:#0b1220;color:#4ade80;font:11px/1.5 monospace;white-space:pre-wrap;max-width:100vw;max-height:70vh;overflow:auto;padding:8px;';
+    document.body.appendChild(out);
+  }, 11000);
+}
 
 const clearPreloader = () => {
   const preloader = document.getElementById('preloader');
@@ -1631,14 +1729,18 @@ const initApp = () => {
   observeAll();
   domObserver.observe(document.body, { childList: true, subtree: true });
 
-  // Safety timeout: homepage čeká na SPA + data (max 7s), podstránky okamžitě
-  const maxWait = isHomepage ? 7000 : 0;
-  setTimeout(() => {
-    if (document.getElementById('preloader')) {
-      console.log('NANOfusion: Preloader safety timeout reached');
-    }
-    clearPreloader();
-  }, maxWait);
+  // Smart safety timeout – NEodhaluje napevno po X sekundách. Odhalí jen při reálné poruše:
+  //  (a) hero data (title/media) se nenačetla do 15s → něco je rozbité,
+  //  (b) SPA nepřevzalo stránku do 30s → spustíme statický fallback.
+  //  Normální (byť pomalá) načítání tak NEUTRHNE odhalení v půlce rozjezdu.
+  if (isHomepage) {
+    setTimeout(() => {
+      if (!window.nnf_preloaderState.titleReady || !window.nnf_preloaderState.mediaReady) clearPreloader();
+    }, 15000);
+    setTimeout(() => {
+      if (!window.nnf_preloaderState.spaSettled) clearPreloader();
+    }, 30000);
+  }
 };
 
 if (document.readyState === 'loading') {
@@ -1647,4 +1749,4 @@ if (document.readyState === 'loading') {
   initApp();
 }
 
-setTimeout(clearPreloader, 8000); // Final fallback
+setTimeout(clearPreloader, 45000); // Final fallback (úplná krajní mez)

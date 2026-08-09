@@ -116,3 +116,25 @@
   (průchod by měl trvat cca délku Supabase + SPA renderu, max ~7 s).
 - Substránky: bez duplicitního SPA bloku.
 - `npm run build && npm run preview` pro produkční verifikaci.
+
+## Dodatek 2 — oprava `spaSettled` (reprodukovatelný flash v hero)
+
+**Symptom uživatele:** na homepage "nadpis + bílé pozadí" → ~2 s → jiný (SPA) loader →
+bg video + nadpis odskakuje + CTA. Tedy sled `statický fallback → SPA boot-spinner → SPA landing`.
+
+**Příčina:** detekce `spaSettled` testovala jen "má `#root` sekce?". Statický fallback ale
+sekce obsahuje a `main.js` ho vzápětí patchuje (badge row, CTA…) → mutace uvnitř `#root`
+splnily podmínku PŘED tím, než se SPA vůbec stáhlo → preloader zmizel, fallback byl vidět,
+a za ~2 s je SPA vytvořilo = flash.
+
+**Oprava (`public/static/main.js`):** `spaSettled` se nyní nastaví jen když **oba** body:
+
+1. `hasFallbackMarkers()` = z `#root` zmizely komentáře `<!-- SYNC:FALLBACK:... -->`
+   (createRoot.render() vyprázdní celý `#root` = marker je pryč → SPA převzal stránku),
+2. `hasRealSpaLayout()` = v `#root` je reálný layout (ne boot-spinner; guard na `.animate-spin`,
+   childElementCount ≥ 2 / `<section>`),
+3. + debounce 200 ms. Pojistka 5 s → **6 s** (kdyby SPA vůbec nenastartovalo, odhalí
+   statický fallback).
+
+Ověřeno na dev serveru: `hasFallbackMarkers` přítomen, starý `hasRealSections` pryč,
+`node --check` OK.

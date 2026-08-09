@@ -154,9 +154,9 @@
   <link href="/static/calculator.css" rel="stylesheet" />
   <link href="/static/ai-chat.css" rel="stylesheet" />
   <script>
-    // Emergency preloader removal fallback — acts only as a last resort;
-    // the real (data-aware) removal is driven from main.js via nnf_preloaderState.
-    // 8s: long enough for the React SPA + Supabase data to settle without flashing.
+    // Emergency preloader removal fallback — last resort only. Real removal is
+    // driven from main.js via nnf_preloaderState (smart, progress-aware).
+    // 45s: nikdy neodhalí stránku dřív, než pomalá síť stihne SPA + data.
     setTimeout(function() {
       var p = document.getElementById('preloader');
       if (p) {
@@ -166,14 +166,14 @@
         document.body.style.opacity = '1';
         document.body.style.overflow = 'auto';
       }
-    }, 8000);
+    }, 45000);
   </script>
 </head>
 
 <body>
   <!-- Premium Preloader - White Edition -->
   <div id="preloader"
-    style="position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; transition: opacity 0.6s ease, visibility 0.6s ease;">
+    style="position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2147483647; transition: opacity 0.6s ease, visibility 0.6s ease;">
     <div style="position: relative; margin-bottom: 2rem;">
       <img src="/static/logo-nav.jpg" alt="NANOfusion"
         style="height: 80px; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); animation: pulse 2s infinite ease-in-out;">
