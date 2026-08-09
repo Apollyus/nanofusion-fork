@@ -1443,9 +1443,8 @@ window.nnf_openGallery = (id) => {
               <div style="font-weight:800; color:white; font-size:20px;">Líbí se vám tento výsledek?</div>
               <div style="color:#94a3b8; font-size:14px;">Napište nám a získejte cenovou nabídku zdarma.</div>
             </div>
-            <button onclick="document.getElementById('gallery-modal-overlay').style.display='none'; setTimeout(() => document.getElementById('ai-chat-launcher').click(), 200)" 
-              style="background:#f59e0b; color:white; border:none; padding:16px 32px; border-radius:16px; font-weight:800; cursor:pointer; transition:all 0.3s ease; white-space:nowrap; box-shadow:0 10px 20px rgba(245, 158, 11, 0.2);">
-              CHCI TAKÉ TAKOVOU PÉČI
+            <button disabled style="background:#cbd5e1; color:#94a3b8; border:none; padding:16px 32px; border-radius:16px; font-weight:800; cursor:not-allowed; transition:all 0.3s ease; white-space:nowrap;">
+              Nanobot (Již brzy)
             </button>
           </div>
         </div>

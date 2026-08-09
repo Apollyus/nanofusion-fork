@@ -513,8 +513,8 @@ const openServiceModal = (data) => {
           <!-- Nanobot Bridge -->
           <div style="margin-top: 2rem; text-align: center; padding-top: 1.5rem; border-top: 1px dashed #e2e8f0;">
              <p style="font-size: 0.813rem; color: #64748b; margin-bottom: 0.75rem; font-weight: 500;">Máte k této službě dotazy?</p>
-             <button onclick="document.getElementById('service-modal-overlay').style.display='none'; setTimeout(() => document.getElementById('ai-chat-launcher').click(), 200);" style="background: transparent; border: 2px solid #F59E0B; color: #F59E0B; padding: 0.6rem 1.25rem; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 0.813rem; display: inline-flex; align-items: center; gap: 0.5rem;">
-                Zkusit Nanobota <span style="font-size: 1rem;">💬</span>
+             <button disabled style="background: transparent; border: 2px solid #cbd5e1; color: #94a3b8; padding: 0.6rem 1.25rem; border-radius: 12px; font-weight: 800; cursor: not-allowed; font-size: 0.813rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                Nanobot (Již brzy) <span style="font-size: 1rem;">⏳</span>
              </button>
           </div>
         </div>
