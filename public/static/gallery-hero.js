@@ -113,6 +113,7 @@ export const loadHeroMedia = async () => {
       }, 100);
 
       fadeOutExisting();
+      // Video se smí načítat i po odhalení stránky → mediaReady hlásíme okamžitě.
       markMediaReady();
       console.log('NANOfusion: Hero YouTube video načteno:', videoId);
       

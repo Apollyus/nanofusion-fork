@@ -6,6 +6,14 @@ const injectFaqs = async () => {
     let faqSection = document.getElementById('faq');
     if (!faqSection || faqSection.dataset.injected === 'true') return;
 
+    // Necháme sekci renderovat tam, kde už obsahuje FAQ položky
+    // (React SPA na homepage nebo statický HTML na podstránkách).
+    // Přepsání celého innerHTML jinak vyvolá viditelný flash.
+    if (faqSection.querySelectorAll('.faq-item').length > 0) {
+        faqSection.dataset.injected = 'true';
+        return;
+    }
+
     faqSection.style.transition = 'opacity 0.3s ease-in-out';
 
     const hydrateFaqs = async () => {

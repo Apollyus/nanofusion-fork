@@ -21,6 +21,14 @@ const injectReviews = (list) => {
     const reviewsSection = document.getElementById('reference');
     if (!reviewsSection || reviewsSection.dataset.injected === 'true') return false;
 
+    // Necháme sekci renderovat tam, kde už obsahuje realné recenze karty
+    // (React SPA na homepage nebo statický HTML na podstránkách).
+    // Přepsání celého innerHTML jinak vyvolá viditelný flash.
+    if (reviewsSection.querySelectorAll('.review-card-premium, .review-card, [class*="review-card"]').length > 0) {
+        reviewsSection.dataset.injected = 'true';
+        return true;
+    }
+
     // Double the array for smooth infinite scrolling loop
     const displayList = list.length > 2 ? list.concat(list) : list;
 
