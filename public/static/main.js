@@ -414,6 +414,9 @@ const observeAll = () => {
 
   const patchHeroButtons = () => {
     document.querySelectorAll('a, button').forEach(el => {
+      // Ochrana tlačítek uvnitř konfigurátoru - nesmíme je přepisovat ani jim brát funkčnost
+      if (el.closest('#kalkulacka') || el.closest('#m-form') || el.closest('.calc-section') || el.classList.contains('calc-cta')) return;
+
       const heroSec = el.closest('section:first-of-type') || el.closest('.hero, #hero, [data-hero]');
       const isHeroContext = !!(heroSec && !heroSec.closest('#blog') && !heroSec.closest('#realizace') && !heroSec.closest('#sluzby'));
 
@@ -428,7 +431,7 @@ const observeAll = () => {
           el.style.cursor = 'pointer';
         }
         // B. "Spočítat cenu" -> #kalkulacka
-        else if (text.includes('nezávazná') || text.includes('cenov') || text.includes('kalkul') || text.includes('spočítat') || text.includes('spočítejte') || text.includes('získat') || text.includes('poptávk')) {
+        else if (text.includes('nezávazná') || text.includes('cenov') || text.includes('kalkul') || text.includes('spočítat') || text.includes('spočítejte') || text.includes('získat') || text.includes('poptávk') || text.includes('zájem')) {
           if (!el.dataset.heroTextPatched) {
             const svg = el.querySelector('svg');
             const svgHtml = svg ? svg.outerHTML : `<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`;
@@ -632,7 +635,7 @@ const observeAll = () => {
   document.querySelectorAll('button.bg-primary, a.bg-primary, [class*="hero"] button, [class*="hero"] a').forEach(btn => {
     if (!btn.closest('header') && !btn.closest('footer') && !btn.closest('#kalkulacka') && !btn.closest('#m-form')) {
       const text = (btn.textContent || '').trim().toLowerCase();
-      if (text.includes('spočítejte') || text.includes('spočítat') || text.includes('poptávk')) {
+      if (text.includes('spočítejte') || text.includes('spočítat') || text.includes('poptávk') || text.includes('zájem')) {
         btn.style.cursor = 'pointer';
         btn.onclick = (e) => {
           if (e) {
@@ -785,7 +788,7 @@ const observeAll = () => {
       const headerBtn = e.target.closest('header button, header a, .nav-mobile-drawer a, .nav-mobile-drawer button');
       if (headerBtn) {
         const text = (headerBtn.textContent || '').trim().toLowerCase();
-        if (text.includes('spočítat') || text.includes('spočítejte') || text.includes('poptávk') || text.includes('nezávazn')) {
+        if (text.includes('spočítat') || text.includes('spočítejte') || text.includes('poptávk') || text.includes('nezávazn') || text.includes('zájem')) {
           if (!text.includes('služby') && !text.includes('reference') && !text.includes('blog') && !text.includes('galerie') && !text.includes('o nás') && !text.includes('kontakt')) {
             isCta = true;
           }
@@ -986,10 +989,13 @@ const observeAll = () => {
     }
 
     // B. "Spočítejte si cenu" / "Spočítejte si to" / Konfigurátor / Poptávka / Zadat poptávku -> MUST scroll to #kalkulacka
-    if (href.includes('#kalkulacka') || href === '/poptavka' || text.includes('spočítejte') || text.includes('spočítat') || text.includes('kalkul') || text.includes('poptávk') || text.includes('nezávazná') || btn.dataset.heroCtaPatched === 'true' || btn.dataset.heroBtnType === 'kalkulacka' || btn.classList.contains('nav-cta-desktop') || btn.classList.contains('drawer-cta') || btn.classList.contains('bg-primary')) {
-      e.preventDefault();
-      window.scrollToKalkulacka(e);
-      return;
+    if (href.includes('#kalkulacka') || href === '/poptavka' || text.includes('spočítejte') || text.includes('spočítat') || text.includes('kalkul') || text.includes('poptávk') || text.includes('nezávazná') || text.includes('zájem') || btn.dataset.heroCtaPatched === 'true' || btn.dataset.heroBtnType === 'kalkulacka' || btn.classList.contains('nav-cta-desktop') || btn.classList.contains('drawer-cta') || btn.classList.contains('bg-primary')) {
+      // OCHRANA: Pokud se kliknutí stalo UVNITŘ kalkulačky samotné (např. tlačítko 'Zobrazit kalkulaci'), ignorujeme tento globální click handler, ať může projít do kalkulačky!
+      if (!btn.closest('#kalkulacka') && !btn.closest('#m-form') && !btn.closest('.calc-section') && !btn.classList.contains('calc-cta')) {
+        e.preventDefault();
+        window.scrollToKalkulacka(e);
+        return;
+      }
     }
 
     // C. Other hash links
