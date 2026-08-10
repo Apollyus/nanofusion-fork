@@ -67,12 +67,11 @@ header.header-scrolled {
 }
 
 @media (max-width: 768px) {
-  /* Move logo more into corner on phones */
-  header .max-w-7xl > div,
-  header .container > div,
+  /* Set minimal horizontal padding on mobile to push logo into the corner */
+  header .max-w-7xl,
   .nav-main-bar {
-    padding-left: 0.25rem !important;
-    padding-right: 0.25rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
   }
 
   /* Homepage Hero Section with Video (reduced top margin/padding below fixed navbar) */
@@ -203,6 +202,13 @@ a.bg-amber-500, a.bg-primary:not(.hidden), button.bg-primary:not(.hidden), a[hre
     gap: 0.5rem !important;
     padding-top: 1.25rem !important;
     padding-bottom: 1.25rem !important;
+  }
+  
+  /* Prevent inner div from shrinking and centering inside the flex container */
+  header .max-w-7xl > div,
+  header .container > div,
+  .nav-main-bar > div {
+    width: 100% !important;
   }
   /* The logo renders at 82px tall (modern-ui.css wins the cascade over the
      72px attempt below) inside a Tailwind h-16 (64px) row, and centers with
