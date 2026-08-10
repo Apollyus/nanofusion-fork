@@ -1250,12 +1250,9 @@ button.primary-btn:hover {
 
   /* Prevent any horizontal scroll */
   body {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
-  section {
-    overflow-x: hidden;
-  }
 }
 
 /* --- Fix content padding inside modal pane on mobile --- */
