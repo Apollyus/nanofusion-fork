@@ -67,6 +67,14 @@ header.header-scrolled {
 }
 
 @media (max-width: 768px) {
+  /* Move logo more into corner on phones */
+  header .max-w-7xl > div,
+  header .container > div,
+  .nav-main-bar {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+
   /* Homepage Hero Section with Video (reduced top margin/padding below fixed navbar) */
   #root > div > section:first-of-type,
   main > section:first-of-type:not(.hero-section) {
@@ -76,7 +84,7 @@ header.header-scrolled {
   /* Service Detail Subpages Hero */
   section.hero-section,
   .hero-section {
-    padding-top: 14.5rem !important;
+    padding-top: 9.5rem !important;
     padding-bottom: 2.5rem !important;
   }
   #root > div > section:nth-of-type(2),
