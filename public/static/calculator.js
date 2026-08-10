@@ -350,8 +350,9 @@ const injectCalculator = () => {
             source: 'Konfigurátor',
             status: 'new'
           };
-          const fullPayload = primaryPhoto ? { ...payload, original_photo_url: primaryPhoto } : payload;
-          let { error } = await supabase.from('inquiries').insert(fullPayload);
+          
+          let { error } = await supabase.from('inquiries').insert(payload);
+          
           if (error) {
             console.warn('[Kalkulačka] První vložení selhalo, opakuji se záložním payloadem:', error.message);
             const fallbackPayload = {
