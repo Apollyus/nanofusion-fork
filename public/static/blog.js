@@ -168,7 +168,7 @@ const injectBlog = async () => {
                 
                 <div style="position:relative; width:100%; max-width:1400px; margin:0 auto;" class="group">
                     <!-- Track Container -->
-                    <div id="blog-scroller" style="display: flex; gap: 2rem; overflow-x: auto; scroll-behavior: smooth; padding: 1rem 0 3rem; scrollbar-width: none; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);">
+                    <div id="blog-scroller" style="display: flex; gap: 2rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; padding: 1rem 0 3rem; scrollbar-width: none; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);">
                         ${displayPosts.map(post => `
                             <div class="blog-card-modern" 
                                 onclick="window.nnf_openBlog('${post.id}')"
