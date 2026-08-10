@@ -354,3 +354,16 @@ a.bg-amber-500, a.bg-primary:not(.hidden), button.bg-primary:not(.hidden), a[hre
     width: 100% !important;
   }
 }
+
+/* ─── Mobile Horizontal Scroll Fixes (Blog, Galerie, Recenze) ───────────── */
+[style*="overflow-x: auto"], .overflow-x-auto {
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x pan-y !important;
+}
+
+@media (max-width: 768px) {
+  [style*="overflow-x: auto"] > div, .overflow-x-auto > div {
+    flex: 0 0 85vw !important;
+    max-width: 85vw !important;
+  }
+}

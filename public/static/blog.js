@@ -235,6 +235,7 @@ const injectBlog = async () => {
             if (scroller) {
                 let autoplayInterval;
                 const startAutoplay = () => {
+                    clearInterval(autoplayInterval);
                     autoplayInterval = setInterval(() => {
                         if (scroller.scrollLeft >= (scroller.scrollWidth / 2)) {
                             scroller.scrollLeft = 0;
@@ -257,8 +258,10 @@ const injectBlog = async () => {
                 scroller.onmouseenter = stopAutoplay;
                 scroller.onmouseleave = startAutoplay;
                 scroller.addEventListener('touchstart', stopAutoplay, {passive: true});
-                scroller.addEventListener('touchend', startAutoplay, {passive: true});
-                scroller.addEventListener('touchcancel', startAutoplay, {passive: true});
+                let resumeTimeout;
+                const delayedStart = () => { clearTimeout(resumeTimeout); resumeTimeout = setTimeout(startAutoplay, 3000); };
+                scroller.addEventListener('touchend', delayedStart, {passive: true});
+                scroller.addEventListener('touchcancel', delayedStart, {passive: true});
 
                 startAutoplay();
             }
