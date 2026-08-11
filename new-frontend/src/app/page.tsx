@@ -1,7 +1,9 @@
 import { Header } from "@/components/layout/Header";
 import { Hero } from "@/components/home/Hero";
 
-export default function Home() {
+export const dynamic = 'force-static';
+
+export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
