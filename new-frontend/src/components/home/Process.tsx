@@ -1,14 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { SectionHeader } from "@/components/ui/section-header";
 
-export async function Process() {
-  const { data: steps } = await supabase
-    .from("how_it_works_steps")
-    .select("*")
-    .order("order_index", { ascending: true });
-
-  if (!steps?.length) return null;
-
+function ProcessStep({ step }: { step: any }) {
   const renderIcon = (iconName: string) => {
     switch (iconName) {
       case "Phone":
@@ -39,6 +32,39 @@ export async function Process() {
   };
 
   return (
+    <div className="relative flex flex-col items-center text-center group">
+      {/* Icon & Number Box */}
+      <div className="relative mb-8">
+        <div className="w-24 h-24 bg-amber-50 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-105 group-hover:shadow-md transition-all duration-300 relative z-10">
+          {renderIcon(step.icon)}
+        </div>
+        {/* Number Badge */}
+        <div className="absolute -top-3 -right-3 w-8 h-8 bg-amber-500 text-white font-bold text-sm rounded-full flex items-center justify-center shadow-md z-20">
+          {step.step_number}
+        </div>
+      </div>
+
+      {/* Text Content */}
+      <h3 className="text-xl font-bold text-slate-900 mb-4">
+        {step.title}
+      </h3>
+      <div 
+        className="text-gray-500 leading-relaxed text-sm max-w-xs mx-auto"
+        dangerouslySetInnerHTML={{ __html: step.description }}
+      />
+    </div>
+  );
+}
+
+export async function Process() {
+  const { data: steps } = await supabase
+    .from("how_it_works_steps")
+    .select("*")
+    .order("order_index", { ascending: true });
+
+  if (!steps?.length) return null;
+
+  return (
     <section className="py-12 bg-gray-50 font-sans relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -56,28 +82,7 @@ export async function Process() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
             {steps.map((step) => (
-              <div key={step.id} className="relative flex flex-col items-center text-center group">
-                
-                {/* Icon & Number Box */}
-                <div className="relative mb-8">
-                  <div className="w-24 h-24 bg-amber-50 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-105 group-hover:shadow-md transition-all duration-300 relative z-10">
-                    {renderIcon(step.icon)}
-                  </div>
-                  {/* Number Badge */}
-                  <div className="absolute -top-3 -right-3 w-8 h-8 bg-amber-500 text-white font-bold text-sm rounded-full flex items-center justify-center shadow-md z-20">
-                    {step.step_number}
-                  </div>
-                </div>
-
-                {/* Text Content */}
-                <h3 className="text-xl font-bold text-slate-900 mb-4">
-                  {step.title}
-                </h3>
-                <div 
-                  className="text-gray-500 leading-relaxed text-sm max-w-xs mx-auto"
-                  dangerouslySetInnerHTML={{ __html: step.description }}
-                />
-              </div>
+              <ProcessStep key={step.id} step={step} />
             ))}
           </div>
         </div>

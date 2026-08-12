@@ -11,12 +11,7 @@ async function getConfig() {
   }, {} as Record<string, string>);
 }
 
-const Badge = ({ icon, text }: { icon: React.ReactNode; text: React.ReactNode }) => (
-  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full px-4 py-1.5 text-sm font-medium">
-    {icon}
-    <span>{text}</span>
-  </div>
-);
+import { Pill } from "@/components/ui/pill";
 
 const Stats = ({ config }: { config: Record<string, string> }) => {
   let stats = [
@@ -112,10 +107,11 @@ export const Hero = async () => {
 
           {/* Badge */}
           <div className="flex flex-wrap gap-3">
-            <Badge
+            <Pill
               icon={<span className="text-amber-500 text-sm tracking-tighter">★★★★★</span>}
-              text={<span className="text-gray-300">950+ spokojených zákazníků</span>}
-            />
+            >
+              <span className="text-gray-300">950+ spokojených zákazníků</span>
+            </Pill>
           </div>
 
           {/* Headlines */}
