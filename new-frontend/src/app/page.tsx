@@ -5,6 +5,7 @@ import { Process } from "@/components/home/Process";
 import { Reviews } from "@/components/home/Reviews";
 import { Videos } from "@/components/home/Videos";
 import { Articles } from "@/components/home/Articles";
+import { Configurator } from "@/components/home/Configurator";
 import { FAQ } from "@/components/home/FAQ";
 import { supabase } from "@/lib/supabase";
 
@@ -25,6 +26,7 @@ export default async function Home() {
         <Articles />
         <Videos />
         <FAQ />
+        <Configurator />
       </main>
     </div>
   );
