@@ -1,4 +1,5 @@
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/home/Hero";
 import { Services } from "@/components/home/Services";
 import { Process } from "@/components/home/Process";
@@ -30,6 +31,7 @@ export default async function Home() {
         <Configurator />
         <Contact />
       </main>
+      <Footer />
     </div>
   );
 }
