@@ -1,10 +1,10 @@
 import React from "react";
 
 interface SectionHeaderProps {
-  title: string;
-  subtitle?: string;
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
   preTitle?: string;
-  variant?: "default" | "dark" | "light";
+  variant?: "default" | "dark" | "light" | "left";
   className?: string;
 }
 
@@ -16,15 +16,19 @@ export function SectionHeader({
   className
 }: SectionHeaderProps) {
   
+  const isLeft = variant === "left";
+  
   const titleColor = 
-    variant === "default" ? "text-amber-500" : 
+    (variant === "default" || variant === "left") ? "text-slate-900" : 
     variant === "light" ? "text-white" : "text-slate-900";
     
-  const titleSize = variant === "default" || variant === "light" ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
+  const titleSize = (variant === "default" || variant === "light" || variant === "left") ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
   const subtitleColor = variant === "light" ? "text-gray-300" : "text-gray-500";
   
+  const alignClasses = isLeft ? "text-left" : "text-center max-w-3xl mx-auto";
+  
   return (
-    <div className={`text-center max-w-3xl mx-auto ${className ?? 'mb-16'}`}>
+    <div className={`${alignClasses} ${className ?? 'mb-16'}`}>
       {preTitle && (
         <p className="text-sm font-bold tracking-widest text-amber-500 uppercase mb-3">
           {preTitle}
@@ -34,9 +38,9 @@ export function SectionHeader({
         {title}
       </h2>
       {subtitle && (
-        <p className={`text-lg ${subtitleColor}`}>
+        <div className={`text-lg ${subtitleColor}`}>
           {subtitle}
-        </p>
+        </div>
       )}
     </div>
   );

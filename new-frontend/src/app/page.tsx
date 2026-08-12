@@ -5,8 +5,9 @@ import { Process } from "@/components/home/Process";
 import { Reviews } from "@/components/home/Reviews";
 import { Videos } from "@/components/home/Videos";
 import { Articles } from "@/components/home/Articles";
-import { Configurator } from "@/components/home/Configurator";
 import { FAQ } from "@/components/home/FAQ";
+import { Configurator } from "@/components/home/Configurator";
+import { Contact } from "@/components/home/Contact";
 import { supabase } from "@/lib/supabase";
 
 export const revalidate = 3600; // Pro vývoj nastaveno na 0 (v produkci pak vrátíme na 3600 pro zrychlení)
@@ -27,6 +28,7 @@ export default async function Home() {
         <Videos />
         <FAQ />
         <Configurator />
+        <Contact />
       </main>
     </div>
   );
