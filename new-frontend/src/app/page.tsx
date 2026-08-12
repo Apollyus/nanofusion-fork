@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Hero } from "@/components/home/Hero";
+import { Services } from "@/components/home/Services";
 
 export const dynamic = 'force-static';
 
@@ -9,6 +10,7 @@ export default async function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
+        <Services />
       </main>
     </div>
   );
