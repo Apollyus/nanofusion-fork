@@ -1,7 +1,8 @@
 import * as React from "react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "white";
+type ButtonVariant = "primary" | "primary-glow" | "white";
 type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -20,6 +21,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const variants = {
       primary:
         "bg-amber-500 hover:bg-amber-600 text-white shadow-sm hover:shadow-md hover:shadow-amber-500/20",
+      "primary-glow":
+        "bg-amber-500 hover:bg-amber-400 text-white shadow-[0_0_15px_rgba(245,158,11,0.5)] hover:shadow-[0_0_25px_rgba(245,158,11,0.8)]",
       white: "bg-white hover:bg-gray-100 text-gray-900 shadow-sm hover:shadow-md",
     };
 
@@ -29,7 +32,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       lg: "py-3.5 px-8 font-bold",
     };
 
-    const compClass = `${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`.trim();
+    const compClass = cn(baseStyles, variants[variant], sizes[size], className);
 
     if (href) {
       return (
