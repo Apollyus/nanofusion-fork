@@ -4,7 +4,7 @@ interface SectionHeaderProps {
   title: string;
   subtitle?: string;
   preTitle?: string;
-  variant?: "default" | "dark";
+  variant?: "default" | "dark" | "light";
   className?: string;
 }
 
@@ -16,8 +16,12 @@ export function SectionHeader({
   className
 }: SectionHeaderProps) {
   
-  const titleColor = variant === "default" ? "text-amber-500" : "text-slate-900";
-  const titleSize = variant === "default" ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
+  const titleColor = 
+    variant === "default" ? "text-amber-500" : 
+    variant === "light" ? "text-white" : "text-slate-900";
+    
+  const titleSize = variant === "default" || variant === "light" ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
+  const subtitleColor = variant === "light" ? "text-gray-300" : "text-gray-500";
   
   return (
     <div className={`text-center max-w-3xl mx-auto ${className ?? 'mb-16'}`}>
@@ -30,7 +34,7 @@ export function SectionHeader({
         {title}
       </h2>
       {subtitle && (
-        <p className="text-lg text-gray-500">
+        <p className={`text-lg ${subtitleColor}`}>
           {subtitle}
         </p>
       )}
