@@ -3,6 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { Services } from "@/components/home/Services";
 import { Process } from "@/components/home/Process";
 import { Reviews } from "@/components/home/Reviews";
+import { Videos } from "@/components/home/Videos";
 import { Articles } from "@/components/home/Articles";
 import { supabase } from "@/lib/supabase";
 
@@ -21,6 +22,7 @@ export default async function Home() {
         <Process />
         <Reviews initialReviews={reviews || []} />
         <Articles />
+        <Videos />
       </main>
     </div>
   );
