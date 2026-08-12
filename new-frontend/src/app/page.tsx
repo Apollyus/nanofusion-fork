@@ -3,9 +3,10 @@ import { Hero } from "@/components/home/Hero";
 import { Services } from "@/components/home/Services";
 import { Process } from "@/components/home/Process";
 import { Reviews } from "@/components/home/Reviews";
+import { Articles } from "@/components/home/Articles";
 import { supabase } from "@/lib/supabase";
 
-export const revalidate = 3600; // Přegeneruje stránku každou hodinu, pokud se změní data v DB
+export const revalidate = 3600; // Pro vývoj nastaveno na 0 (v produkci pak vrátíme na 3600 pro zrychlení)
 
 export default async function Home() {
   // Zkusíme načíst recenze z DB (tabulka 'reviews' nebo 'service_reviews', zde používám 'reviews')
@@ -19,6 +20,7 @@ export default async function Home() {
         <Services />
         <Process />
         <Reviews initialReviews={reviews || []} />
+        <Articles />
       </main>
     </div>
   );

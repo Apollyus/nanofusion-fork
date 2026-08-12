@@ -27,7 +27,7 @@ function ReviewCard({ review }: { review: any }) {
 }
 
 export function Reviews({ initialReviews }: { initialReviews?: any[] }) {
-  const { scrollRef, scrollByAmount } = useCarousel(0.5, 350);
+  const { scrollRef, scrollByAmount, canScrollLeft, canScrollRight } = useCarousel(0.5, 350);
 
   // Statická data z původního webu jako záloha
   const defaultReviews = [
@@ -107,7 +107,11 @@ export function Reviews({ initialReviews }: { initialReviews?: any[] }) {
         {/* Carousel Container */}
         <div className="relative group">
           
-          <CarouselArrows onScroll={scrollByAmount} />
+          <CarouselArrows 
+            onScroll={scrollByAmount} 
+            canScrollLeft={canScrollLeft} 
+            canScrollRight={canScrollRight} 
+          />
 
           {/* Gradient Edges */}
           <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-[#111111] to-transparent z-10 pointer-events-none" />
