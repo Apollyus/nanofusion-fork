@@ -38,11 +38,11 @@ export function Footer() {
           <div className="flex flex-col items-center md:items-start">
             <Link href="/" className="inline-block mb-6">
               <Image 
-                src="/logo.png" 
+                src="/nanofusion-footer-logo.png" 
                 alt="NANOfusion" 
                 width={180} 
                 height={60} 
-                className="h-12 w-auto object-contain brightness-0 invert" 
+                className="h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(245,158,11,0.15)]" 
               />
             </Link>
             <p className="text-sm leading-relaxed mb-8 max-w-sm">
@@ -93,7 +93,7 @@ export function Footer() {
             
             <div className="rounded-xl overflow-hidden border-2 border-amber-500 h-40 relative w-full max-w-sm mx-auto md:mx-0">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2611.8317765108845!2d16.641571477017684!3d49.05202688975971!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4712c9bf13de5555%3A0xc66c1f1ecfb9a0f5!2sNANO%20FUSION%20s.r.o.!5e0!3m2!1sen!2scz!4v1714567890123!5m2!1sen!2scz" 
+                src="https://www.google.com/maps?q=NANOfusion%20s.r.o.,%20Blučina&output=embed" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
