@@ -61,9 +61,9 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-[#EBEBEB] text-[#4A4A4A] py-4 px-4 md:px-8 flex justify-between items-center shadow-sm">
+    <nav className="bg-[#EBEBEB] text-[#4A4A4A] py-6 px-4 md:px-8 flex justify-between items-center shadow-sm">
       <Link href="/" className="flex items-center">
-        <Image src="/logo.png" alt="NANOfusion" width={180} height={60} className="h-10 w-auto object-contain" />
+        <Image src="/logo.png" alt="NANOfusion" width={180} height={60} className="h-18 w-auto object-contain" />
       </Link>
 
       <div className="hidden lg:flex items-center gap-6 xl:gap-8">
