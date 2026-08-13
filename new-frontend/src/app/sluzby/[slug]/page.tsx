@@ -15,6 +15,18 @@ interface PageProps {
   }>;
 }
 
+export const revalidate = 3600; // 1 hour ISR
+
+export async function generateStaticParams() {
+  const { data: services } = await supabase
+    .from("services")
+    .select("slug");
+
+  return (services || []).map((service) => ({
+    slug: service.slug,
+  }));
+}
+
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const { data: service } = await supabase
@@ -30,9 +42,40 @@ export async function generateMetadata({ params }: PageProps) {
   const plainText = rawDesc.replace(/<[^>]*>?/gm, '');
   const metaDesc = plainText.substring(0, 160).trim() + "...";
 
+  const title = `${service.name} | NANOfusion`;
+  const url = `https://nanofusion.cz/sluzby/${slug}`;
+  const defaultImage = "https://nanofusion.cz/static/logo.jpg";
+  // Pokusíme se vzít obrázek z hero nebo z fotek, jinak použijeme logo
+  const ogImage = service.hero_image_url || defaultImage;
+
   return {
-    title: `${service.name} | NANOfusion`,
+    title,
     description: metaDesc,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description: metaDesc,
+      type: "website",
+      url,
+      siteName: "NANOfusion",
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: service.name,
+        },
+      ],
+      locale: "cs_CZ",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: metaDesc,
+      images: [ogImage],
+    },
   };
 }
 
@@ -121,8 +164,28 @@ export default async function ServicePage({ params }: PageProps) {
   const quote = localData.quote;
   const processNote = localData.process_note;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": service.name,
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "NANOfusion",
+      "url": "https://nanofusion.cz",
+      "telephone": "+420774509409",
+      "email": "info@nanofusion.cz",
+    },
+    "description": service.description ? service.description.replace(/<[^>]*>?/gm, '').substring(0, 160) : "",
+    "areaServed": "CZ",
+    "url": `https://nanofusion.cz/sluzby/${slug}`,
+  };
+
   return (
     <main className="font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ServiceHero service={service} ytId={ytId} basePrice={basePrice} />
 
       <ServiceBenefits service={service} processDescription={processDescription} benefits={benefits} />
