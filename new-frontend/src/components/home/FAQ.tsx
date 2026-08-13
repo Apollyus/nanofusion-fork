@@ -3,21 +3,25 @@ import { FAQAccordion } from "./FAQAccordion";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 
-export async function FAQ() {
-  // Načteme FAQ pro domovskou stránku
-  const { data: faqs } = await supabase
-    .from('faqs')
-    .select('*')
-    .eq('is_active', true)
-    .eq('page_section', 'home')
-    .order('order_index', { ascending: true });
+export async function FAQ({ initialFaqs }: { initialFaqs?: any[] }) {
+  let faqs = initialFaqs;
+
+  if (!faqs) {
+    const { data } = await supabase
+      .from('faqs')
+      .select('*')
+      .eq('is_active', true)
+      .eq('page_section', 'home')
+      .order('order_index', { ascending: true });
+    faqs = data || undefined;
+  }
 
   if (!faqs || faqs.length === 0) return null;
 
   return (
     <section className="py-24 bg-white font-sans relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         <SectionHeader
           title="Na co se nás nejčastěji ptáte"
           subtitle="Vše, co potřebujete vědět o našich technologiích a postupech."
@@ -28,7 +32,7 @@ export async function FAQ() {
         <FAQAccordion items={faqs} />
 
         <div className="mt-10 text-center">
-          <Button 
+          <Button
             href="/faq"
             variant="primary-glow"
             className="gap-2"

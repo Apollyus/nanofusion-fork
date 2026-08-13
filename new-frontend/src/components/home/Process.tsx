@@ -56,11 +56,16 @@ function ProcessStep({ step }: { step: any }) {
   );
 }
 
-export async function Process() {
-  const { data: steps } = await supabase
-    .from("how_it_works_steps")
-    .select("*")
-    .order("order_index", { ascending: true });
+export async function Process({ initialSteps }: { initialSteps?: any[] }) {
+  let steps = initialSteps;
+  
+  if (!steps) {
+    const { data } = await supabase
+      .from("how_it_works_steps")
+      .select("*")
+      .order("order_index", { ascending: true });
+    steps = data || undefined;
+  }
 
   if (!steps?.length) return null;
 
