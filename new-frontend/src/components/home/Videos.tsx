@@ -13,7 +13,7 @@ export async function Videos() {
   if (!videos || videos.length === 0) return null;
 
   return (
-    <section className="py-24 bg-white font-sans relative overflow-hidden">
+    <section id="galerie" className="py-24 bg-white font-sans relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Špičková péče o váš majetek v detailech"

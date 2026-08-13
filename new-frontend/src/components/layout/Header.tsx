@@ -61,22 +61,20 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-[#EBEBEB] text-[#4A4A4A] py-6 px-4 md:px-8 flex justify-between items-center shadow-sm">
-      <Link href="/" className="flex items-center">
-        <Image src="/logo.png" alt="NANOfusion" width={180} height={60} className="h-18 w-auto object-contain" />
-      </Link>
+    <nav className="bg-[#EBEBEB] text-[#4A4A4A] py-2  flex flex-col shadow-sm">
+      <div className="container mx-auto px-4 md:px-6 flex justify-between items-center max-w-7xl">
+        <Link href="/" className="flex items-center">
+          <Image src="/logo.png" alt="NANOfusion" width={180} height={60} className="h-18 w-auto object-contain" />
+        </Link>
 
-      <div className="hidden lg:flex items-center gap-6 xl:gap-8">
-        {navLinks.map((link) => (
-          <Link key={link.label} href={link.href} className="hover:text-amber-500 font-medium transition-colors">
-            {link.label}
-          </Link>
-        ))}
+        <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+          {navLinks.map((link) => (
+            <Link key={link.label} href={link.href} className="hover:text-amber-500 font-medium transition-colors">
+              {link.label}
+            </Link>
+          ))}
+        </div>
       </div>
-
-      <Button href="/kalkulace" className="hidden md:inline-flex">
-        Spočítat cenu
-      </Button>
 
       {/* Mobile Menu Button - Placeholder */}
       <button className="lg:hidden p-2 text-gray-600 hover:text-amber-500 transition-colors">
