@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
 import { supabase, optimizeImg } from "@/lib/supabase";
-import { Process } from "@/components/home/Process";
 import { Reviews } from "@/components/home/Reviews";
 import { FAQ } from "@/components/home/FAQ";
-import { Contact } from "@/components/home/Contact";
 import { ServiceBeforeAfter } from "@/components/ui/ServiceBeforeAfter";
 import { ServiceGallery } from "@/components/ui/ServiceGallery";
 import { Button } from "@/components/ui/button";
+import { Configurator } from "@/components/home/Configurator";
+import { Phone, Mail, Clock } from "lucide-react";
 
 interface PageProps {
   params: Promise<{
@@ -80,7 +80,7 @@ export default async function ServicePage({ params }: PageProps) {
   const beforeAfterPhotos = beforeAfterRes.data || [];
   const specificReviews = reviewsRes.data || [];
   
-  let customProcessSteps = undefined;
+  let customProcessSteps: any[] = [];
   const processConfig = configRes.data?.find(c => c.key === `service_process_${serviceId}` || c.key === `service_process_${slug}`);
   if (processConfig && processConfig.value) {
     try {
@@ -111,7 +111,7 @@ export default async function ServicePage({ params }: PageProps) {
   return (
     <main className="font-sans">
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-slate-900">
+      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-slate-900 min-h-[80vh] flex items-center">
         <div className="absolute inset-0 z-0 opacity-40">
            {ytId ? (
              <img src={`https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`} className="w-full h-full object-cover" alt="" />
@@ -123,62 +123,109 @@ export default async function ServicePage({ params }: PageProps) {
            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/30" />
         </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-amber-500/10 text-amber-500 font-bold text-sm mb-6 border border-amber-500/20 backdrop-blur-sm">
-              {service.category || "Služba"}
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
-              {service.name}
-            </h1>
-            <div 
-              className="text-lg md:text-xl text-slate-300 mb-10 leading-relaxed font-light"
-              dangerouslySetInnerHTML={{ __html: service.description || "" }}
-            />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             
-            <div className="flex flex-wrap gap-4">
-              <Button href="#kontakt" variant="primary-glow" className="h-14 px-8 text-lg font-bold rounded-xl">
-                Nezávazně poptat
-              </Button>
-              <Button href="#vyhody" variant="white" className="h-14 px-8 text-lg font-bold rounded-xl bg-white/10 text-white backdrop-blur-sm border border-white/20 hover:bg-white/20">
-                Zjistit více ↓
-              </Button>
+            {/* LEFT COLUMN: TEXT */}
+            <div className="max-w-2xl">
+              <h1 className="text-4xl md:text-5xl lg:text-[4rem] font-black text-white mb-6 leading-tight drop-shadow-xl">
+                {(() => {
+                  const parts = service.name.trim().split(" ");
+                  if (parts.length > 1) {
+                    return (
+                      <>
+                        <span className="text-white">{parts[0]}</span>{" "}
+                        <span className="text-amber-500">{parts.slice(1).join(" ")}</span>
+                      </>
+                    );
+                  }
+                  return <span className="text-amber-500">{service.name}</span>;
+                })()}
+              </h1>
+              <div 
+                className="text-lg md:text-xl text-slate-300 mb-8 leading-relaxed font-light drop-shadow-md"
+                dangerouslySetInnerHTML={{ __html: service.description || "" }}
+              />
+              
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-10 text-amber-500 font-bold text-sm md:text-base">
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                  14 let zkušeností
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                  950+ dokončených projektů
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                  100% bezplatná konzultace
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <a 
+                  href="tel:+420774509409" 
+                  className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-white/10 text-white backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all font-bold"
+                >
+                  <Phone className="w-4 h-4 text-amber-500" />
+                  +420 774 509 409
+                </a>
+                <a 
+                  href="mailto:info@nanofusion.cz" 
+                  className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-white/10 text-white backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all font-bold"
+                >
+                  <Mail className="w-4 h-4 text-amber-500" />
+                  info@nanofusion.cz
+                </a>
+              </div>
             </div>
+
+            {/* RIGHT COLUMN: CONFIGURATOR */}
+            <div className="relative w-full max-w-xl mx-auto lg:mr-0 z-20">
+              <div className="absolute -inset-1 bg-amber-500 rounded-3xl blur opacity-30"></div>
+              <div className="relative rounded-3xl border-4 border-amber-500 bg-white overflow-hidden shadow-2xl shadow-amber-500/20">
+                <Configurator />
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* BENEFITS & WHAT'S INCLUDED */}
-      {benefits.length > 0 && (
+      {/* BENEFITS & WHAT'S INCLUDED (CO TO OBSAHUJE) */}
+      {(service.process_description || benefits.length > 0) && (
         <section id="vyhody" className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-8">
-                  Proč si vybrat <span className="text-amber-500">naši službu?</span>
-                </h2>
-                <div className="space-y-6">
-                  {benefits.map((benefit, idx) => (
-                    <div key={idx} className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center text-amber-500 font-black">
-                        ✓
-                      </div>
-                      <div className="text-lg font-bold text-slate-800 pt-0.5">
-                        {benefit}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white/50 backdrop-blur-sm rounded-2xl border-2 border-amber-500 p-8 md:p-12 shadow-xl shadow-amber-500/5">
+              <h2 className="text-xl md:text-2xl font-black text-amber-500 mb-6 uppercase">
+                Co to obsahuje?
+              </h2>
               
               {service.process_description && (
-                <div className="bg-slate-50 p-8 md:p-12 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50">
-                  <h3 className="text-2xl font-black text-slate-900 mb-6">Co služba zahrnuje?</h3>
-                  <div 
-                    className="text-slate-600 space-y-4 prose prose-amber max-w-none"
-                    dangerouslySetInnerHTML={{ __html: service.process_description }}
-                  />
-                </div>
+                <div 
+                  className="text-slate-700 text-lg leading-relaxed mb-10 prose prose-amber max-w-none prose-p:mb-6"
+                  dangerouslySetInnerHTML={{ __html: service.process_description }}
+                />
+              )}
+
+              {benefits.length > 0 && (
+                <>
+                  <h3 className="text-xl font-bold text-slate-900 mb-6">Co je součástí:</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
+                    {benefits.map((benefit, idx) => (
+                      <div key={idx} className="flex items-start gap-4">
+                        <div className="flex-shrink-0 mt-1">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        </div>
+                        <div className="text-base font-bold text-slate-800">
+                          {benefit}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -186,7 +233,38 @@ export default async function ServicePage({ params }: PageProps) {
       )}
 
       {/* PROCESS */}
-      <Process initialSteps={customProcessSteps} />
+      {customProcessSteps.length > 0 && (
+        <section className="py-20 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-black text-slate-900">
+                Jak čištění probíhá
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {customProcessSteps.map((step, idx) => (
+                <div key={step.id} className="bg-white rounded-2xl border-2 border-amber-500 p-8 shadow-xl shadow-amber-500/5 flex flex-col items-center text-center relative">
+                  <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center text-2xl font-black text-white mb-6 shadow-lg shadow-amber-500/30">
+                    {String(idx + 1).padStart(2, '0')}
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-4">{step.title}</h3>
+                  <p className="text-slate-600">{step.description}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-16 text-center">
+              <div className="inline-flex items-center gap-3 bg-white px-8 py-4 rounded-full shadow-md border border-slate-100">
+                <Clock className="w-6 h-6 text-amber-500" />
+                <span className="text-lg font-medium text-slate-800">
+                  Čištění a ochranu {service.name.toLowerCase().includes("střech") ? "střechy" : "povrchu"} stihneme za <strong className="text-amber-500">1 až 2 pracovní dny</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* BEFORE & AFTER */}
       {hasBeforeAfter && (
@@ -198,6 +276,22 @@ export default async function ServicePage({ params }: PageProps) {
         <ServiceGallery images={gallery} />
       )}
 
+      {/* QUOTE */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className="flex justify-center gap-1 mb-6">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <svg key={i} className="w-8 h-8 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black text-slate-800 italic">
+             &ldquo;Skvělá práce, {service.name.toLowerCase().includes("střech") ? "střecha" : "povrch"} vypadá jako {service.name.toLowerCase().includes("střech") ? "nová" : "nový"}! Všem doporučuji.&rdquo;
+          </h2>
+        </div>
+      </section>
+
       {/* REVIEWS */}
       <Reviews initialReviews={specificReviews.length > 0 ? specificReviews : undefined} />
 
@@ -207,7 +301,23 @@ export default async function ServicePage({ params }: PageProps) {
       )}
 
       {/* CONTACT CTA */}
-      <Contact />
+      <section className="py-20 bg-slate-900 border-t-4 border-amber-500">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-black text-white mb-6">Chcete vědět více?</h2>
+          <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto font-light">
+            Zanechte nám na sebe kontakt a my se vám co nejdříve ozveme s nezávaznou nabídkou pro vaši konkrétní situaci.
+          </p>
+          <div className="flex flex-wrap justify-center gap-6">
+            <Button href="#kalkulacka" className="h-16 px-10 text-lg font-black rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-900 shadow-xl shadow-amber-500/20">
+              SPOČÍTEJTE SI CENU <span className="ml-2">→</span>
+            </Button>
+            <a href="tel:+420774509409" className="inline-flex items-center justify-center gap-3 h-16 px-10 text-lg font-bold rounded-xl bg-white/10 text-white backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all">
+              <Phone className="w-5 h-5 text-amber-500" />
+              +420 774 509 409
+            </a>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
