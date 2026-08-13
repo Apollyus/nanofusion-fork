@@ -150,15 +150,6 @@ export const Hero = async () => {
           </div>
         </div>
 
-        {/* Floating Action Button (Chat) - decorative for mockup */}
-        <div className="absolute bottom-16 right-8 z-30 hidden md:block">
-          <button className="bg-amber-500 hover:bg-amber-600 text-white rounded-full p-4 shadow-lg shadow-amber-500/30 transition-transform hover:scale-105">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-              <path d="M8 12h.01" /><path d="M12 12h.01" /><path d="M16 12h.01" />
-            </svg>
-          </button>
-        </div>
 
         {/* Bottom Curved Wave Separator */}
         <div className="absolute bottom-[-2px] left-0 w-full overflow-hidden leading-none z-10 text-white">
