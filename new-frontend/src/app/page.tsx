@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/home/Hero";
 import { Services } from "@/components/home/Services";
 import { About } from "@/components/home/About";
@@ -55,7 +53,6 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
       <main className="flex-1">
         <Hero />
         <Services />
@@ -68,7 +65,6 @@ export default async function Home() {
         <Configurator />
         <Contact />
       </main>
-      <Footer />
     </div>
   );
 }
