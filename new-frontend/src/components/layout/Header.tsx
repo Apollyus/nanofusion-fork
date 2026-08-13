@@ -52,12 +52,12 @@ const TopBar = async () => {
 
 const Navbar = () => {
   const navLinks = [
-    { label: "Služby", href: "/sluzby" },
-    { label: "Reference", href: "/reference" },
-    { label: "Blog", href: "/blog" },
-    { label: "Galerie", href: "/galerie" },
-    { label: "O nás", href: "/o-nas" },
-    { label: "Kontakt", href: "/kontakt" },
+    { label: "Služby", href: "/#sluzby" },
+    { label: "Reference", href: "/#reference" },
+    { label: "Blog", href: "/#blog" },
+    { label: "Galerie", href: "/#galerie" },
+    { label: "O nás", href: "/#o-nas" },
+    { label: "Kontakt", href: "/#kontakt" },
   ];
 
   return (

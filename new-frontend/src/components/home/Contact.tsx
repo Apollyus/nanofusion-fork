@@ -26,6 +26,7 @@ interface ContactInputProps extends React.InputHTMLAttributes<HTMLInputElement |
   label: string;
   as?: 'input' | 'select' | 'textarea';
   children?: React.ReactNode;
+  rows?: number;
 }
 
 const ContactInput = ({ label, as = 'input', className = '', children, ...props }: ContactInputProps) => {
@@ -34,7 +35,11 @@ const ContactInput = ({ label, as = 'input', className = '', children, ...props 
     <div className={className}>
       <label className="block text-sm font-bold text-slate-900 mb-2">{label}</label>
       {as === 'textarea' ? (
-        <textarea className={`${baseClasses} resize-y`} {...(props as any)} />
+        <textarea 
+          className={`${baseClasses} resize-y`} 
+          rows={(props as any).rows}
+          {...(props as any)} 
+        />
       ) : as === 'select' ? (
         <select 
           className={`${baseClasses} text-slate-600 appearance-none`}
@@ -172,7 +177,6 @@ export function Contact() {
                   <p className="text-slate-600">Vaše poptávka byla úspěšně odeslána. Brzy se vám ozveme.</p>
                   <Button 
                     type="button" 
-                    variant="outline" 
                     className="mt-6"
                     onClick={() => setSuccess(false)}
                   >

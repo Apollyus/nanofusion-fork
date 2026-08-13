@@ -8,25 +8,25 @@ interface SectionHeaderProps {
   className?: string;
 }
 
-export function SectionHeader({ 
-  title, 
-  subtitle, 
+export function SectionHeader({
+  title,
+  subtitle,
   preTitle,
   variant = "default",
   className
 }: SectionHeaderProps) {
-  
+
   const isLeft = variant === "left";
-  
-  const titleColor = 
-    (variant === "default" || variant === "left") ? "text-slate-900" : 
-    variant === "light" ? "text-white" : "text-slate-900";
-    
+
+  const titleColor =
+    (variant === "default" || variant === "left") ? "text-slate-900" :
+      variant === "light" ? "text-white" : "text-slate-900";
+
   const titleSize = (variant === "default" || variant === "light" || variant === "left") ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
   const subtitleColor = variant === "light" ? "text-gray-300" : "text-gray-500";
-  
+
   const alignClasses = isLeft ? "text-left" : "text-center max-w-3xl mx-auto";
-  
+
   return (
     <div className={`${alignClasses} ${className ?? 'mb-16'}`}>
       {preTitle && (
