@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { Services } from "@/components/home/Services";
+import { Realizations } from "@/components/home/Realizations";
 import { Process } from "@/components/home/Process";
 import { Reviews } from "@/components/home/Reviews";
 import { Videos } from "@/components/home/Videos";
@@ -56,6 +57,7 @@ export default async function Home() {
         <Hero />
         <Services />
         <Process />
+        <Realizations />
         <Reviews initialReviews={reviews || []} />
         <Articles />
         <Videos />

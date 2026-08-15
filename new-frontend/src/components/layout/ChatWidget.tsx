@@ -477,7 +477,7 @@ export function ChatWidget() {
                 }
               }}
               placeholder="Napište zprávu..."
-              className="flex-1 max-h-32 min-h-[44px] resize-none px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+              className="flex-1 max-h-32 min-h-[44px] resize-none px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
               rows={1}
             />
             <Button

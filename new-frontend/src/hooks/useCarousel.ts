@@ -12,8 +12,8 @@ export function useCarousel(speed = 0, scrollAmount = 350) {
   const checkScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(Math.ceil(scrollLeft) < scrollWidth - clientWidth);
+      setCanScrollLeft(scrollLeft > 20);
+      setCanScrollRight(Math.ceil(scrollLeft) < scrollWidth - clientWidth - 20);
     }
   };
 
@@ -72,6 +72,7 @@ export function useCarousel(speed = 0, scrollAmount = 350) {
 
       manualScrollTimeout.current = setTimeout(() => {
         isManualScrolling.current = false;
+        checkScroll();
       }, 600);
     }
   };
