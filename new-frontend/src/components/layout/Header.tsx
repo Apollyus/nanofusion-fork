@@ -56,7 +56,7 @@ const Navbar = () => {
     { label: "Reference", href: "/#reference" },
     { label: "Blog", href: "/#blog" },
     { label: "Galerie", href: "/#galerie" },
-    { label: "O nás", href: "/#o-nas" },
+    { label: "O nás", href: "/o-nas" },
     { label: "Kontakt", href: "/#kontakt" },
   ];
 

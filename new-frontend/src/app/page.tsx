@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { Services } from "@/components/home/Services";
-import { About } from "@/components/home/About";
 import { Process } from "@/components/home/Process";
 import { Reviews } from "@/components/home/Reviews";
 import { Videos } from "@/components/home/Videos";
@@ -56,7 +55,6 @@ export default async function Home() {
       <main className="flex-1">
         <Hero />
         <Services />
-        <About />
         <Process />
         <Reviews initialReviews={reviews || []} />
         <Articles />
