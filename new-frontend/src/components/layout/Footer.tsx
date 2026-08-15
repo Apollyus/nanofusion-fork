@@ -118,7 +118,7 @@ export function Footer() {
             <span className="hidden sm:inline">|</span>
             <FooterModals />
             <span className="hidden sm:inline">|</span>
-            <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">E-shop</a>
+            <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" className="text-amber-500 hover:text-amber-600 font-bold transition-colors">E-shop</a>
             <span className="hidden sm:inline">|</span>
             <a href="https://nanofusion-j3bs.vercel.app/admin/login" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">Zaměstnanci</a>
             <span className="hidden sm:inline">|</span>

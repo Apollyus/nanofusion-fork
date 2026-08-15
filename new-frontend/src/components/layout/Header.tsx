@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
 
 async function getConfig() {
   const { data } = await supabase.from("site_config").select("key, value");
@@ -18,9 +19,10 @@ const TopBar = async () => {
   const alertText = config.header_alert || "Jezdíme po celé ČR - Po–Pá 7:00–18:00";
 
   return (
-    <div className="bg-[#2D2D2D] text-[#B0B0B0] text-sm py-2 px-4 md:px-8 flex flex-col md:flex-row justify-between items-center gap-2">
-      <div>{alertText}</div>
-      <div className="flex gap-4 md:gap-6 items-center">
+    <div className="bg-[#2D2D2D] text-[#B0B0B0] text-sm py-2">
+      <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-2 max-w-7xl">
+        <div>{alertText}</div>
+        <div className="flex gap-4 md:gap-6 items-center">
         <a
           href={`tel:${phone.replace(/\s+/g, "")}`}
           className="hover:text-white transition-colors flex items-center gap-1"
@@ -46,6 +48,7 @@ const TopBar = async () => {
           {email}
         </a>
       </div>
+      </div>
     </div>
   );
 };
@@ -58,6 +61,8 @@ const Navbar = () => {
     { label: "Galerie", href: "/#galerie" },
     { label: "O nás", href: "/o-nas" },
     { label: "Kontakt", href: "/#kontakt" },
+    { label: "Konfigurátor", href: "/kalkulace", highlight: false },
+    { label: "E-shop", href: "https://eshop-nanofusion.cz", highlight: true, external: true },
   ];
 
   return (
@@ -69,9 +74,31 @@ const Navbar = () => {
 
         <div className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navLinks.map((link) => (
-            <Link key={link.label} href={link.href} className="hover:text-amber-500 font-medium transition-colors">
-              {link.label}
-            </Link>
+            link.external ? (
+              <a 
+                key={link.label} 
+                href={link.href} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={cn(
+                  "font-medium transition-colors",
+                  link.highlight ? "text-amber-500 hover:text-amber-600 font-bold" : "hover:text-amber-500"
+                )}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link 
+                key={link.label} 
+                href={link.href} 
+                className={cn(
+                  "font-medium transition-colors",
+                  link.highlight ? "text-amber-500 hover:text-amber-600 font-bold" : "hover:text-amber-500"
+                )}
+              >
+                {link.label}
+              </Link>
+            )
           ))}
         </div>
       </div>

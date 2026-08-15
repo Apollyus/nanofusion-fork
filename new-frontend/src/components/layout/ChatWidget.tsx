@@ -389,7 +389,7 @@ export function ChatWidget() {
               </div>
               <div>
                 <h3 className="font-bold text-sm">Nano-Asistent</h3>
-                <p className="text-xs text-white/80">Odborník na hloubkové čištění</p>
+                <p className="text-xs text-white/80">Odborník na hloubkové čištění a ochranu</p>
               </div>
             </div>
             <button
@@ -443,7 +443,7 @@ export function ChatWidget() {
                             handleSend(reply);
                           }
                         }}
-                        className="text-xs bg-white border border-amber-500 text-amber-600 px-3 py-1.5 rounded-full hover:bg-amber-50 transition-colors whitespace-nowrap cursor-pointer"
+                        className="text-xs bg-slate-100 border border-slate-200 text-slate-700 px-4 py-2 rounded-full hover:bg-slate-200 transition-colors whitespace-nowrap cursor-pointer"
                       >
                         {reply}
                       </button>
