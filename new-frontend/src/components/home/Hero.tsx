@@ -71,7 +71,7 @@ export const Hero = async () => {
   return (
     <section className="relative w-full flex flex-col font-sans">
       {/* Hero Background and Content */}
-      <div className="relative w-full min-h-[500px] h-[70vh] max-h-[750px] flex flex-col justify-center bg-[#1f1f1f] overflow-hidden pt-4 pb-32 lg:pb-24">
+      <div className="relative w-full min-h-[600px] md:min-h-[500px] h-auto md:h-[70vh] md:max-h-[750px] flex flex-col justify-center bg-[#1f1f1f] overflow-hidden pt-10 pb-20 md:pb-32 lg:pb-24">
 
         {/* Background Video/Image */}
         {mediaData && (
