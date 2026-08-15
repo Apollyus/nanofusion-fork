@@ -77,6 +77,7 @@ export async function Process({ initialSteps }: { initialSteps?: any[] }) {
           preTitle="Jak to funguje"
           title="3 jednoduché kroky ke změně"
           variant="dark"
+          swapColors={true}
           className="mb-12"
         />
 

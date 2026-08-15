@@ -39,8 +39,8 @@ const Stats = ({ config }: { config: Record<string, string> }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center gap-12 md:gap-20 text-center">
         {stats.map((stat, i) => (
           <div key={i} className="flex flex-col gap-2 min-w-[200px]">
-            <div className="text-4xl md:text-5xl font-bold text-amber-500">{stat.value}</div>
-            <div className="text-gray-500 text-sm md:text-base font-medium">{stat.label}</div>
+            <div className="text-5xl md:text-6xl font-black text-amber-500 font-heading tracking-tight">{stat.value}</div>
+            <div className="text-gray-500 text-base md:text-lg font-medium uppercase tracking-wide">{stat.label}</div>
           </div>
         ))}
       </div>
@@ -118,10 +118,10 @@ export const Hero = async () => {
           {/* Headlines */}
           <div className="max-w-3xl mt-4">
             <h1
-              className="text-5xl md:text-6xl lg:text-[5rem] font-extrabold text-white leading-[1.1] tracking-tight mb-6"
+              className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 font-heading"
               dangerouslySetInnerHTML={{ __html: heroTitle }}
             />
-            <p className="text-lg md:text-xl text-gray-400 max-w-2xl font-normal leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-300 max-w-2xl font-light leading-relaxed">
               {heroSubtitle}
             </p>
           </div>

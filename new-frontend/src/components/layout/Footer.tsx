@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { FooterModals } from "./FooterModals";
 
 const SocialIcon = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <a 
@@ -115,9 +116,7 @@ export function Footer() {
           <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 sm:gap-2">
             <span>IČ: 29375363</span>
             <span className="hidden sm:inline">|</span>
-            <Link href="/obchodni-podminky" className="hover:text-amber-500 transition-colors">Obchodní podmínky</Link>
-            <span className="hidden sm:inline">|</span>
-            <Link href="/gdpr" className="hover:text-amber-500 transition-colors">GDPR</Link>
+            <FooterModals />
             <span className="hidden sm:inline">|</span>
             <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">E-shop</a>
             <span className="hidden sm:inline">|</span>

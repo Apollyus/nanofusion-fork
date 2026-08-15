@@ -1,10 +1,12 @@
-import React from "react";
+import { cn } from "@/lib/utils";
 
 interface SectionHeaderProps {
-  title: React.ReactNode;
-  subtitle?: React.ReactNode;
+  title: string;
+  subtitle?: string;
   preTitle?: string;
-  variant?: "default" | "dark" | "light" | "left";
+  align?: 'left' | 'center';
+  variant?: 'light' | 'dark' | 'default' | 'left';
+  swapColors?: boolean;
   className?: string;
 }
 
@@ -12,33 +14,39 @@ export function SectionHeader({
   title,
   subtitle,
   preTitle,
-  variant = "default",
+  align = 'center',
+  variant = 'dark',
+  swapColors = false,
   className
 }: SectionHeaderProps) {
-
-  const isLeft = variant === "left";
-
-  const titleColor = "text-amber-500";
-
-  const titleSize = (variant === "default" || variant === "light" || variant === "left") ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
-  const subtitleColor = variant === "light" ? "text-gray-300" : "text-gray-500";
-
-  const alignClasses = isLeft ? "text-left" : "text-center max-w-3xl mx-auto";
-
+  
   return (
-    <div className={`${alignClasses} ${className ?? 'mb-16'}`}>
+    <div className={cn(
+      align === 'center' ? "text-center max-w-3xl mx-auto" : "text-left",
+      className ?? "mb-16"
+    )}>
       {preTitle && (
-        <p className="text-sm font-bold tracking-widest text-amber-500 uppercase mb-3">
+        <p className={cn(
+          "text-xs font-bold tracking-widest uppercase mb-3",
+          variant === 'light' ? 'text-gray-400' : (swapColors ? 'text-amber-500' : 'text-slate-600')
+        )}>
           {preTitle}
         </p>
       )}
-      <h2 className={`${titleSize} font-extrabold mb-4 ${titleColor}`}>
+      <h2 className={cn(
+        "text-3xl md:text-4xl font-bold mb-4 font-heading",
+        variant === 'light' ? 'text-white' : (swapColors ? 'text-slate-900' : 'text-amber-500')
+      )}>
         {title}
       </h2>
       {subtitle && (
-        <div className={`text-lg ${subtitleColor}`}>
+        <p className={cn(
+          "text-lg max-w-2xl font-light leading-relaxed",
+          variant === 'light' ? 'text-slate-400' : 'text-slate-600',
+          align === 'center' && "mx-auto"
+        )}>
           {subtitle}
-        </div>
+        </p>
       )}
     </div>
   );
