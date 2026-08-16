@@ -9,11 +9,8 @@ function RealizationCard({ item }: { item: any }) {
   const rawUrl = item.realization_photos?.[0]?.url || item.image_url;
   const imageUrl = rawUrl ? optimizeImg(rawUrl, 600) : `https://placehold.co/600x400/eeeeee/999999?text=${encodeURIComponent(item.title)}`;
   
-  const CardWrapper = item.slug ? Link : "div";
-  const wrapperProps = item.slug ? { href: `/realizace/${item.slug}` } : {};
-
-  return (
-    <CardWrapper {...wrapperProps} className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[320px] lg:w-[380px] shrink-0 snap-center md:snap-start cursor-pointer">
+  const cardContent = (
+    <>
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
         <img 
           src={imageUrl} 
@@ -35,7 +32,21 @@ function RealizationCard({ item }: { item: any }) {
           {item.location || "Neznámá lokalita"}
         </div>
       </div>
-    </CardWrapper>
+    </>
+  );
+
+  if (item.slug) {
+    return (
+      <Link href={`/realizace/${item.slug}`} className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[320px] lg:w-[380px] shrink-0 snap-center md:snap-start cursor-pointer">
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[320px] lg:w-[380px] shrink-0 snap-center md:snap-start cursor-pointer">
+      {cardContent}
+    </div>
   );
 }
 
