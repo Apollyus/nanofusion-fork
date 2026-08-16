@@ -103,14 +103,16 @@ export function Contact() {
   return (
     <section className="py-24 bg-white" id="kontakt">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           
           {/* Left Column: Info */}
-          <div className="flex flex-col justify-center items-start">
+          <div className="flex flex-col justify-center items-start lg:col-span-5">
             <SectionHeader
               title={<>Získejte cenovou nabídku <span className="text-amber-500">zdarma</span></>}
               preTitle="KONTAKTUJTE NÁS"
+              align="left"
               variant="left"
+              swapColors={true}
               className="mb-10 w-full"
             />
             <p className="text-slate-600 text-lg mb-10 leading-relaxed max-w-lg">
@@ -161,7 +163,7 @@ export function Contact() {
           </div>
 
           {/* Right Column: Form */}
-          <div>
+          <div className="lg:col-span-7">
             <form 
               onSubmit={handleSubmit}
               className="bg-white border-2 border-amber-500 rounded-3xl p-6 sm:p-8 shadow-sm"
