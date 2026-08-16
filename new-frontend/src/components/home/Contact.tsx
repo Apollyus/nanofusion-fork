@@ -101,7 +101,7 @@ export function Contact() {
   };
 
   return (
-    <section className="py-24 bg-white" id="kontakt">
+    <section className="py-12 md:py-16 bg-white" id="kontakt">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           

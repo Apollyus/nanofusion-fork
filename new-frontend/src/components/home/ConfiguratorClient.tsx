@@ -56,7 +56,7 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
   const [email, setEmail] = useState("");
   const [gdpr, setGdpr] = useState(false);
   const [photos, setPhotos] = useState<File[]>([]);
-  
+
   const [submitting, setSubmitting] = useState(false);
   const [priceResult, setPriceResult] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -96,15 +96,15 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
     if (!gdpr) return alert("Prosím potvrďte souhlas se zpracováním osobních údajů.");
 
     setSubmitting(true);
-    
+
     // Výpočet
     const areaValue = areaUnknown ? 0 : (parseInt(area) || 0);
     const baseTotal = selectedService.price * areaValue;
     const minTotal = Math.round(baseTotal * 1.05 / 10) * 10;
     const maxTotal = Math.round(baseTotal * 1.15 / 10) * 10;
-    
-    const totalDisplay = areaUnknown 
-      ? 'ZDARMA (Individuální nabídka*)' 
+
+    const totalDisplay = areaUnknown
+      ? 'ZDARMA (Individuální nabídka*)'
       : `${minTotal.toLocaleString('cs-CZ')} – ${maxTotal.toLocaleString('cs-CZ')} Kč`;
 
     setPriceResult(totalDisplay);
@@ -112,7 +112,7 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
 
     // Save to DB in background
     const message = `Lokace: ${address}, Kalkulačka: ${selectedObj.name}, Plocha: ${areaUnknown ? 'Neznámo' : areaValue + ' m²'}, Odhad ceny: ${totalDisplay}\nFotografie: ${photos.length > 0 ? photos.length + ' souborů (v budoucnu nahrát do storage)' : 'žádné'}`;
-    
+
     try {
       await supabase.from('inquiries').insert({
         name,
@@ -159,11 +159,11 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
 
       {step === 1 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <p className="text-left font-bold text-slate-800 mb-6">1. Co budeme provádět?</p>
+          <p className="text-left font-bold text-slate-800 mb-6">Část 1 ze 2: Kontakty / Služba</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
             {services.map(s => (
-              <div 
-                key={s.id} 
+              <div
+                key={s.id}
                 onClick={() => setSelectedServiceId(s.id)}
                 className={`p-4 border-2 rounded-2xl text-center cursor-pointer transition-all ${selectedServiceId === s.id ? 'border-amber-500 bg-amber-50' : 'border-slate-200 hover:border-amber-300'}`}
               >
@@ -176,8 +176,8 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
           <p className="text-left font-bold text-slate-800 mb-4">Typ objektu</p>
           <div className="flex flex-col sm:flex-row gap-4 mb-10">
             {objectTypes.map(o => (
-              <div 
-                key={o.id} 
+              <div
+                key={o.id}
                 onClick={() => setSelectedObjId(o.id)}
                 className={`flex-1 p-4 border-2 rounded-2xl text-center cursor-pointer transition-all ${selectedObjId === o.id ? 'border-amber-500 bg-amber-50' : 'border-slate-200 hover:border-amber-300'}`}
               >
@@ -187,20 +187,20 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
           </div>
 
           <Button onClick={handleNext} className="w-full h-14 text-lg">
-            Pokračovat k ploše →
+            Pokračovat →
           </Button>
         </div>
       )}
 
       {step === 2 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <p className="text-left font-bold text-slate-800 mb-6">2. Upřesněte zadání</p>
-          
+          <p className="text-left font-bold text-slate-800 mb-6">Specifikace zakázky</p>
+
           <div className="mb-8">
-            <label className="block text-sm font-bold text-slate-700 mb-2">Odhadovaná plocha (m²)</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Plocha v m² *</label>
             <div className="relative">
-              <input 
-                type="number" 
+              <input
+                type="number"
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
                 disabled={areaUnknown}
@@ -217,20 +217,20 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
           <div className="bg-slate-50 p-6 rounded-3xl mb-8 border border-slate-100">
             <p className="text-center text-sm font-bold text-slate-600 mb-6 uppercase tracking-wider">Uveďte kontakt pro zaslání kalkulace</p>
             <div className="space-y-4">
-              <input type="text" placeholder="Vaše jméno *" value={name} onChange={e => setName(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
+              <input type="text" placeholder="Jméno a Příjmení *" value={name} onChange={e => setName(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
               <input type="text" placeholder="Přesná adresa místa, kde by se práce prováděly *" value={address} onChange={e => setAddress(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
               <input type="tel" placeholder="Telefonní číslo *" value={phone} onChange={e => setPhone(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
               <input type="email" placeholder="E-mail *" value={email} onChange={e => setEmail(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
-              
+
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Fotografie objektu (nepovinné)</label>
-                <input 
-                  type="file" 
+                <input
+                  type="file"
                   ref={fileInputRef}
-                  multiple 
+                  multiple
                   accept="image/*"
                   onChange={e => setPhotos(Array.from(e.target.files || []))}
-                  className="w-full p-2 border border-dashed border-slate-300 bg-white rounded-xl text-sm text-slate-900 font-medium file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200 cursor-pointer" 
+                  className="w-full p-2 border border-dashed border-slate-300 bg-white rounded-xl text-sm text-slate-900 font-medium file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200 cursor-pointer"
                 />
                 {photos.length > 0 && <div className="text-xs text-emerald-500 mt-2 font-bold">✅ Vybráno {photos.length} fotografií.</div>}
               </div>
@@ -244,10 +244,10 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
 
           <div className="flex gap-4">
             <button onClick={handleBack} className="w-1/3 h-14 bg-slate-200 text-slate-700 font-bold uppercase rounded-xl hover:bg-slate-300 transition-colors">
-              Zpět
+              ← Zpět
             </button>
             <Button onClick={handleSubmit} disabled={submitting} className="w-2/3 h-14 text-sm uppercase">
-              {submitting ? 'Počkat...' : 'Zobrazit kalkulaci'}
+              {submitting ? 'Počkat...' : 'Zobrazit cenu'}
             </Button>
           </div>
         </div>
@@ -256,17 +256,16 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
       {step === 3 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center">
           <div className="bg-slate-900 rounded-3xl p-10 mb-8">
-            <div className="text-slate-400 text-lg mb-2">Děkujeme, {name}!</div>
-            <div className="text-white mb-4">Předběžné rozmezí ceny (bez DPH):</div>
+            <div className="text-white mb-4">Předběžná cena pro vaši plochu:</div>
             <div className="text-4xl md:text-5xl font-bold text-amber-500 mb-4">{priceResult}</div>
             <p className="text-xs text-slate-500">
               * Uvedené ceny jsou bez DPH. Sazba se liší dle objektu (12 % nebo 21 %).
             </p>
-            <p className="text-slate-400 mt-6 text-sm max-w-sm mx-auto">
-              Specialista NanoFusion Vás bude kontaktovat pro domluvení termínu <strong>bezplatného zaměření</strong>.
-            </p>
+            <div className="padding-4 bg-emerald-900/40 border border-emerald-800 rounded-xl text-emerald-400 text-sm font-bold mt-6 p-4">
+              ✓ Úspěšně odesláno. Zavoláme vám.
+            </div>
           </div>
-          
+
           <button onClick={handleRestart} className="text-slate-500 underline text-sm hover:text-slate-700 font-medium">
             Začít znovu
           </button>

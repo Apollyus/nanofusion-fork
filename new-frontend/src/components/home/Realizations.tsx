@@ -28,7 +28,7 @@ function LoadingSpinner() {
 
 export function Realizations() {
   return (
-    <section id="realizace" className="py-24 bg-slate-50 font-sans overflow-hidden">
+    <section id="realizace" className="py-12 md:py-16 bg-slate-50 font-sans overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         
         <SectionHeader

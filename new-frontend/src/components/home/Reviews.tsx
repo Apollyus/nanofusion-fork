@@ -7,7 +7,7 @@ import { useCarousel } from "@/hooks/useCarousel";
 
 function ReviewCard({ review }: { review: any }) {
   return (
-    <div 
+    <div
       className="flex-none w-[320px] md:w-[350px] bg-slate-800 rounded-2xl p-8 flex flex-col snap-center md:snap-start"
     >
       <div className="text-amber-500 mb-4 flex gap-1">
@@ -78,9 +78,9 @@ export function Reviews({ initialReviews }: { initialReviews?: any[] }) {
   const reviews = initialReviews && initialReviews.length > 0 ? initialReviews : defaultReviews;
 
   return (
-    <section id="reference" className="py-24 bg-[#111111] font-sans relative overflow-hidden">
+    <section id="reference" className="py-12 md:py-16 bg-[#111111] font-sans relative overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative">
-        
+
         <SectionHeader
           title="Co o nás říkají naši klienti"
           subtitle="Reference čerpáme z portálů Firmy.cz a Google. Spokojenost našich klientů je pro nás prioritou číslo jedna."
@@ -106,18 +106,18 @@ export function Reviews({ initialReviews }: { initialReviews?: any[] }) {
 
         {/* Carousel Container */}
         <div className="relative group">
-          
-          <CarouselArrows 
-            onScroll={scrollByAmount} 
-            canScrollLeft={canScrollLeft} 
-            canScrollRight={canScrollRight} 
+
+          <CarouselArrows
+            onScroll={scrollByAmount}
+            canScrollLeft={canScrollLeft}
+            canScrollRight={canScrollRight}
           />
 
           {/* Gradient Edges */}
           <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-[#111111] to-transparent z-10 pointer-events-none" />
           <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-[#111111] to-transparent z-10 pointer-events-none" />
 
-          <div 
+          <div
             ref={scrollRef}
             className="flex gap-4 sm:gap-6 lg:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar relative z-0 px-[calc(50%-160px)] md:px-0"
           >

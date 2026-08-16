@@ -24,7 +24,7 @@ export async function FAQ({ initialFaqs }: { initialFaqs?: any[] }) {
   if (!homeFaqs || homeFaqs.length === 0) return null;
 
   return (
-    <section className="py-24 bg-white font-sans relative">
+    <section className="py-12 md:py-16 bg-white font-sans relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center max-w-xl mx-auto mb-10">

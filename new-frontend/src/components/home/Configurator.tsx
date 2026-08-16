@@ -11,7 +11,7 @@ export async function Configurator() {
   }
 
   return (
-    <section className="py-24 bg-slate-50 relative">
+    <section className="py-12 md:py-16 bg-slate-50 relative">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <ConfiguratorClient 
           prices={prices || []} 

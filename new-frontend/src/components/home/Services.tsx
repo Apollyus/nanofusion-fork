@@ -79,7 +79,7 @@ export async function Services() {
   if (!services?.length) return null;
 
   return (
-    <section id="sluzby" className="py-24 bg-white font-sans">
+    <section id="sluzby" className="py-12 md:py-16 bg-white font-sans">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         
         <SectionHeader 

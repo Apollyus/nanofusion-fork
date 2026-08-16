@@ -109,7 +109,7 @@ function AboutWhyUs() {
 
 export function About() {
   return (
-    <section id="o-nas" className="py-24 bg-slate-50 font-sans">
+    <section id="o-nas" className="py-12 md:py-16 bg-slate-50 font-sans">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader 
           title="Příběh preciznosti a inovace"
