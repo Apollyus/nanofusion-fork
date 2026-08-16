@@ -1,5 +1,5 @@
 export const localCatalog: Record<string, any> = {
-    'facade': {
+    'cisteni-fasad': {
         title: 'Čištění fasád',
         badge: 'PRÉMIOVÁ OCHRANA',
         subtitle: 'Hloubkové odstranění řas, plísní a atmosférických nečistot. Ochrana se zárukou až 10 let.',

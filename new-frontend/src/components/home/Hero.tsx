@@ -135,7 +135,7 @@ export const Hero = async () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center gap-4 pt-6">
-            <Button href="/kalkulace" size="lg" className="flex items-center gap-2">
+            <Button href="/#kalkulacka" size="lg" className="flex items-center gap-2">
               Nezávazná cenová nabídka
               <svg
                 xmlns="http://www.w3.org/2000/svg"

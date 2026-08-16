@@ -16,16 +16,16 @@ const SocialIcon = ({ href, children }: { href: string; children: React.ReactNod
 export function Footer() {
   const services = [
     { label: "Čištění fasád", href: "/sluzby/cisteni-fasad" },
-    { label: "Čištění střech", href: "/sluzby/cisteni-strech" },
-    { label: "Čištění dlažeb", href: "/sluzby/cisteni-dlazby" },
-    { label: "Solární panely", href: "/sluzby/cisteni-fotovoltaiky" },
-    { label: "Odstranění graffiti", href: "/sluzby/odstraneni-graffiti" },
-    { label: "Průmyslové čištění", href: "/sluzby/prumyslove-cisteni" },
-    { label: "Nátěry fasád", href: "/sluzby/natery-fasad" },
-    { label: "Nátěry střech", href: "/sluzby/natery-strech" },
-    { label: "Protiskluzová úprava", href: "/sluzby/protiskluzove-natery" },
-    { label: "IG CeramFloor", href: "/sluzby/ochrana-podlah-ceramfloor" },
-    { label: "Antibakteriální ochrana", href: "/sluzby/antibakterialni-ochrana" }
+    { label: "Čištění střech", href: "/sluzby/roof" },
+    { label: "Čištění dlažeb", href: "/sluzby/pavement" },
+    { label: "Solární panely", href: "/sluzby/pv" },
+    { label: "Odstranění graffiti", href: "/sluzby/graffiti" },
+    { label: "Průmyslové čištění", href: "/sluzby/industrial" },
+    { label: "Nátěry fasád", href: "/sluzby/facade-paint" },
+    { label: "Nátěry střech", href: "/sluzby/roof-paint" },
+    { label: "Protiskluzová úprava", href: "/sluzby/antislip" },
+    { label: "IG CeramFloor", href: "/sluzby/ceramfloor" },
+    { label: "Antibakteriální ochrana", href: "/sluzby/antibac" }
   ];
 
   return (
@@ -120,9 +120,9 @@ export function Footer() {
             <span className="hidden sm:inline">|</span>
             <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" className="text-amber-500 hover:text-amber-600 font-bold transition-all underline underline-offset-4 decoration-amber-500/30 hover:decoration-amber-500">E-shop</a>
             <span className="hidden sm:inline">|</span>
-            <a href="https://nanofusion-j3bs.vercel.app/admin/login" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">Zaměstnanci</a>
-            <span className="hidden sm:inline">|</span>
-            <a href="https://vojtechfal.cz" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">Created by ❤️</a>
+            <a href="https://nanofusion-j3bs.vercel.app/admin/login" target="_blank" rel="noopener noreferrer" className="transition-colors opacity-60 hover:opacity-100">Zaměstnanci</a>
+            <span className="hidden sm:inline opacity-60">|</span>
+            <a href="https://vojtechfal.cz" target="_blank" rel="noopener noreferrer" className="transition-colors opacity-60 hover:opacity-100">Created by ❤️</a>
           </div>
         </div>
 

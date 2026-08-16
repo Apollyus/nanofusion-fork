@@ -145,8 +145,8 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-slate-100" id="kalkulacka">
-      <h2 className="text-2xl font-bold text-center text-amber-500 mb-2">Konfigurátor</h2>
-      <p className="text-slate-500 text-sm text-center mb-8 max-w-lg mx-auto">
+      <h2 className="text-2xl font-bold text-left text-amber-500 mb-2">Konfigurátor</h2>
+      <p className="text-slate-500 text-sm text-left mb-8 max-w-lg">
         Tento konfigurátor slouží ke zjištění orientační ceny. Po vyplnění vás bude kontaktovat náš technik. Zcela ZDARMA.
       </p>
 
@@ -159,7 +159,7 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
 
       {step === 1 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <p className="text-center font-bold text-slate-800 mb-6">1. Co budeme provádět?</p>
+          <p className="text-left font-bold text-slate-800 mb-6">1. Co budeme provádět?</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
             {services.map(s => (
               <div 
@@ -173,7 +173,7 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
             ))}
           </div>
 
-          <p className="text-center font-bold text-slate-800 mb-4">Typ objektu</p>
+          <p className="text-left font-bold text-slate-800 mb-4">Typ objektu</p>
           <div className="flex flex-col sm:flex-row gap-4 mb-10">
             {objectTypes.map(o => (
               <div 
@@ -194,7 +194,7 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
 
       {step === 2 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <p className="text-center font-bold text-slate-800 mb-6">2. Upřesněte zadání</p>
+          <p className="text-left font-bold text-slate-800 mb-6">2. Upřesněte zadání</p>
           
           <div className="mb-8">
             <label className="block text-sm font-bold text-slate-700 mb-2">Odhadovaná plocha (m²)</label>
