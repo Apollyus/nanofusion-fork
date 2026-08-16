@@ -106,19 +106,20 @@ export const Hero = async () => {
         {/* Content Container */}
         <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col items-start gap-6">
 
-          {/* Badge */}
-          <div className="flex flex-wrap gap-3">
-            <Pill
-              icon={<span className="text-amber-500 tracking-tighter">★★★★★</span>}
-              className="text-gray-300 w-full max-w-full overflow-x-auto hide-scrollbar sm:w-auto sm:overflow-visible py-2"
-            >
-              <div className="flex items-center whitespace-nowrap">
-                <span className="font-semibold text-white mx-1">950+</span> projektů
-                <span className="text-white/40 mx-2 md:mx-3 shrink-0">•</span>
-                <span className="shrink-0">pojištění odpovědnosti</span>
-                <span className="text-white/40 mx-2 md:mx-3 shrink-0">•</span>
-                <span className="font-semibold text-white mr-1">4,9</span> na firmy.cz
-              </div>
+          {/* Badges */}
+          <div className="flex flex-wrap gap-2 md:gap-3">
+            <Pill className="text-gray-200 text-xs px-3 py-1 md:py-1.5 md:px-4">
+              <span className="font-semibold text-white mr-1.5">950+</span> projektů
+            </Pill>
+            <Pill className="text-gray-200 text-xs px-3 py-1 md:py-1.5 md:px-4">
+              pojištění odpovědnosti
+            </Pill>
+            <Pill className="text-gray-200 text-xs px-3 py-1 md:py-1.5 md:px-4">
+              <span className="text-amber-500 tracking-tighter mr-1.5 text-[10px] md:text-xs">★★★★★</span>
+              <span className="font-semibold text-white mr-1.5">4,9</span> na firmy.cz
+            </Pill>
+            <Pill className="text-amber-500 text-xs px-3 py-1 md:py-1.5 md:px-4 border-amber-500/30 bg-amber-500/10 font-medium">
+              <span className="font-bold mr-1.5">100%</span> zdarma konzultace
             </Pill>
           </div>
 

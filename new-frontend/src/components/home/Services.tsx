@@ -12,7 +12,7 @@ function ServiceCard({ service }: { service: any }) {
 
   return (
     <Link 
-      href={`/sluzby/${service.slug}`}
+      href={`/sluzby/${service.slug}#kalkulacka`}
       className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300"
     >
       {/* Image Container */}
@@ -59,7 +59,7 @@ function ServiceCard({ service }: { service: any }) {
         />
 
         <div className="mt-auto pt-4 flex items-center text-amber-500 font-bold text-sm group-hover:text-amber-600 transition-colors">
-          Zjistit více
+          Spočítat cenu
           <svg className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
