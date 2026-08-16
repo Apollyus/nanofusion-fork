@@ -17,7 +17,7 @@ serve(async (req) => {
     // 1. Setup Supabase Client
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ""
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ""
-    const openRouterKey = Deno.env.get('OPENROUTER_API_KEY')
+    const openAiKey = Deno.env.get('OPENAI_API_KEY')
     
     const supabase = createClient(supabaseUrl, supabaseKey)
 
@@ -98,17 +98,15 @@ serve(async (req) => {
       (Nevyplněné údaje nahraď slovem "Neznámé")
     `;
 
-    // 3. Call OpenRouter (compatible with OpenAI API format)
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    // 3. Call OpenAI
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openRouterKey}`,
+        'Authorization': `Bearer ${openAiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://nanofusion.cz',
-        'X-Title': 'NANOFusion Chat',
       },
       body: JSON.stringify({
-        model: 'openai/gpt-4o-mini',
+        model: 'gpt-4o-mini',
         messages: [{ role: 'system', content: systemPrompt }, ...messages],
         temperature: 0.2,
       }),
