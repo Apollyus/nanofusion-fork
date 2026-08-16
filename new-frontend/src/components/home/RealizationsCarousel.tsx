@@ -11,19 +11,24 @@ function RealizationCard({ item, onClick }: { item: any; onClick: () => void }) 
   const imageUrl = rawUrl ? optimizeImg(rawUrl, 600) : `https://placehold.co/600x400/eeeeee/999999?text=${encodeURIComponent(item.title)}`;
   
   return (
-    <div onClick={onClick} className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[320px] lg:w-[380px] shrink-0 cursor-pointer">
+    <div onClick={onClick} className="group/card flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[320px] lg:w-[380px] shrink-0 cursor-pointer">
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
         <img 
           src={imageUrl} 
           alt={item.title}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-105"
         />
+        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <span className="bg-white text-slate-900 font-bold px-6 py-3 rounded-full text-sm tracking-widest uppercase shadow-xl transform translate-y-4 group-hover/card:translate-y-0 transition-all duration-300">
+            Detail projektu
+          </span>
+        </div>
       </div>
       <div className="p-6 flex flex-col flex-grow">
         <div className="inline-block bg-amber-50 text-amber-500 font-bold text-[10px] md:text-xs uppercase tracking-wider mb-3 px-3 py-1 rounded-full w-fit">
           {item.work_type || item.category || "Realizace"}
         </div>
-        <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 line-clamp-2 leading-snug group-hover:text-amber-500 transition-colors">
+        <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 line-clamp-2 leading-snug group-hover/card:text-amber-500 transition-colors">
           {item.title}
         </h3>
         <div className="mt-auto flex items-center text-gray-500 text-sm font-medium">
