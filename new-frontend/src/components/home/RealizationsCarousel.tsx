@@ -37,6 +37,141 @@ function RealizationCard({ item, onClick }: { item: any; onClick: () => void }) 
   );
 }
 
+function RealizationModalContent({ item }: { item: any }) {
+  const allPhotos = item.realization_photos || [];
+  // Include main image_url as fallback if no photos exist
+  const photos = allPhotos.length > 0 
+    ? allPhotos.map((p: any) => p.url) 
+    : (item.image_url ? [item.image_url] : []);
+    
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActiveIndex((prev) => (prev + 1) % photos.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActiveIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  };
+
+  return (
+    <div className="flex flex-col">
+      {/* Hero Image */}
+      <div className="w-full aspect-video md:h-[400px] relative rounded-3xl overflow-hidden bg-slate-100 group">
+        {photos.length > 0 ? (
+          <img 
+            src={optimizeImg(photos[activeIndex], 1200)}
+            alt={item.title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+            <span className="text-gray-400">Bez obrázku</span>
+          </div>
+        )}
+        
+        {/* Gallery Arrows */}
+        {photos.length > 1 && (
+          <>
+            <button 
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button 
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </>
+        )}
+      </div>
+
+      <div className="mt-8 flex flex-col lg:flex-row gap-8">
+        {/* Left Column */}
+        <div className="flex-1 flex flex-col">
+          <h2 className="text-3xl font-extrabold text-[#1a1a24] mb-6 leading-tight">
+            {item.title}
+          </h2>
+          
+          {/* Badges */}
+          <div className="flex flex-wrap items-center gap-3 text-sm font-bold mb-8">
+            <div className="bg-[#fff8eb] text-amber-500 px-4 py-2 rounded-full uppercase tracking-wide text-xs">
+              {item.work_type || item.category || "Realizace"}
+            </div>
+            {item.duration && (
+              <div className="bg-slate-100 text-slate-600 px-4 py-2 rounded-full flex items-center gap-2 text-xs">
+                <span>⏱</span>
+                {item.duration}
+              </div>
+            )}
+            <div className="bg-slate-100 text-slate-600 px-4 py-2 rounded-full flex items-center gap-2 text-xs">
+              <span>📍</span>
+              {item.location || "Neznámá lokalita"}
+            </div>
+          </div>
+
+          {/* Thumbnails */}
+          {photos.length > 1 && (
+            <div className="flex flex-wrap gap-4 mb-8">
+              {photos.map((photo: string, idx: number) => (
+                <button 
+                  key={idx}
+                  onClick={() => setActiveIndex(idx)}
+                  className={`relative w-24 h-20 rounded-xl overflow-hidden border-2 transition-all ${activeIndex === idx ? 'border-amber-500 scale-105' : 'border-transparent hover:scale-105'}`}
+                >
+                  <img src={optimizeImg(photo, 200)} className="absolute inset-0 w-full h-full object-cover" alt="" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: CTA */}
+        <div className="w-full lg:w-[320px] shrink-0">
+          <div className="bg-amber-500 rounded-3xl p-8 text-white shadow-lg">
+            <h3 className="text-xl font-bold mb-3">Zaujala vás tato práce?</h3>
+            <p className="text-amber-50 text-sm mb-6 leading-relaxed">
+              Rádi pro vás připravíme nezávaznou kalkulaci zdarma.
+            </p>
+            <a 
+              href="#kalkulacka" 
+              onClick={(e) => {
+                // Just close modal and scroll if needed, or link to contact page
+                const el = document.getElementById("kontakt");
+                if (el) {
+                  e.preventDefault();
+                  el.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              className="block w-full bg-white text-amber-600 hover:bg-slate-50 font-bold py-3.5 px-6 rounded-2xl text-center transition-colors shadow-sm"
+            >
+              MÁM ZÁJEM 💬
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Description Box */}
+      {(item.content || item.description) && (
+        <div className="mt-8 border border-gray-200 rounded-3xl p-8 bg-white">
+          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">
+            Detaily realizace
+          </h4>
+          <div 
+            className="prose prose-slate max-w-none text-gray-600 leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: item.content || item.description }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function RealizationsCarousel({ realizations }: { realizations: any[] }) {
   const { scrollRef, scrollByAmount, canScrollLeft, canScrollRight } = useCarousel(0);
   const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -62,51 +197,8 @@ export function RealizationsCarousel({ realizations }: { realizations: any[] }) 
         </div>
       </div>
 
-      <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} title={selectedItem?.title || ""}>
-        {selectedItem && (
-          <div className="flex flex-col gap-6">
-            <div className="w-full h-64 md:h-96 relative rounded-2xl overflow-hidden">
-              <img 
-                src={selectedItem.realization_photos?.[0]?.url ? optimizeImg(selectedItem.realization_photos[0].url, 1200) : selectedItem.image_url ? optimizeImg(selectedItem.image_url, 1200) : `https://placehold.co/1200x800/eeeeee/999999?text=${encodeURIComponent(selectedItem.title)}`}
-                alt={selectedItem.title}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-            
-            <div className="flex items-center gap-4 text-sm font-medium">
-              <div className="bg-amber-50 text-amber-500 px-3 py-1 rounded-full">
-                {selectedItem.work_type || selectedItem.category || "Realizace"}
-              </div>
-              <div className="flex items-center text-gray-500">
-                <svg className="w-4 h-4 mr-1 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                </svg>
-                {selectedItem.location || "Neznámá lokalita"}
-              </div>
-            </div>
-
-            {selectedItem.content && (
-              <div 
-                className="prose prose-slate max-w-none"
-                dangerouslySetInnerHTML={{ __html: selectedItem.content }}
-              />
-            )}
-            
-            {selectedItem.realization_photos?.length > 1 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                {selectedItem.realization_photos.slice(1).map((photo: any, idx: number) => (
-                  <div key={idx} className="relative aspect-square rounded-xl overflow-hidden">
-                    <img 
-                      src={optimizeImg(photo.url, 400)}
-                      alt={`${selectedItem.title} - foto ${idx + 2}`}
-                      className="absolute inset-0 w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+      <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} title="">
+        {selectedItem && <RealizationModalContent item={selectedItem} />}
       </Modal>
     </>
   );
