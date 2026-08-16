@@ -153,7 +153,7 @@ export const Hero = async () => {
                 <path d="m12 5 7 7-7 7" />
               </svg>
             </Button>
-            <Button href="/sluzby" variant="white" size="lg">
+            <Button href="#sluzby" variant="white" size="lg">
               Prozkoumat služby
             </Button>
           </div>
