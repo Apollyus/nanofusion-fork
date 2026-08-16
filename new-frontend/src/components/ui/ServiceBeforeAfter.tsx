@@ -10,9 +10,37 @@ interface ServiceBeforeAfterProps {
 
 export function ServiceBeforeAfter({ beforeImg, afterImg }: ServiceBeforeAfterProps) {
   const [sliderPosition, setSliderPosition] = useState(50);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const requestRef = useRef<number>();
+  const startTimeRef = useRef<number>();
+
+  useEffect(() => {
+    if (hasInteracted) {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      return;
+    }
+
+    const animate = (time: number) => {
+      if (startTimeRef.current === undefined) startTimeRef.current = time;
+      const elapsed = time - startTimeRef.current;
+      
+      // Oscillate faster (speed up by lowering the divisor, e.g., 400 instead of 700)
+      const oscillation = Math.sin(elapsed / 400) * 18; 
+      setSliderPosition(50 + oscillation);
+
+      requestRef.current = requestAnimationFrame(animate);
+    };
+
+    requestRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    };
+  }, [hasInteracted]);
 
   const handleMove = (clientX: number) => {
+    if (!hasInteracted) setHasInteracted(true);
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
@@ -97,7 +125,10 @@ export function ServiceBeforeAfter({ beforeImg, afterImg }: ServiceBeforeAfterPr
             min="0"
             max="100"
             value={sliderPosition}
-            onChange={(e) => setSliderPosition(Number(e.target.value))}
+            onChange={(e) => {
+              if (!hasInteracted) setHasInteracted(true);
+              setSliderPosition(Number(e.target.value));
+            }}
             className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20"
             aria-label="Porovnání před a po"
           />
