@@ -1,45 +1,78 @@
 "use client";
 
+import { useState } from "react";
 import { useCarousel } from "@/hooks/useCarousel";
 import { CarouselArrows } from "@/components/ui/carousel-arrows";
-import Link from "next/link";
+import { Modal } from "@/components/ui/modal";
 
 export function VideosCarousel({ videos }: { videos: any[] }) {
-  const { scrollRef, scrollByAmount, canScrollLeft, canScrollRight } = useCarousel(0, 400);
+  const { scrollRef, scrollByAmount, canScrollLeft, canScrollRight } = useCarousel(1);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  if (!videos || videos.length === 0) return null;
 
   return (
-    <div className="relative group/carousel">
-      <CarouselArrows 
-        onScroll={scrollByAmount} 
-        canScrollLeft={canScrollLeft} 
-        canScrollRight={canScrollRight} 
-      />
+    <>
+      <div className="relative group/carousel">
+        <CarouselArrows 
+          onScroll={scrollByAmount} 
+          canScrollLeft={canScrollLeft} 
+          canScrollRight={canScrollRight} 
+        />
 
-      <div 
-        ref={scrollRef}
-        className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 snap-x snap-mandatory hide-scrollbar pb-12 pt-4 px-[7.5vw] md:px-1"
-      >
-        {videos.map((video) => (
-          <VideoCard key={video.id} video={video} />
-        ))}
+        <div 
+          ref={scrollRef}
+          className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 hide-scrollbar pb-12 pt-4 px-[7.5vw] md:px-1"
+        >
+          {videos.map((video) => (
+            <VideoCard key={video.id} video={video} onClick={() => setSelectedItem(video)} />
+          ))}
+        </div>
       </div>
-    </div>
+
+      <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} title={selectedItem?.title || selectedItem?.caption || "Detail"}>
+        {selectedItem && (
+          <div className="flex flex-col gap-6">
+            <div className="w-full relative rounded-2xl overflow-hidden bg-black flex items-center justify-center min-h-[50vh]">
+              {(selectedItem.type === 'youtube' || !!selectedItem.youtube_id) ? (
+                <iframe 
+                  className="absolute inset-0 w-full h-full"
+                  src={`https://www.youtube.com/embed/${selectedItem.youtube_id}?autoplay=1`} 
+                  title="YouTube video player" 
+                  frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <img 
+                  src={selectedItem.url} 
+                  alt={selectedItem.title || selectedItem.caption}
+                  className="max-w-full max-h-[75vh] object-contain"
+                />
+              )}
+            </div>
+            {(selectedItem.caption || selectedItem.title) && (
+              <div className="text-lg text-slate-700">
+                {selectedItem.caption || selectedItem.title}
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
+    </>
   );
 }
 
-function VideoCard({ video }: { video: any }) {
+function VideoCard({ video, onClick }: { video: any; onClick: () => void }) {
   const isVideo = video.type === 'youtube' || !!video.youtube_id;
   const title = video.caption || video.title || (isVideo ? 'Video' : 'Fotografie');
   const youtubeId = video.youtube_id;
   const imageUrl = isVideo ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : video.url;
-  const targetHref = isVideo ? `https://www.youtube.com/watch?v=${youtubeId}` : video.url;
   
   return (
-    <a 
-      href={targetHref}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group/card flex flex-col bg-[#121826] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1.333rem)] shrink-0 snap-center md:snap-start"
+    <div 
+      onClick={onClick}
+      className="group/card flex flex-col bg-[#121826] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1.333rem)] shrink-0 cursor-pointer"
     >
       <div className="relative aspect-video overflow-hidden bg-slate-900">
         <img 
@@ -70,14 +103,10 @@ function VideoCard({ video }: { video: any }) {
           )}
         </div>
 
-        {/* "Watch on YouTube" or "View Photo" bottom right */}
+        {/* "View Photo/Video" bottom right */}
         {isVideo ? (
           <div className="absolute bottom-4 right-4 bg-black/80 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-2 border border-white/10">
-            Sledovat na 
-            <span className="font-bold flex items-center gap-1">
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              YouTube
-            </span>
+            Přehrát video
           </div>
         ) : (
           <div className="absolute bottom-4 right-4 bg-black/80 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-2 border border-white/10">
@@ -94,6 +123,6 @@ function VideoCard({ video }: { video: any }) {
           {title}
         </h3>
       </div>
-    </a>
+    </div>
   );
 }

@@ -23,7 +23,7 @@ function ArticleCard({ article }: { article: any }) {
   return (
     <Link 
       href={`/magazin/${article.slug}`}
-      className="group/card flex flex-col bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 h-auto w-[85vw] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0 snap-center md:snap-start"
+      className="group/card flex flex-col bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 h-auto w-[85vw] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0"
     >
       <div className="relative aspect-[3/2] overflow-hidden bg-slate-100">
         {article.hero_image_url ? (
@@ -62,7 +62,7 @@ function ArticleCard({ article }: { article: any }) {
 }
 
 export function ArticlesCarousel({ articles }: { articles: any[] }) {
-  const { scrollRef, scrollByAmount, canScrollLeft, canScrollRight } = useCarousel(0);
+  const { scrollRef, scrollByAmount, canScrollLeft, canScrollRight } = useCarousel(1);
 
   if (!articles || articles.length === 0) return null;
 
@@ -76,7 +76,7 @@ export function ArticlesCarousel({ articles }: { articles: any[] }) {
 
       <div 
         ref={scrollRef}
-        className="flex overflow-x-auto gap-4 sm:gap-8 snap-x snap-mandatory hide-scrollbar pb-8 pt-4 px-[7.5vw] md:px-1"
+        className="flex overflow-x-auto gap-4 sm:gap-8 hide-scrollbar pb-8 pt-4 px-[7.5vw] md:px-1"
       >
         {articles.map((article) => (
           <ArticleCard key={article.id} article={article} />

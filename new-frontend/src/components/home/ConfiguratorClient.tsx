@@ -147,7 +147,7 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-slate-100" id="kalkulacka">
       <h2 className="text-2xl font-bold text-left text-amber-500 mb-2">Konfigurátor</h2>
       <p className="text-slate-500 text-sm text-left mb-8 max-w-lg">
-        Tento konfigurátor slouží ke zjištění orientační ceny. Po vyplnění vás bude kontaktovat náš technik. Zcela ZDARMA.
+        Tento konfigurátor slouží ke zjištění orientační ceny. Ceny jsou uvedeny bez DPH, které činí 12 % nebo 21 % dle typu subjektu. Po vyplnění formuláře vás bude kontaktovat náš technik a na základě informací vám vytvoří finální cenovou nabídku, která vás k ničemu nezavazuje a je zcela ZDARMA.
       </p>
 
       {/* Progress */}

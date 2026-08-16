@@ -32,14 +32,28 @@ export function useCarousel(speed = 0, scrollAmount = 350) {
     let isHovered = false;
 
     if (speed > 0) {
+      let exactScroll = scrollContainer.scrollLeft;
+      let currentDirection = 1; // 1 pro pohyb doprava, -1 pro pohyb doleva
+      
       const scroll = () => {
         if (!isHovered && scrollContainer && !isManualScrolling.current) {
-          scrollContainer.scrollLeft += speed;
+          exactScroll += speed * currentDirection;
+          scrollContainer.scrollLeft = exactScroll;
           
-          // Pokud dojedeme na konec a auto-scroll je zapnutý
-          if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth - 1) {
-             // Zastaví se na konci (už žádný ping-pong nebo skákání)
+          const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+          
+          // Ping-pong logika: Pokud dojedeme na konec, otočíme směr
+          if (maxScroll > 10) {
+            // Použijeme < 1 místo <= 1, aby se to nezasekávalo kvůli zaokrouhlení
+            if (currentDirection === 1 && scrollContainer.scrollLeft >= maxScroll - 2) {
+              currentDirection = -1; // jedeme doleva
+            } else if (currentDirection === -1 && scrollContainer.scrollLeft <= 1) {
+              currentDirection = 1; // jedeme doprava
+            }
           }
+        } else if (scrollContainer) {
+          // Pokud stojíme, updatujeme exactScroll z aktuální pozice pro jistotu
+          exactScroll = scrollContainer.scrollLeft;
         }
         animationFrameId = requestAnimationFrame(scroll);
       };

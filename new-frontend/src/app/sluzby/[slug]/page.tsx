@@ -278,7 +278,7 @@ function ServiceHero({ service, ytId, basePrice }: { service: any; ytId: string 
             </div>
           </div>
 
-          <div className="relative w-full max-w-xl mx-auto lg:mr-0 z-20">
+          <div id="kalkulacka" className="relative w-full max-w-xl mx-auto lg:mr-0 z-20">
             <ServiceConfigurator basePrice={basePrice} serviceName={service.name} />
           </div>
 
