@@ -29,7 +29,7 @@ function LoadingSpinner() {
 export function Realizations() {
   return (
     <section id="realizace" className="py-24 bg-slate-50 font-sans overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         
         <SectionHeader
           title="Naše realizace v detailu"

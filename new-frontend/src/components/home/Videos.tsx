@@ -6,7 +6,6 @@ export async function Videos() {
   const { data: videos } = await supabase
     .from('gallery_items')
     .select('*')
-    .eq('type', 'youtube')
     .eq('is_active', true)
     .order('order_index', { ascending: true });
 
@@ -14,7 +13,7 @@ export async function Videos() {
 
   return (
     <section id="galerie" className="py-24 bg-white font-sans relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Špičková péče o váš majetek v detailech"
           variant="default"

@@ -29,7 +29,7 @@ function LoadingSpinner() {
 export function Articles() {
   return (
     <section id="blog" className="py-24 bg-white font-sans overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         
         <SectionHeader
           title="Nano-Magazín & Tipy"
