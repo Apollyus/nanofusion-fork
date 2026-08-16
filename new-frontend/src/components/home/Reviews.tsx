@@ -8,7 +8,7 @@ import { useCarousel } from "@/hooks/useCarousel";
 function ReviewCard({ review }: { review: any }) {
   return (
     <div 
-      className="flex-none w-[320px] md:w-[350px] bg-slate-800 rounded-2xl p-8 flex flex-col snap-start"
+      className="flex-none w-[320px] md:w-[350px] bg-slate-800 rounded-2xl p-8 flex flex-col snap-center md:snap-start"
     >
       <div className="text-amber-500 mb-4 flex gap-1">
         {Array.from({ length: review.rating }).map((_, i) => (
@@ -117,10 +117,9 @@ export function Reviews({ initialReviews }: { initialReviews?: any[] }) {
           <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-[#111111] to-transparent z-10 pointer-events-none" />
           <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-[#111111] to-transparent z-10 pointer-events-none" />
 
-          {/* Reviews Scroll Area */}
           <div 
             ref={scrollRef}
-            className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar relative z-0"
+            className="flex gap-4 sm:gap-6 lg:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar relative z-0 px-[calc(50%-160px)] md:px-0"
           >
             {reviews.map((review) => (
               <ReviewCard key={review.id} review={review} />

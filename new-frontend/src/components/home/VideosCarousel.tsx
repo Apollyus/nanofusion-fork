@@ -17,7 +17,7 @@ export function VideosCarousel({ videos }: { videos: any[] }) {
 
       <div 
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto pb-12 snap-x snap-mandatory hide-scrollbar relative z-0"
+        className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 snap-x snap-mandatory hide-scrollbar pb-12 pt-4 px-[7.5vw] md:px-1"
       >
         {videos.map((video) => (
           <VideoCard key={video.id} video={video} />
@@ -36,7 +36,7 @@ function VideoCard({ video }: { video: any }) {
       href={`https://www.youtube.com/watch?v=${youtubeId}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="group/card flex flex-col bg-[#121826] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0 snap-start"
+      className="group/card flex flex-col bg-[#121826] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] shrink-0 snap-center md:snap-start"
     >
       <div className="relative aspect-video overflow-hidden bg-slate-900">
         <img 

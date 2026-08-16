@@ -13,7 +13,7 @@ function RealizationCard({ item }: { item: any }) {
   const wrapperProps = item.slug ? { href: `/realizace/${item.slug}` } : {};
 
   return (
-    <CardWrapper {...wrapperProps} className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[320px] lg:w-[380px] shrink-0 snap-start cursor-pointer">
+    <CardWrapper {...wrapperProps} className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 w-[85vw] md:w-[320px] lg:w-[380px] shrink-0 snap-center md:snap-start cursor-pointer">
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
         <img 
           src={imageUrl} 
@@ -54,7 +54,7 @@ export function RealizationsCarousel({ realizations }: { realizations: any[] }) 
 
       <div 
         ref={scrollRef}
-        className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 snap-x snap-mandatory hide-scrollbar pb-8 pt-4 px-1"
+        className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 snap-x snap-mandatory hide-scrollbar pb-8 pt-4 px-[7.5vw] md:px-1"
       >
         {realizations.map((item) => (
           <RealizationCard key={item.id} item={item} />
