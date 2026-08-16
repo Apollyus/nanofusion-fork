@@ -273,14 +273,14 @@ export function FooterModals() {
     <>
       <button 
         onClick={() => setOpenModal('op')}
-        className="hover:text-amber-500 transition-colors focus:outline-none"
+        className="hover:text-amber-500 transition-all focus:outline-none underline underline-offset-4 decoration-amber-500/30 hover:decoration-amber-500"
       >
         Obchodní podmínky
       </button>
       <span className="hidden sm:inline">|</span>
       <button 
         onClick={() => setOpenModal('gdpr')}
-        className="hover:text-amber-500 transition-colors focus:outline-none"
+        className="hover:text-amber-500 transition-all focus:outline-none underline underline-offset-4 decoration-amber-500/30 hover:decoration-amber-500"
       >
         GDPR
       </button>

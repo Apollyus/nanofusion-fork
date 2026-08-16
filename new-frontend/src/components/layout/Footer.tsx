@@ -37,13 +37,13 @@ export function Footer() {
           
           {/* Column 1: Brand & Social */}
           <div className="flex flex-col items-center md:items-start">
-            <Link href="/" className="inline-block mb-6">
+            <Link href="/" className="inline-block mb-6 hover:scale-105 transition-transform duration-300" title="Zpět na úvodní stránku">
               <Image 
                 src="/nanofusion-footer-logo.png" 
                 alt="NANOfusion" 
-                width={180} 
-                height={60} 
-                className="h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(245,158,11,0.15)]" 
+                width={240} 
+                height={80} 
+                className="h-16 w-auto object-contain drop-shadow-[0_2px_10px_rgba(245,158,11,0.15)]" 
               />
             </Link>
             <p className="text-sm leading-relaxed mb-8 max-w-sm">
@@ -74,7 +74,7 @@ export function Footer() {
             <ul className="space-y-3">
               {services.map((service, index) => (
                 <li key={index}>
-                  <Link href={service.href} className="hover:text-amber-500 transition-colors text-sm">
+                  <Link href={service.href} className="hover:text-amber-500 transition-all duration-300 text-sm inline-block hover:scale-105 origin-left">
                     {service.label}
                   </Link>
                 </li>
@@ -92,7 +92,7 @@ export function Footer() {
               <p>Po–Pá 7:00–18:00</p>
             </div>
             
-            <div className="rounded-xl overflow-hidden border-2 border-amber-500 h-40 relative w-full max-w-sm mx-auto md:mx-0">
+            <div className="rounded-xl overflow-hidden border-2 border-amber-500 h-64 relative w-full mx-auto md:mx-0 mt-2">
               <iframe 
                 src="https://www.google.com/maps?q=NANOfusion%20s.r.o.,%20Blučina&output=embed" 
                 width="100%" 
@@ -118,7 +118,7 @@ export function Footer() {
             <span className="hidden sm:inline">|</span>
             <FooterModals />
             <span className="hidden sm:inline">|</span>
-            <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" className="text-amber-500 hover:text-amber-600 font-bold transition-colors">E-shop</a>
+            <a href="https://eshop-nanofusion.cz" target="_blank" rel="noopener noreferrer" className="text-amber-500 hover:text-amber-600 font-bold transition-all underline underline-offset-4 decoration-amber-500/30 hover:decoration-amber-500">E-shop</a>
             <span className="hidden sm:inline">|</span>
             <a href="https://nanofusion-j3bs.vercel.app/admin/login" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">Zaměstnanci</a>
             <span className="hidden sm:inline">|</span>
