@@ -12,8 +12,8 @@ export function ServiceBeforeAfter({ beforeImg, afterImg }: ServiceBeforeAfterPr
   const [sliderPosition, setSliderPosition] = useState(50);
   const [hasInteracted, setHasInteracted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const requestRef = useRef<number>();
-  const startTimeRef = useRef<number>();
+  const requestRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (hasInteracted) {
@@ -22,8 +22,8 @@ export function ServiceBeforeAfter({ beforeImg, afterImg }: ServiceBeforeAfterPr
     }
 
     const animate = (time: number) => {
-      if (startTimeRef.current === undefined) startTimeRef.current = time;
-      const elapsed = time - startTimeRef.current;
+      if (startTimeRef.current === null) startTimeRef.current = time;
+      const elapsed = time - startTimeRef.current!;
       
       // Oscillate faster (speed up by lowering the divisor, e.g., 400 instead of 700)
       const oscillation = Math.sin(elapsed / 400) * 18; 
