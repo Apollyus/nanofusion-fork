@@ -65,7 +65,7 @@ export function Navbar() {
         {/* Right: Button & Mobile Toggle */}
         <div className="flex lg:flex-1 justify-end items-center gap-4">
           <Button
-            href="/kalkulace"
+            href="/#kalkulacka"
             className="hidden lg:inline-flex rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
           >
             Spočítat cenu
@@ -115,7 +115,7 @@ export function Navbar() {
               )
             ))}
             <Button
-              href="/kalkulace"
+              href="/#kalkulacka"
               onClick={() => setIsOpen(false)}
               className="w-full mt-2"
             >

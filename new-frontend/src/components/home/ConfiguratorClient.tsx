@@ -215,10 +215,10 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
           </div>
 
           <div className="bg-slate-50 p-6 rounded-3xl mb-8 border border-slate-100">
-            <p className="text-center font-bold text-slate-800 mb-6">Uveďte kontakt pro zaslání kalkulace</p>
+            <p className="text-center text-sm font-bold text-slate-600 mb-6 uppercase tracking-wider">Uveďte kontakt pro zaslání kalkulace</p>
             <div className="space-y-4">
               <input type="text" placeholder="Vaše jméno *" value={name} onChange={e => setName(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
-              <input type="text" placeholder="Přesná adresa (Ulice, Město) *" value={address} onChange={e => setAddress(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
+              <input type="text" placeholder="Přesná adresa místa, kde by se práce prováděly *" value={address} onChange={e => setAddress(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
               <input type="tel" placeholder="Telefonní číslo *" value={phone} onChange={e => setPhone(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
               <input type="email" placeholder="E-mail *" value={email} onChange={e => setEmail(e.target.value)} className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-amber-500 transition-colors text-slate-900 placeholder:text-slate-400 font-medium bg-white" />
               
@@ -237,7 +237,7 @@ export function ConfiguratorClient({ prices }: ConfiguratorClientProps) {
 
               <label className="flex items-start gap-3 mt-4 cursor-pointer text-xs text-slate-600">
                 <input type="checkbox" checked={gdpr} onChange={e => setGdpr(e.target.checked)} className="mt-0.5 w-4 h-4 text-amber-500 rounded focus:ring-amber-500" />
-                <span>Souhlasím se zpracováním osobních údajů v souladu s <a href="/gdpr" className="text-amber-500 font-bold hover:underline">GDPR</a> pro účely vytvoření nabídky. *</span>
+                <span>Souhlasím se zpracováním osobních údajů v souladu s <a href="/gdpr" className="text-amber-500 font-bold hover:underline">GDPR</a> pro účely vytvoření cenové nabídky. *</span>
               </label>
             </div>
           </div>
