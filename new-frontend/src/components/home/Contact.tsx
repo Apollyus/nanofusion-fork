@@ -35,13 +35,13 @@ const ContactInput = ({ label, as = 'input', className = '', children, ...props 
     <div className={className}>
       <label className="block text-sm font-bold text-slate-900 mb-2">{label}</label>
       {as === 'textarea' ? (
-        <textarea 
-          className={`${baseClasses} resize-y`} 
+        <textarea
+          className={`${baseClasses} resize-y`}
           rows={(props as any).rows}
-          {...(props as any)} 
+          {...(props as any)}
         />
       ) : as === 'select' ? (
-        <select 
+        <select
           className={`${baseClasses} text-slate-600 appearance-none`}
           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.2rem' }}
           {...(props as any)}
@@ -85,7 +85,7 @@ export function Contact() {
       });
 
       if (error) throw error;
-      
+
       setSuccess(true);
       setName("");
       setPhone("");
@@ -104,9 +104,9 @@ export function Contact() {
     <section className="py-12 md:py-16 bg-white" id="kontakt">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          
+
           {/* Left Column: Info */}
-          <div className="flex flex-col justify-center items-start lg:col-span-5">
+          <div className="flex flex-col justify-center items-start lg:col-span-6 xl:col-span-6">
             <SectionHeader
               title={<>Získejte cenovou nabídku <span className="text-amber-500">zdarma</span></>}
               preTitle="KONTAKTUJTE NÁS"
@@ -120,7 +120,7 @@ export function Contact() {
             </p>
 
             <div className="space-y-6">
-              <ContactInfoItem 
+              <ContactInfoItem
                 title="Zavolejte nám"
                 content="+420 774 509 409"
                 href="tel:+420774509409"
@@ -130,7 +130,7 @@ export function Contact() {
                   </svg>
                 }
               />
-              <ContactInfoItem 
+              <ContactInfoItem
                 title="Napište nám"
                 content="info@nanofusion.cz"
                 href="mailto:info@nanofusion.cz"
@@ -140,7 +140,7 @@ export function Contact() {
                   </svg>
                 }
               />
-              <ContactInfoItem 
+              <ContactInfoItem
                 title="Působnost"
                 content="Celá Česká republika"
                 icon={
@@ -150,7 +150,7 @@ export function Contact() {
                   </svg>
                 }
               />
-              <ContactInfoItem 
+              <ContactInfoItem
                 title="Otevírací doba"
                 content="Po–Pá 7:00–18:00"
                 icon={
@@ -163,8 +163,8 @@ export function Contact() {
           </div>
 
           {/* Right Column: Form */}
-          <div className="lg:col-span-7">
-            <form 
+          <div className="lg:col-span-5 xl:col-span-5">
+            <form
               onSubmit={handleSubmit}
               className="bg-white border-2 border-amber-500 rounded-3xl p-6 sm:p-8 shadow-sm"
             >
@@ -177,8 +177,8 @@ export function Contact() {
                   </div>
                   <h3 className="text-2xl font-bold text-slate-900 mb-2">Děkujeme!</h3>
                   <p className="text-slate-600">Vaše poptávka byla úspěšně odeslána. Brzy se vám ozveme.</p>
-                  <Button 
-                    type="button" 
+                  <Button
+                    type="button"
                     className="mt-6"
                     onClick={() => setSuccess(false)}
                   >
@@ -241,8 +241,8 @@ export function Contact() {
                     className="mb-6"
                   />
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     disabled={submitting}
                     className="w-full h-12 text-sm justify-center gap-2"
                   >
@@ -251,7 +251,7 @@ export function Contact() {
                     </svg>
                     {submitting ? "Odesílání..." : "Odeslat nezávaznou poptávku"}
                   </Button>
-                  
+
                   <p className="text-center text-xs text-slate-500 mt-4">
                     Odesláním souhlasíte se zpracováním osobních údajů. Odpovíme do 24 hodin.
                   </p>
