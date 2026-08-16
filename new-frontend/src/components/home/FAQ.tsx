@@ -20,7 +20,7 @@ export async function FAQ({ initialFaqs }: { initialFaqs?: any[] }) {
 
   return (
     <section className="py-24 bg-white font-sans relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
 
         <SectionHeader
           title="Na co se nás nejčastěji ptáte"
