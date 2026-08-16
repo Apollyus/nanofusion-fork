@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,19 +17,22 @@ export function Navbar() {
     { label: "Galerie", href: "/#galerie" },
     { label: "O nás", href: "/o-nas" },
     { label: "Kontakt", href: "/#kontakt" },
-    { label: "Konfigurátor", href: "/kalkulace", highlight: false },
     { label: "E-shop", href: "https://eshop-nanofusion.cz", highlight: true, external: true },
   ];
 
   return (
     <nav className="bg-[#EBEBEB] text-[#4A4A4A] py-3 shadow-sm relative">
-      <div className="container mx-auto px-4 md:px-6 flex justify-between items-center max-w-7xl">
-        <Link href="/" className="flex items-center" onClick={() => setIsOpen(false)}>
-          <Image src="/logo.png" alt="NANOfusion" width={180} height={60} className="h-20 md:h-12 w-auto object-contain" />
-        </Link>
+      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between max-w-7xl">
+        
+        {/* Left: Logo */}
+        <div className="flex lg:flex-1 justify-start">
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity" onClick={() => setIsOpen(false)}>
+            <Image src="/logo.png" alt="NANOfusion" width={240} height={80} className="h-24 md:h-16 w-auto object-contain cursor-pointer" />
+          </Link>
+        </div>
 
-        {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+        {/* Center: Desktop Menu */}
+        <div className="hidden lg:flex items-center justify-center gap-6 xl:gap-8">
           {navLinks.map((link) => (
             link.external ? (
               <a
@@ -58,13 +62,23 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden p-2 text-gray-600 hover:text-amber-500 transition-colors"
-        >
-          {isOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-        </button>
+        {/* Right: Button & Mobile Toggle */}
+        <div className="flex lg:flex-1 justify-end items-center gap-4">
+          <Button
+            href="/kalkulace"
+            className="hidden lg:inline-flex rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+          >
+            Spočítat cenu
+          </Button>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden p-2 text-gray-600 hover:text-amber-500 transition-colors"
+          >
+            {isOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Dropdown */}
@@ -100,6 +114,13 @@ export function Navbar() {
                 </Link>
               )
             ))}
+            <Button
+              href="/kalkulace"
+              onClick={() => setIsOpen(false)}
+              className="w-full mt-2"
+            >
+              Spočítat cenu
+            </Button>
           </div>
         </div>
       )}

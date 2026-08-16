@@ -109,9 +109,16 @@ export const Hero = async () => {
           {/* Badge */}
           <div className="flex flex-wrap gap-3">
             <Pill
-              icon={<span className="text-amber-500 text-sm tracking-tighter">★★★★★</span>}
+              icon={<span className="text-amber-500 tracking-tighter">★★★★★</span>}
+              className="text-gray-300 w-full max-w-full overflow-x-auto hide-scrollbar sm:w-auto sm:overflow-visible py-2"
             >
-              <span className="text-gray-300">950+ spokojených zákazníků</span>
+              <div className="flex items-center whitespace-nowrap">
+                <span className="font-semibold text-white mx-1">950+</span> projektů
+                <span className="text-white/40 mx-2 md:mx-3 shrink-0">•</span>
+                <span className="shrink-0">pojištění odpovědnosti</span>
+                <span className="text-white/40 mx-2 md:mx-3 shrink-0">•</span>
+                <span className="font-semibold text-white mr-1">4,9</span> na firmy.cz
+              </div>
             </Pill>
           </div>
 
@@ -150,7 +157,7 @@ export const Hero = async () => {
             </Button>
           </div>
         </div>
-        
+
         {/* Floating Review on Video */}
         <FloatingReview />
 
