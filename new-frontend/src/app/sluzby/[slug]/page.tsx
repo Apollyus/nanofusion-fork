@@ -200,8 +200,6 @@ export default async function ServicePage({ params }: PageProps) {
         <ServiceGallery images={gallery} />
       )}
 
-      <Reviews initialReviews={specificReviews.length > 0 ? specificReviews : undefined} />
-
       {faqs.length > 0 && (
         <FAQ initialFaqs={faqs} />
       )}
