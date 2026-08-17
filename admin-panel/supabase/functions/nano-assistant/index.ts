@@ -21,51 +21,84 @@ serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // 2. FETCH LIVE PRICES & KNOWLEDGE FROM DB
-    const [pricesRes, knowledgeRes] = await Promise.all([
+    // 2. FETCH ALL DATA IN PARALLEL
+    const [pricesRes, knowledgeRes, faqsRes, servicesRes, articlesRes] = await Promise.all([
       supabase.from('configurator_prices').select('item_key, label, price, unit'),
-      supabase.from('bot_knowledge').select('title, content, category').eq('is_active', true)
+      supabase.from('bot_knowledge').select('title, content, category').eq('is_active', true),
+      supabase.from('faqs').select('question, answer').eq('is_active', true),
+      supabase.from('services').select('slug, name, description').eq('is_active', true),
+      supabase.from('articles').select('title, slug, content').eq('is_published', true)
     ])
 
     const prices = pricesRes.data
     const knowledge = knowledgeRes.data
+    const faqs = faqsRes.data
+    const services = servicesRes.data
+    const articles = articlesRes.data
 
-    // Format data for the prompt
+    // Format prices for the prompt
     const priceList = prices?.map(p => `- ${p.label}: ${p.price} Kč/${p.unit || 'm2'}`).join('\n') || 
       'Ceny jsou k dispozici na vyžádání.';
     
+    // Format knowledge base
     const knowledgeContext = knowledge?.map(k => `### ${k.title} (${k.category})\n${k.content}`).join('\n\n') || 
       'Zatím nemáme doplňující informace.';
+
+    // Format FAQs
+    const faqContext = faqs?.map(f => `Otázka: ${f.question}\nOdpověď: ${f.answer}`).join('\n\n') || 
+      'Žádné FAQ.';
+
+    // Format services
+    const servicesContext = services?.map(s => `---\n${s.name} (slug: ${s.slug})\n${s.description}`).join('\n\n') || 
+      'Žádné služby.';
+
+    // Format articles
+    const articlesContext = articles?.map(a => `---\n${a.title}\n${a.content}`).join('\n\n') || 
+      'Žádné články.';
 
     const systemPrompt = `
       Jsi profesionální AI asistent pro firmu NANOfusion s.r.o., experta na hloubkové čištění a nano-ochranu povrchů.
       Tvá role je fungovat jako špičkový technický a obchodní konzultant.
       
-      --- ZNALOSTNÍ BÁZE A CENÍK ---
+      --- SLUŽBY ---
+      ${servicesContext}
+      
+      --- ČASTÉ DOTAZY ---
+      ${faqContext}
+      
+      --- ČLÁNKY A INFORMACE ---
+      ${articlesContext}
+      
+      --- ZNALOSTNÍ BÁZE ---
       ${knowledgeContext}
       
-      CENY (Kč/m2 nebo jednotku):
+      CENÍK (Kč/m2 nebo jednotku):
       ${priceList}
       
-      KONSTANTY FIRMY:
-      - Záruka: až 10 let
-      - Termíny: realizace do 14 dnů
+      KLÍČOVÉ INFORMACE:
+      - Záruka na nano-ochranu: až 10 let
+      - Termíny realizace: obvykle do 14 dnů
       - Zaměření a konzultace: ZDARMA po celé ČR
-      - Sídlo: Blučina u Brna
+      - Sídlo: Blučina (jižní Morava), působíme po celé ČR
       
-      --- TVÉ CÍLE A PRAVIDLA ---
-      1. ABSOLUTNÍ PŘESNOST: Při odpovídání vycházej POUZE z informací v sekci ZNALOSTNÍ BÁZE a CENÍK. Nikdy si nevymýšlej technologie, postupy ani ceny, které zde nejsou uvedeny.
-      2. NEZNALOST JE OK: Pokud se klient ptá na detail, který v datech nemáš, neomlouvej se. Místo toho sebevědomě odvět: "Tento specifický detail s vámi rád probere náš hlavní technik. Mohu vás s ním spojit?"
-      3. OBCHODNÍ CÍL (LEAD): Tvá hlavní priorita je získat od klienta poptávku (Jméno, Telefon, Adresa, přibližná velikost plochy). Plynule ho k tomu naveď.
-      4. TÓN KOMUNIKACE: Piš stručně, sebevědomě, vysoce profesionálně a přátelsky. Využívej odrážky pro čitelnost. Mluv v krátkých odstavcích (max 2-3 věty).
+      TVÉ CÍLE:
+      1. ODPovídát na technické dotazy přesně na základě výše uvedených dat
+      2. POMOCI S KALKULACÍ (vždy počítej s cenou z ceníku výše)
+      3. ZÍSKAT KONTAKT (Jméno, Telefon, Adresa, Plocha)
       
-      --- SYSTÉMOVÉ ZNAČKY ---
-      Pokud ti klient v chatu poskytne kontaktní údaje (jméno, telefon atd.), přidej na ÚPLNÝ KONEC tvé zprávy tento skrytý tag:
+      PRAVIDLA:
+      - Buď profesionální, stručný a přátelský
+      - Odpovídej POUZE na základě poskytnutých dat — nikdy si nevymýšlej ceny, technologie nebo postupy
+      - Pokud neznáš odpověď, řekni: "Tento specifický detail s vámi rád probere náš hlavní technik. Mohu vás s ním spojit?"
+      - Piš stručně (max 2-3 věty na odstavec), používej odrážky pro čitelnost
+      
+      SKRYTÁ ZNAČKA PRO LEAD:
+      Pokud získáš kontaktní údaje, přidej na ÚPLNÝ KONEC zprávy:
       [LEAD: Jméno, Telefon, Adresa, Plocha]
       (Nevyplněné údaje nahraď slovem "Neznámé")
     `;
 
-    // 3. Call OpenAI (using gpt-4o for maximum reasoning capabilities and lower temp for factuality)
+    // 3. Call OpenAI
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -73,7 +106,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: 'gpt-4o-mini',
         messages: [{ role: 'system', content: systemPrompt }, ...messages],
         temperature: 0.2,
       }),
