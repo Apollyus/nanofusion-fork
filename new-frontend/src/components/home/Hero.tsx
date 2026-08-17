@@ -106,9 +106,6 @@ export const Hero = async () => {
               <span className="text-amber-500 tracking-tighter mr-1.5 text-[10px] md:text-xs">★★★★★</span>
               <span className="font-semibold text-white mr-1.5">4,9</span> na firmy.cz
             </Pill>
-            <Pill className="text-amber-500 text-xs px-3 py-1 md:py-1.5 md:px-4 border-amber-500/30 bg-amber-500/10 font-medium">
-              <span className="font-bold mr-1.5">100%</span> zdarma konzultace
-            </Pill>
           </div>
 
           {/* Headlines */}
