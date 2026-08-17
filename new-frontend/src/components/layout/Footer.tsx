@@ -122,7 +122,7 @@ export function Footer() {
             <span className="hidden sm:inline">|</span>
             <a href="https://nanofusion-j3bs.vercel.app/admin/login" target="_blank" rel="noopener noreferrer" className="transition-colors opacity-60 hover:opacity-100">Zaměstnanci</a>
             <span className="hidden sm:inline opacity-60">|</span>
-            <a href="https://vojtechfal.cz" target="_blank" rel="noopener noreferrer" className="transition-colors opacity-60 hover:opacity-100">Created by ❤️</a>
+            <a href="http://www.aerisq.tech/" target="_blank" rel="noopener noreferrer" className="transition-colors opacity-60 hover:opacity-100">Created by 💚</a>
           </div>
         </div>
 
