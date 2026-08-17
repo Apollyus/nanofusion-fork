@@ -45,8 +45,6 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600; // Pro vývoj nastaveno na 0 (v produkci pak vrátíme na 3600 pro zrychlení)
-
 export default async function Home() {
   // Zkusíme načíst recenze z DB (tabulka 'reviews' nebo 'service_reviews', zde používám 'reviews')
   const { data: reviews } = await supabase.from('reviews').select('*');

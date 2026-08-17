@@ -15,8 +15,6 @@ interface PageProps {
   }>;
 }
 
-export const revalidate = 3600; // 1 hour ISR
-
 export async function generateStaticParams() {
   const { data: services } = await supabase
     .from("services")
