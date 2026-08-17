@@ -18,7 +18,7 @@ const Stats = () => {
   const stats = [
     { value: "950+", label: "Dokončených projektů" },
     { value: "745 000", label: "m² ošetřených ploch" },
-    { value: "13", label: "Let zkušeností" },
+    { value: "14", label: "Let zkušeností" },
     { value: "100%", label: "zdarma konzultace" },
   ];
 
