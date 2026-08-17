@@ -42,7 +42,7 @@ function RealizationCard({ item, onClick }: { item: any; onClick: () => void }) 
   );
 }
 
-function RealizationModalContent({ item }: { item: any }) {
+function RealizationModalContent({ item, onClose }: { item: any; onClose: () => void }) {
   const allPhotos = item.realization_photos || [];
   // Include main image_url as fallback if no photos exist
   const photos = allPhotos.length > 0 
@@ -143,20 +143,20 @@ function RealizationModalContent({ item }: { item: any }) {
             <p className="text-amber-50 text-sm mb-6 leading-relaxed">
               Rádi pro vás připravíme nezávaznou kalkulaci zdarma.
             </p>
-            <a 
-              href="#kalkulacka" 
-              onClick={(e) => {
-                // Just close modal and scroll if needed, or link to contact page
-                const el = document.getElementById("kontakt");
-                if (el) {
-                  e.preventDefault();
-                  el.scrollIntoView({ behavior: "smooth" });
-                }
+            <button 
+              onClick={() => {
+                onClose();
+                setTimeout(() => {
+                  const el = document.getElementById("kalkulacka");
+                  if (el) {
+                    el.scrollIntoView({ behavior: "smooth" });
+                  }
+                }, 100);
               }}
-              className="block w-full bg-white text-amber-600 hover:bg-slate-50 font-bold py-3.5 px-6 rounded-2xl text-center transition-colors shadow-sm"
+              className="block w-full bg-white text-amber-600 hover:bg-slate-50 hover:scale-105 active:scale-95 font-bold py-3.5 px-6 rounded-2xl text-center transition-all shadow-sm cursor-pointer"
             >
               MÁM ZÁJEM 💬
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -203,7 +203,7 @@ export function RealizationsCarousel({ realizations }: { realizations: any[] }) 
       </div>
 
       <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} title="">
-        {selectedItem && <RealizationModalContent item={selectedItem} />}
+        {selectedItem && <RealizationModalContent item={selectedItem} onClose={() => setSelectedItem(null)} />}
       </Modal>
     </>
   );
