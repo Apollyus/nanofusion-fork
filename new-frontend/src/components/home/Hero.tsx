@@ -14,29 +14,17 @@ async function getConfig() {
 import { Pill } from "@/components/ui/pill";
 import { FloatingReview } from "@/components/ui/floating-review";
 
-const Stats = ({ config }: { config: Record<string, string> }) => {
-  let stats = [
+const Stats = () => {
+  const stats = [
     { value: "950+", label: "Dokončených projektů" },
     { value: "745 000", label: "m² ošetřených ploch" },
-    { value: "14", label: "Let zkušeností" },
-    { value: "100%", label: "Bezplatná konzultace" },
+    { value: "13", label: "Let zkušeností" },
+    { value: "100%", label: "zdarma konzultace" },
   ];
-
-  if (config.about_stats) {
-    try {
-      const parsed = JSON.parse(config.about_stats);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        // Map DB stats which have {label: string, value: string}
-        stats = parsed.map((s: any) => ({ value: s.value, label: s.label }));
-      }
-    } catch (e) {
-      console.error("Failed to parse about_stats", e);
-    }
-  }
 
   return (
     <div className="bg-white pt-16 pb-20 relative z-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center gap-12 md:gap-20 text-center">
+      <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center gap-12 md:gap-20 text-center">
         {stats.map((stat, i) => (
           <div key={i} className="flex flex-col gap-2 min-w-[200px]">
             <div className="text-5xl md:text-6xl font-black text-amber-500 font-heading tracking-tight">{stat.value}</div>
@@ -137,7 +125,7 @@ export const Hero = async () => {
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center gap-4 pt-6">
             <Button href="/#kalkulacka" size="lg" className="flex items-center gap-2">
-              Nezávazná cenová nabídka
+              Spočítat cenu
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -180,7 +168,7 @@ export const Hero = async () => {
       </div>
 
       {/* Stats Section */}
-      <Stats config={config} />
+      <Stats />
     </section>
   );
 };
