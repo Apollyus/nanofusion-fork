@@ -15,7 +15,7 @@ type ChatState = "INIT" | "ASK_SERVICE" | "ASK_ADDRESS" | "ASK_AREA" | "ASK_CONT
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isBotEnabled, setIsBotEnabled] = useState(true); // NATVRDO ZAPNUTO
+  const [isBotEnabled, setIsBotEnabled] = useState(false);
   const [chatState, setChatState] = useState<ChatState>("INIT");
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -57,20 +57,22 @@ export function ChatWidget() {
 
   useEffect(() => {
     const initBot = async () => {
-      // Check if bot is enabled
-      // ZAPNUTO NATVRDO PRO TESTOVÁNÍ (původní podmínka zakomentována)
-      // if (configData && configData.value === "true") {
+      const { data: configData } = await supabase
+        .from("site_config")
+        .select("value")
+        .eq("key", "nanobot_enabled")
+        .maybeSingle();
+
+      if (configData && configData.value === "true") {
         setIsBotEnabled(true);
-        // Generování session ID
         setSessionId("chat_" + Math.random().toString(36).substring(2, 11));
 
-        // Auto pop-up
         setTimeout(() => {
           if (!isOpen && window.location.hash !== "#admin") {
             setIsOpen(true);
           }
         }, 1200);
-      // }
+      }
 
       // Load bot knowledge
       const { data: knowledgeData } = await supabase
